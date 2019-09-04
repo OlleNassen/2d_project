@@ -2,16 +2,7 @@
 #include "glad/glad.h"
 #include "math2d.h"
 
-struct Tile
-{
-	Vector2 rect[4] =
-	{
-		vector2(-0.5f, -0.5f),
-		vector2(0.5f, -0.5f),
-		vector2(0.5f, 0.5f),
-		vector2(-0.5f, 0.5f)
-	};
-};
+typedef Vector2 Tile[4];
 
 void tilemap_draw(Tilemap & tilemap)
 {
@@ -27,12 +18,12 @@ void tilemap_generate(Tilemap& tilemap, unsigned int num_tiles_x, unsigned int n
 	tilemap.tile_size_x = tile_size_x;
 	tilemap.tile_size_y = tile_size_y;
 
-	Vector2 rect[4] =
+	Tile rect =
 	{
-		vector2(-(float)tile_size_x / 2, -(float)tile_size_y/2),
-		vector2((float)tile_size_x/2, -(float)tile_size_y/2),
-		vector2((float)tile_size_x/2, (float)tile_size_y/2),
-		vector2(-(float)tile_size_x/2, (float)tile_size_y/2)
+		vector2(0.f, 0.f),
+		vector2((float)tile_size_x, 0.f),
+		vector2((float)tile_size_x, (float)tile_size_y),
+		vector2(0.f, (float)tile_size_y)
 	};
 
 	glGenVertexArrays(1, &tilemap.vao);
@@ -51,10 +42,10 @@ void tilemap_generate(Tilemap& tilemap, unsigned int num_tiles_x, unsigned int n
 		for (int j = 0; j < num_tiles_x; ++j)
 		{
 			//tilemap.type[i+j*num_tiles_x] = 'a';
-			vertex_data[i+j*num_tiles_y].rect[0] = vector2_add(rect[0], vector2(j * tile_size_x, i * tile_size_y));
-			vertex_data[i+j*num_tiles_y].rect[1] = vector2_add(rect[1], vector2(j * tile_size_x, i * tile_size_y));
-			vertex_data[i+j*num_tiles_y].rect[2] = vector2_add(rect[2], vector2(j * tile_size_x, i * tile_size_y));
-			vertex_data[i+j*num_tiles_y].rect[3] = vector2_add(rect[3], vector2(j * tile_size_x, i * tile_size_y));
+			vertex_data[i+j*num_tiles_y][0] = vector2_add(rect[0], vector2(j * tile_size_x, i * tile_size_y));
+			vertex_data[i + j * num_tiles_y][1] = vector2_add(rect[1], vector2(j * tile_size_x, i * tile_size_y));
+			vertex_data[i + j * num_tiles_y][2] = vector2_add(rect[2], vector2(j * tile_size_x, i * tile_size_y));
+			vertex_data[i + j * num_tiles_y][3] = vector2_add(rect[3], vector2(j * tile_size_x, i * tile_size_y));
 
 			indices[offset++] = offsetVert + 0;
 			indices[offset++] = offsetVert + 1;
