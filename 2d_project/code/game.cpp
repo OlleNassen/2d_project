@@ -28,6 +28,7 @@ void game_initialize(Game & game)
 	glBindBuffer(GL_ARRAY_BUFFER, game.tilemap.vbo);
 	Quad vertexData[16][16];
 	unsigned int indices[16 * 16 * 6];
+	int offsetVert = 0;
 	int offset = 0;
 	for (int i = 0; i < 16; ++i)
 	{
@@ -39,14 +40,14 @@ void game_initialize(Game & game)
 			vertexData[j][i].abcd[2] = vector2_add(vertexData[j][i].abcd[2], vector2(j * game.tilemap.size_x, i * game.tilemap.size_y));
 			vertexData[j][i].abcd[3] = vector2_add(vertexData[j][i].abcd[3], vector2(j * game.tilemap.size_x, i * game.tilemap.size_y));
 
-			indices[offset+0] = offset + 0;
-			indices[offset+1] = offset + 1;
-			indices[offset+2] = offset + 2;
-			indices[offset+3] = offset + 0;
-			indices[offset+4] = offset + 2;
-			indices[offset+5] = offset + 3;
+			indices[offset++] = offsetVert + 0;
+			indices[offset++] = offsetVert + 1;
+			indices[offset++] = offsetVert + 2;
+			indices[offset++] = offsetVert + 0;
+			indices[offset++] = offsetVert + 2;
+			indices[offset++] = offsetVert + 3;
 
-			offset += 6;
+			offsetVert += 4;
 		}
 	}
 	
