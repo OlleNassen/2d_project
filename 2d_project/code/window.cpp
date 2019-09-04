@@ -1,10 +1,23 @@
 #include "window.h"
+#include <SDL/SDL.h>
 #include <glad.c>
 
-void windowInitialize(Window& window, const char * title, int width, int height)
+struct Window
+{
+	SDL_Window* window;
+	SDL_GLContext glContext;
+	bool32 window_open;
+	double time;
+};
+
+static Window window;
+
+void window_initialize(const char* title, int width, int height)
 {
 	SDL_Init(SDL_INIT_EVERYTHING);
-
+	window.time = 0.0;
+	window.window_open = true;
+	
 	window.window = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
 		width, height, SDL_WINDOW_OPENGL);
 
@@ -40,16 +53,94 @@ void windowInitialize(Window& window, const char * title, int width, int height)
 	}
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glEnable(GL_MULTISAMPLE);
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 }
 
-void windowClear(float r, float g, float b, float alpha)
+void window_events_poll()
 {
-	glClearColor(r,g,b,alpha);
+	SDL_Event e;
+	while (SDL_PollEvent(&e))
+	{
+		switch (e.type)
+		{
+		case SDL_QUIT:
+		{
+			window.window_open = false;
+			break;
+		}
+
+		case SDL_KEYDOWN:
+			if (e.key.keysym.scancode == SDL_SCANCODE_ESCAPE)
+				window.window_open = false;
+			break;
+		}
+	}
+}
+
+double window_time_get()
+{
+	return (double)SDL_GetTicks() / 1000.0;
+}
+
+bool32 window_keyboard_pressed(int key)
+{
+	return 0;
+}
+
+bool32 window_mouse_pressed(int button)
+{
+	return 0;
+}
+
+void window_mouse_position(int *x, int *y)
+{
+	SDL_GetMouseState(x, y);
+}
+
+void window_size_set(int width, int height)
+{
+	SDL_SetWindowSize(window.window, width, height);
+}
+
+void window_size_get(int *width, int *height)
+{
+	SDL_GetWindowSize(window.window, width, height);
+}
+
+void window_type_set(WindowType type)
+{
+	switch (type)
+	{
+	case window_windowed:
+	{
+		SDL_SetWindowBordered(window.window, SDL_TRUE);
+	}
+	case window_borderless:
+	{
+		SDL_SetWindowBordered(window.window, SDL_FALSE);
+	}
+	case window_fullscreen:
+	{
+		SDL_SetWindowFullscreen(window.window, SDL_WINDOW_FULLSCREEN_DESKTOP);
+	}
+	default:
+	{
+
+	}
+	}
+}
+
+bool32 window_open()
+{
+	return window.window_open;
+}
+
+void window_clear()
+{
 	glClear(GL_COLOR_BUFFER_BIT);
 }
 
-void windowDisplay(Window& window)
+void window_display()
 {
 	SDL_GL_SwapWindow(window.window);
 }
