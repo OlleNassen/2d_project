@@ -10,14 +10,20 @@ typedef enum
 	window_fullscreen
 } WindowType;
 
+typedef struct
+{
+	unsigned int transitions;
+	bool32 pressed;
+} GameButton;
+
 void window_initialize(const char* title, int width, int height);
 
 void window_events_poll();
 
 double window_time_get();
 
-bool32 window_keyboard_pressed(int key);
-bool32 window_mouse_pressed(int button);
+GameButton window_keyboard_pressed(int key);
+GameButton window_mouse_pressed(int button);
 void window_mouse_position(int *x, int *y);
 
 void window_size_set(int width, int height);

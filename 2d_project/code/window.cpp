@@ -8,7 +8,8 @@ struct Window
 	SDL_GLContext glContext;
 	bool32 window_open;
 	double time;
-	bool32 key_pressed[128];
+	GameButton key_pressed[128];
+	GameButton mouse_pressed[6];
 };
 
 static Window window;
@@ -57,6 +58,15 @@ void window_initialize(const char* title, int width, int height)
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 }
 
+static void change_button_state(GameButton *button, bool32 pressed)
+{
+	if (button->pressed != pressed)
+	{
+		button->pressed = pressed;
+		++button->transitions;
+	}
+}
+
 void window_events_poll()
 {
 	SDL_Event e;
@@ -69,23 +79,30 @@ void window_events_poll()
 			window.window_open = false;
 			break;
 		}
-
 		case SDL_KEYDOWN:
 		{
 			if (e.key.keysym.sym < 128)
 			{
-				window.key_pressed[e.key.keysym.sym] = true;
+				change_button_state(&window.key_pressed[e.key.keysym.sym], true);
 			}	
-			if (e.key.keysym.scancode == SDL_SCANCODE_ESCAPE)
-				window.window_open = false;
 			break;
 		}
 		case SDL_KEYUP:
 		{
 			if (e.key.keysym.sym < 128)
 			{
-				window.key_pressed[e.key.keysym.sym] = false;
+				change_button_state(&window.key_pressed[e.key.keysym.sym], false);
 			}
+			break;
+		}
+		case SDL_MOUSEBUTTONDOWN:
+		{
+			change_button_state(&window.mouse_pressed[e.button.button], true);
+			break;
+		}
+		case SDL_MOUSEBUTTONUP:
+		{
+			change_button_state(&window.mouse_pressed[e.button.button], false);
 			break;
 		}
 		}
@@ -97,14 +114,14 @@ double window_time_get()
 	return (double)SDL_GetTicks() / 1000.0;
 }
 
-bool32 window_keyboard_pressed(int key)
+GameButton window_keyboard_pressed(int key)
 {
 	return window.key_pressed[key];
 }
 
-bool32 window_mouse_pressed(int button)
+GameButton window_mouse_pressed(int button)
 {
-	return 0;
+	return window.mouse_pressed[button];
 }
 
 void window_mouse_position(int *x, int *y)
