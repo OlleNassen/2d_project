@@ -1,5 +1,6 @@
 #include "camera.h"
 #include<glm/gtc/matrix_transform.hpp>
+#include "math2d.h"
 
 void cameraInitializeDefault(Camera& camera)
 {

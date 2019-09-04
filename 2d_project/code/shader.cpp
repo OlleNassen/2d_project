@@ -194,9 +194,9 @@ void shaderUniform(unsigned int shader, const char* name, float value)
 	glUniform1f(glGetUniformLocation(shader, name), value);
 }
 
-void shaderUniform(unsigned int shader, const char* name, const glm::vec2& value)
+void shaderUniform(unsigned int shader, const char* name, const Vector2& value)
 {
-	glUniform2fv(glGetUniformLocation(shader, name), 1, &value[0]);
+	glUniform2fv(glGetUniformLocation(shader, name), 1, &value.x);
 }
 
 void shaderUniform(unsigned int shader, const char* name, const glm::vec3& value)
