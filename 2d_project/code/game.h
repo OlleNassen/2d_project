@@ -6,6 +6,7 @@ struct Tilemap
 {
 	char xy[16][16];
 	unsigned int vbo;
+	unsigned int ebo;
 	int size_x;
 	int size_y;
 };
