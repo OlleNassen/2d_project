@@ -8,6 +8,7 @@ struct Window
 	SDL_GLContext glContext;
 	bool32 window_open;
 	double time;
+	bool32 key_pressed[128];
 };
 
 static Window window;
@@ -70,9 +71,17 @@ void window_events_poll()
 		}
 
 		case SDL_KEYDOWN:
+		{
+			window.key_pressed[e.key.keysym.sym] = true;
 			if (e.key.keysym.scancode == SDL_SCANCODE_ESCAPE)
 				window.window_open = false;
 			break;
+		}
+		case SDL_KEYUP:
+		{
+			window.key_pressed[e.key.keysym.sym] = false;
+			break;
+		}
 		}
 	}
 }
@@ -84,7 +93,7 @@ double window_time_get()
 
 bool32 window_keyboard_pressed(int key)
 {
-	return 0;
+	return window.key_pressed[key];
 }
 
 bool32 window_mouse_pressed(int button)
