@@ -4,44 +4,29 @@
 
 void engineRun()
 {
-	Window window;
-	windowInitialize(window, "Royale", 1280, 720);
+	window_initialize("Royale", 1280, 720);
+	
 	Game game;
 	gameInitialize(game);
 	gameStart(game);
 
-	double lastTime = (double)SDL_GetTicks() / 1000.0;
+	double lastTime = window_time_get();
 	double deltaTime = 0.0;
 	bool running = true;
-	while (running)
+	while (window_open())
 	{
-		double now = (double)SDL_GetTicks() / 1000.0;
+		window_time_get();
+		double now = window_time_get();
 		deltaTime = now - lastTime;
 		lastTime = now;
 
-		SDL_Event e;
-		while (SDL_PollEvent(&e))
-		{
-			switch (e.type)
-			{
-				case SDL_QUIT:
-				{
-					running = false;
-					break;
-				}
-
-				case SDL_KEYDOWN:
-					if (e.key.keysym.scancode == SDL_SCANCODE_ESCAPE)
-						running = false;
-					break;
-			}
-		}
+		window_events_poll();
 
 		gameUpdate(game);
 
-		windowClear(0,0,0, 1.0f);
+		window_clear();
 		gameRender(game);
-		windowDisplay(window);
+		window_display();
 	}
 
 }
