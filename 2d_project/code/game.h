@@ -4,7 +4,7 @@
 
 struct Tilemap
 {
-	int xy[16][16];
+	char xy[16][16];
 	unsigned int vbo;
 	int size_x;
 	int size_y;
@@ -12,16 +12,16 @@ struct Tilemap
 
 struct Game
 {
-	unsigned int globalVao;
+	unsigned int global_vao;
 	Tilemap tilemap;
 	Camera camera;
 
 	unsigned int shader;
 };
 
-void gameInitialize(Game& game);
-void gameStart(Game& game);
-void gameUpdate(Game& game);
-void gameRender(Game& game);
+void game_initialize(Game& game);
+void game_start(Game& game);
+void game_update(Game& game);
+void game_render(Game& game);
 
 #endif

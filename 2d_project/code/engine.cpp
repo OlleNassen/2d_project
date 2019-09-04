@@ -7,8 +7,8 @@ void engineRun()
 	window_initialize("Royale", 1280, 720);
 	
 	Game game;
-	gameInitialize(game);
-	gameStart(game);
+	game_initialize(game);
+	game_start(game);
 
 	double lastTime = window_time_get();
 	double deltaTime = 0.0;
@@ -22,10 +22,10 @@ void engineRun()
 
 		window_events_poll();
 
-		gameUpdate(game);
+		game_update(game);
 
 		window_clear();
-		gameRender(game);
+		game_render(game);
 		window_display();
 	}
 
