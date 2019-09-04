@@ -45,6 +45,8 @@ void game_initialize(Game & game)
 			indices[offset+3] = offset + 0;
 			indices[offset+4] = offset + 2;
 			indices[offset+5] = offset + 3;
+
+			offset += 6;
 		}
 	}
 	
@@ -54,7 +56,7 @@ void game_initialize(Game & game)
 
 	glGenBuffers(1, &game.tilemap.ebo);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, game.tilemap.ebo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * 16 * 16 * 4, &indices[0], GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * 16 * 16 * 6, &indices[0], GL_STATIC_DRAW);
 
 	cameraInitializeDefault(game.camera);
 }
