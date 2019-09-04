@@ -1,4 +1,5 @@
 #include "window.h"
+#include <SDL/SDL.h>
 #include <glad.c>
 
 struct Window

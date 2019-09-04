@@ -1,6 +1,5 @@
 #ifndef WINDOW_H
 #define WINDOW_H
-#include <SDL/SDL.h>
 
 typedef unsigned int bool32;
 
