@@ -9,6 +9,7 @@
     <ClCompile Include="code\window.cpp" />
     <ClCompile Include="code\math2d.cpp" />
     <ClCompile Include="code\sprite.cpp" />
+    <ClCompile Include="code\tilemap.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="code\camera.h" />
@@ -18,6 +19,7 @@
     <ClInclude Include="code\window.h" />
     <ClInclude Include="code\math2d.h" />
     <ClInclude Include="code\sprite.h" />
+    <ClInclude Include="code\tilemap.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="resources\shaders\2d.frag" />
