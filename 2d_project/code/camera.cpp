@@ -3,7 +3,7 @@
 
 void cameraInitializeDefault(Camera& camera)
 {
-	camera.ortho = glm::ortho(0.f, 1280.f, 720.f, 0.f);
+	camera.ortho = glm::ortho(0.f, 1280.f, 0.0f, 720.f);
 	camera.position = glm::vec3(0,0,1);
 }
 
