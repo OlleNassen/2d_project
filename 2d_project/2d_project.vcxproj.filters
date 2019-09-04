@@ -15,4 +15,8 @@
     <ClInclude Include="code\shader.h" />
     <ClInclude Include="code\window.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="resources\shaders\2d.frag" />
+    <None Include="resources\shaders\2d.vert" />
+  </ItemGroup>
 </Project>

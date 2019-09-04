@@ -8,7 +8,7 @@ void engineRun()
 	windowInitialize(window, "Royale", 1280, 720);
 	Game game;
 	gameInitialize(game);
-	gameStart(game, 4);
+	gameStart(game);
 
 	double lastTime = (double)SDL_GetTicks() / 1000.0;
 	double deltaTime = 0.0;
@@ -33,10 +33,6 @@ void engineRun()
 				case SDL_KEYDOWN:
 					if (e.key.keysym.scancode == SDL_SCANCODE_ESCAPE)
 						running = false;
-					if (e.key.keysym.scancode == SDL_SCANCODE_A)
-						game.lines[0].angle -= 0.05;
-					if (e.key.keysym.scancode == SDL_SCANCODE_D)
-						game.lines[0].angle += 0.05;
 					break;
 			}
 		}
@@ -48,5 +44,4 @@ void engineRun()
 		windowDisplay(window);
 	}
 
-	gameClearMemory(game);
 }
