@@ -11,9 +11,11 @@ struct Game
 
 	Texture texture;
 
+	unsigned int spriteVAO;
 	unsigned int spriteVBO;
 
 	unsigned int shader;
+	unsigned int shader_tex;
 };
 
 void game_initialize(Game& game);

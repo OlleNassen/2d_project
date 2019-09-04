@@ -72,14 +72,20 @@ void window_events_poll()
 
 		case SDL_KEYDOWN:
 		{
-			window.key_pressed[e.key.keysym.sym] = true;
+			if (e.key.keysym.sym < 128)
+			{
+				window.key_pressed[e.key.keysym.sym] = true;
+			}	
 			if (e.key.keysym.scancode == SDL_SCANCODE_ESCAPE)
 				window.window_open = false;
 			break;
 		}
 		case SDL_KEYUP:
 		{
-			window.key_pressed[e.key.keysym.sym] = false;
+			if (e.key.keysym.sym < 128)
+			{
+				window.key_pressed[e.key.keysym.sym] = false;
+			}
 			break;
 		}
 		}
