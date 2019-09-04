@@ -5,31 +5,23 @@
 
 typedef struct
 {
-	float width;
-	float height;
-} Texture;
-
-typedef struct 
-{
-	float x;
-	float y;
-	float w;
-	float h;
-} Rectangles;
+	Rect sprite;
+	Rect size;
+	float speed;
+} SpriteAnimation;
 
 typedef struct
 {
-	Rectangles animations[16];
-	
-	Rectangles size;
-	Vector2 position;
-	Vector2 sizee;
-	unsigned int texture;
-} Sprite;
+	unsigned int id;
+	int width;
+	int height;
+} Texture;
 
-void sprite_draw(Sprite *sprite);
+void sprite_draw(Rect *rect, SpriteAnimation *anim, Texture *text, float time);
 
-void sprite_draw(Sprite *sprite, int animation, int frame);
+
+Texture texture_from_memory(const char *buffer);
+Texture texture_from_file(const char *path);
 
 
 #endif

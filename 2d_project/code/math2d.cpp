@@ -1,7 +1,7 @@
 #include "math2d.h"
 #include <math.h>
 
-Vector2 vector2(float x, float y)
+Vector2 vector2_create(float x, float y)
 {
 	Vector2 v;
 	v.x = x;
@@ -61,4 +61,26 @@ Vector2 vector2_divide(Vector2 a, Vector2 b)
 	a.x /= b.x;
 	a.y /= b.y;
 	return a;
+}
+
+
+
+Rect rect_create(float x, float y, float w, float h)
+{
+	Rect rect;
+	rect.x = x;
+	rect.y = y;
+	rect.w = w;
+	rect.h = h;
+	return rect;
+}
+
+int rect_contains(Rect *r, float x, float y)
+{
+	if ((r->x - r->w) > x) return false;
+	if ((r->y - r->h) > y) return false;
+	if ((r->x + r->w) < x) return false;
+	if ((r->y + r->h) < y) return false;
+
+	return true;
 }

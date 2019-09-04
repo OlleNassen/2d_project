@@ -2,11 +2,16 @@
 #define GAME_H
 #include "camera.h"
 #include "tilemap.h"
+#include "sprite.h"
 
 struct Game
 {
 	Camera camera;
 	Tilemap tilemap;
+
+	Texture texture;
+
+	unsigned int spriteVBO;
 
 	unsigned int shader;
 };

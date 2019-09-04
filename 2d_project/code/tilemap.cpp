@@ -20,10 +20,10 @@ void tilemap_generate(Tilemap& tilemap, unsigned int num_tiles_x, unsigned int n
 
 	Tile rect =
 	{
-		vector2(0.f, 0.f),
-		vector2((float)tile_size_x, 0.f),
-		vector2((float)tile_size_x, (float)tile_size_y),
-		vector2(0.f, (float)tile_size_y)
+		vector2_create(0.f, 0.f),
+		vector2_create((float)tile_size_x, 0.f),
+		vector2_create((float)tile_size_x, (float)tile_size_y),
+		vector2_create(0.f, (float)tile_size_y)
 	};
 
 	glGenVertexArrays(1, &tilemap.vao);
@@ -37,15 +37,15 @@ void tilemap_generate(Tilemap& tilemap, unsigned int num_tiles_x, unsigned int n
 
 	unsigned short offsetVert = 0;
 	unsigned short offset = 0;
-	for (int i = 0; i < num_tiles_y; ++i)
+	for (unsigned int i = 0; i < num_tiles_y; ++i)
 	{
-		for (int j = 0; j < num_tiles_x; ++j)
+		for (unsigned int j = 0; j < num_tiles_x; ++j)
 		{
 			//tilemap.type[i+j*num_tiles_x] = 'a';
-			vertex_data[i+j*num_tiles_y][0] = vector2_add(rect[0], vector2(j * tile_size_x, i * tile_size_y));
-			vertex_data[i + j * num_tiles_y][1] = vector2_add(rect[1], vector2(j * tile_size_x, i * tile_size_y));
-			vertex_data[i + j * num_tiles_y][2] = vector2_add(rect[2], vector2(j * tile_size_x, i * tile_size_y));
-			vertex_data[i + j * num_tiles_y][3] = vector2_add(rect[3], vector2(j * tile_size_x, i * tile_size_y));
+			vertex_data[i + j * num_tiles_y][0] = vector2_add(rect[0], vector2_create(j * tile_size_x, i * tile_size_y));
+			vertex_data[i + j * num_tiles_y][1] = vector2_add(rect[1], vector2_create(j * tile_size_x, i * tile_size_y));
+			vertex_data[i + j * num_tiles_y][2] = vector2_add(rect[2], vector2_create(j * tile_size_x, i * tile_size_y));
+			vertex_data[i + j * num_tiles_y][3] = vector2_add(rect[3], vector2_create(j * tile_size_x, i * tile_size_y));
 
 			indices[offset++] = offsetVert + 0;
 			indices[offset++] = offsetVert + 1;
