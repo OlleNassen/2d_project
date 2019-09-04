@@ -25,7 +25,10 @@ void game_update(Game& game)
 void game_render(Game& game)
 {
 	glUseProgram(game.shader);
-	shaderUniform(game.shader, "view", cameraGetViewMatrix(game.camera));
+	Vector2 view;
+	view.x = game.camera.position.x;
+	view.y = game.camera.position.y;
+	shaderUniform(game.shader, "view", &view);
 	shaderUniform(game.shader, "projection", game.camera.ortho);
 	tilemap_draw(game.tilemap);
 }
