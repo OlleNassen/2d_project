@@ -41,10 +41,10 @@ void tilemap_generate(Tilemap& tilemap, unsigned short num_tiles_rows, unsigned 
 	{
 		for (unsigned int j = 0; j < tilemap.num_tiles_rows; ++j)
 		{
-			vertex_positions[i + j * tilemap.num_tiles_columns][0] = vector2_add(rectangle_coordinates[0], vector2_create((float)i * tile_size_y, (float)j * tile_size_x));
-			vertex_positions[i + j * tilemap.num_tiles_columns][1] = vector2_add(rectangle_coordinates[1], vector2_create((float)i * tile_size_y, (float)j * tile_size_x));
-			vertex_positions[i + j * tilemap.num_tiles_columns][2] = vector2_add(rectangle_coordinates[2], vector2_create((float)i * tile_size_y, (float)j * tile_size_x));
-			vertex_positions[i + j * tilemap.num_tiles_columns][3] = vector2_add(rectangle_coordinates[3], vector2_create((float)i * tile_size_y, (float)j * tile_size_x));
+			vertex_positions[i + j * tilemap.num_tiles_columns][0] = vector2_add(rectangle_coordinates[0], vector2_create((float)i * tile_size_x, (float)j * tile_size_y));
+			vertex_positions[i + j * tilemap.num_tiles_columns][1] = vector2_add(rectangle_coordinates[1], vector2_create((float)i * tile_size_x, (float)j * tile_size_y));
+			vertex_positions[i + j * tilemap.num_tiles_columns][2] = vector2_add(rectangle_coordinates[2], vector2_create((float)i * tile_size_x, (float)j * tile_size_y));
+			vertex_positions[i + j * tilemap.num_tiles_columns][3] = vector2_add(rectangle_coordinates[3], vector2_create((float)i * tile_size_x, (float)j * tile_size_y));
 
 			vertex_tex_coords[i + j * tilemap.num_tiles_columns][0] = vector2_create(0.f, 0.f);
 			vertex_tex_coords[i + j * tilemap.num_tiles_columns][1] = vector2_create(1.f, 0.0f);
