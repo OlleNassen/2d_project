@@ -32,7 +32,7 @@ void tilemap_generate(Tilemap& tilemap, unsigned short num_tiles_rows, unsigned 
 	glBindBuffer(GL_ARRAY_BUFFER, tilemap.vbo);
 
 	Tile* vertex_positions = new Tile[tilemap.num_tiles_rows*tilemap.num_tiles_columns];
-	//Tile* vertex_tex_coords = new Tile[tilemap.num_tiles_rows*tilemap.num_tiles_columns];
+	Tile* vertex_tex_coords = new Tile[tilemap.num_tiles_rows*tilemap.num_tiles_columns];
 	unsigned short* indices = new unsigned short[tilemap.num_tiles_rows * tilemap.num_tiles_columns * 6];
 
 	unsigned short offsetVert = 0;
@@ -46,10 +46,10 @@ void tilemap_generate(Tilemap& tilemap, unsigned short num_tiles_rows, unsigned 
 			vertex_positions[i + j * tilemap.num_tiles_columns][2] = vector2_add(rectangle_coordinates[2], vector2_create((float)j * tile_size_x, (float)i * tile_size_y));
 			vertex_positions[i + j * tilemap.num_tiles_columns][3] = vector2_add(rectangle_coordinates[3], vector2_create((float)j * tile_size_x, (float)i * tile_size_y));
 
-			//vertex_tex_coords[i + j * tilemap.num_tiles_columns][0] = 
-			//vertex_tex_coords[i + j * tilemap.num_tiles_columns][1] = 
-			//vertex_tex_coords[i + j * tilemap.num_tiles_columns][2] = 
-			//vertex_tex_coords[i + j * tilemap.num_tiles_columns][3] = 
+			vertex_tex_coords[i + j * tilemap.num_tiles_columns][0] = vector2_create(0.f, 0.f);
+			vertex_tex_coords[i + j * tilemap.num_tiles_columns][1] = vector2_create(1.f, 0.0f);
+			vertex_tex_coords[i + j * tilemap.num_tiles_columns][2] = vector2_create(1.f, 1.f);
+			vertex_tex_coords[i + j * tilemap.num_tiles_columns][3] = vector2_create(0.f, 1.f);
 
 			indices[offset++] = offsetVert + 0;
 			indices[offset++] = offsetVert + 1;
@@ -62,14 +62,21 @@ void tilemap_generate(Tilemap& tilemap, unsigned short num_tiles_rows, unsigned 
 		}
 	}
 
-	glBufferData(GL_ARRAY_BUFFER, sizeof(Tile) * tilemap.num_tiles_rows * tilemap.num_tiles_columns, &vertex_positions[0], GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(Tile) * tilemap.num_tiles_rows * tilemap.num_tiles_columns * 2, 0, GL_STATIC_DRAW);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(Tile) * tilemap.num_tiles_rows * tilemap.num_tiles_columns, &vertex_positions[0]);
+	glBufferSubData(GL_ARRAY_BUFFER, sizeof(Tile) * tilemap.num_tiles_rows * tilemap.num_tiles_columns, sizeof(Tile) * tilemap.num_tiles_rows * tilemap.num_tiles_columns, &vertex_tex_coords[0]);
+
 	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
+
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, (void*)0);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, (void*)(sizeof(Tile) * tilemap.num_tiles_rows * tilemap.num_tiles_columns));
 
 	glGenBuffers(1, &tilemap.ebo);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, tilemap.ebo);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned short) * tilemap.num_tiles_rows * tilemap.num_tiles_columns * 6, &indices[0], GL_STATIC_DRAW);
 
 	delete[] vertex_positions;
+	delete[] vertex_tex_coords;
 	delete[] indices;
 }

@@ -29,9 +29,9 @@ void drawer_initialize(Drawer& drawer, unsigned short num_tiles_rows, unsigned s
 
 void drawer_draw(Drawer& drawer, Camera& camera)
 {
-	glUseProgram(drawer.shader);
-	shader_uniform(drawer.shader, "view", vector2_create(camera.position.x, camera.position.y));
-	shader_uniform(drawer.shader, "projection", camera.ortho);
+	glUseProgram(drawer.shader_tex);
+	shader_uniform(drawer.shader_tex, "view", vector2_create(camera.position.x, camera.position.y));
+	shader_uniform(drawer.shader_tex, "projection", camera.ortho);
 	tilemap_draw(drawer.tilemap);
 
 	Rect rect = rect_create(150, 150, 200, 200);
