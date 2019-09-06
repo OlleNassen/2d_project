@@ -3,10 +3,9 @@
 #include "glad/glad.h"
 #include "window.h"
 
-
-void drawer_initialize(Drawer& drawer)
+void drawer_initialize(Drawer& drawer, unsigned short num_tiles_rows, unsigned short num_tiles_columns)
 {
-	tilemap_generate(drawer.tilemap, 64, 32, 32, 32);
+	tilemap_generate(drawer.tilemap, num_tiles_rows, num_tiles_columns, 32, 32);
 
 	drawer.shader = shader_create("resources/shaders/2d.vert", "resources/shaders/2d.frag");
 	drawer.shader_tex = shader_create("resources/shaders/2dtex.vert", "resources/shaders/2dtex.frag");
