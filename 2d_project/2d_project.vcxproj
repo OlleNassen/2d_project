@@ -24,6 +24,7 @@
     <ClCompile Include="code\game.cpp" />
     <ClCompile Include="code\main.cpp" />
     <ClCompile Include="code\math2d.cpp" />
+    <ClCompile Include="code\drawer.cpp" />
     <ClCompile Include="code\shader.cpp" />
     <ClCompile Include="code\sprite.cpp" />
     <ClCompile Include="code\tilemap.cpp" />
@@ -34,6 +35,7 @@
     <ClInclude Include="code\engine.h" />
     <ClInclude Include="code\game.h" />
     <ClInclude Include="code\math2d.h" />
+    <ClInclude Include="code\drawer.h" />
     <ClInclude Include="code\shader.h" />
     <ClInclude Include="code\sprite.h" />
     <ClInclude Include="code\tilemap.h" />

@@ -26,7 +26,7 @@ void engineRun()
 		game_update(game);
 
 		window_clear();
-		game_render(game);
+		game_draw(game);
 		window_display();
 
 		GameButton escape = window_keyboard_pressed(SDLK_ESCAPE);
