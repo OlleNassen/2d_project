@@ -118,9 +118,9 @@ Vector3 vector3_scale(Vector3 a, float k)
 	return a;
 }
 
-mat4 mat4_create_identity()
+Mat4 mat4_create_identity()
 {
-	mat4 m;
+	Mat4 m;
 	memset(&m.elements[0], 0, sizeof(float) * 16);
 	m.elements[0] = 1.f;
 	m.elements[5] = 1.f;
@@ -129,9 +129,9 @@ mat4 mat4_create_identity()
 	return m;
 }
 
-mat4 mat4_create_ortho(float left, float right, float bottom, float top, float zNear, float zFar)
+Mat4 mat4_create_ortho(float left, float right, float bottom, float top, float zNear, float zFar)
 {
-	mat4 m;
+	Mat4 m;
 	memset(&m.elements[0], 0, sizeof(float) * 16);
 
 	m.elements[0] = 2.f / (right - left);

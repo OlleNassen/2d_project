@@ -4,7 +4,7 @@
 
 struct Camera
 {
-	mat4 ortho;
+	Mat4 ortho;
 	Vector3 position;
 };
 

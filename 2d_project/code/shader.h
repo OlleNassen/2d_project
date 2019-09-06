@@ -12,6 +12,6 @@ void shader_uniform(unsigned int shader, const char* name, int value);
 void shader_uniform(unsigned int shader, const char* name, float value);
 void shader_uniform(unsigned int shader, const char* name, const Vector2& value);
 void shader_uniform(unsigned int shader, const char* name, const Vector3& value);
-void shader_uniform(unsigned int shader, const char* name, const mat4& value);
+void shader_uniform(unsigned int shader, const char* name, const Mat4& value);
 
 #endif

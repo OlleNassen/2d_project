@@ -39,10 +39,10 @@ Vector3 vector3_scale(Vector3 a, float k);
 typedef struct
 {
 	float elements[4*4];
-}mat4;
+}Mat4;
 
-mat4 mat4_create_identity();
-mat4 mat4_create_ortho(float left, float right, float bottom, float top, float zNear, float zFar);
+Mat4 mat4_create_identity();
+Mat4 mat4_create_ortho(float left, float right, float bottom, float top, float zNear, float zFar);
 
 typedef struct
 {

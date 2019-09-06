@@ -203,7 +203,7 @@ void shader_uniform(unsigned int shader, const char* name, const Vector3& value)
 	glUniform3fv(glGetUniformLocation(shader, name), 1, &value.x);
 }
 
-void shader_uniform(unsigned int shader, const char* name, const mat4& value)
+void shader_uniform(unsigned int shader, const char* name, const Mat4& value)
 {
 	glUniformMatrix4fv(glGetUniformLocation(shader, name),
 		1, GL_FALSE, &value.elements[0]);
