@@ -25,8 +25,8 @@ void game_draw(Game& game)
 
 void create_game_map(GameMap& gameMap)
 {
-	gameMap.num_tiles_rows = 60;
-	gameMap.num_tiles_columns = 10;
+	gameMap.num_tiles_rows = 20;
+	gameMap.num_tiles_columns = 30;
 	gameMap.tiles = new char[gameMap.num_tiles_rows * gameMap.num_tiles_columns];
 	memset(gameMap.tiles, 0, sizeof(char) * gameMap.num_tiles_rows * gameMap.num_tiles_columns);
 }
