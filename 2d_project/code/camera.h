@@ -1,11 +1,11 @@
 #ifndef CAMERA_H
 #define CAMERA_H
-#include <glm/glm.hpp>
+#include <math2d.h>
 
 struct Camera
 {
-	glm::mat4 ortho;
-	glm::vec3 position;
+	mat4 ortho;
+	Vector3 position;
 };
 
 void camera_initialize_default(Camera& camera);

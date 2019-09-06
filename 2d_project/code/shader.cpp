@@ -5,7 +5,6 @@
 #include <sstream>
 #include <string>
 #include <iostream>
-#include <glm/gtc/type_ptr.hpp>
 
 void check_compile_errors(unsigned int shader, const char* type);
 
@@ -199,20 +198,15 @@ void shader_uniform(unsigned int shader, const char* name, const Vector2& value)
 	glUniform2fv(glGetUniformLocation(shader, name), 1, &value.x);
 }
 
-void shader_uniform(unsigned int shader, const char* name, const glm::vec3& value)
+void shader_uniform(unsigned int shader, const char* name, const Vector3& value)
 {
-	glUniform3fv(glGetUniformLocation(shader, name), 1, &value[0]);
+	glUniform3fv(glGetUniformLocation(shader, name), 1, &value.x);
 }
 
-void shader_uniform(unsigned int shader, const char* name, const glm::vec4& value)
-{
-	glUniform4fv(glGetUniformLocation(shader, name), 1, &value[0]);
-}
-
-void shader_uniform(unsigned int shader, const char* name, const glm::mat4& value)
+void shader_uniform(unsigned int shader, const char* name, const mat4& value)
 {
 	glUniformMatrix4fv(glGetUniformLocation(shader, name),
-		1, GL_FALSE, glm::value_ptr(value));
+		1, GL_FALSE, &value.elements[0]);
 }
 
 void check_compile_errors(unsigned int shader, const char* type)
