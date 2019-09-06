@@ -3,23 +3,22 @@
 #include "game.h"
 #include <SDL/SDL.h>
 
-void engineRun()
+void engine_run()
 {
 	window_initialize("Royale", 1280, 720);
 	
 	Game game;
 	game_initialize(game);
-	game_start(game);
 
-	double lastTime = window_time_get();
-	double deltaTime = 0.0;
+	double last_time = window_time_get();
+	double delta_time = 0.0;
 	bool running = true;
 	while (running)
 	{
 		window_time_get();
 		double now = window_time_get();
-		deltaTime = now - lastTime;
-		lastTime = now;
+		delta_time = now - last_time;
+		last_time = now;
 
 		window_events_poll();
 

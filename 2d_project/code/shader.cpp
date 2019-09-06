@@ -7,9 +7,9 @@
 #include <iostream>
 #include <glm/gtc/type_ptr.hpp>
 
-void checkCompileErrors(unsigned int shader, const char* type);
+void check_compile_errors(unsigned int shader, const char* type);
 
-unsigned int shaderCreate(const char* vertexPath, const char* fragmentPath)
+unsigned int shader_create(const char* vertexPath, const char* fragmentPath)
 {
 	// 1. retrieve the vertex/fragment source code from filePath
 	std::string vertexCode;
@@ -42,20 +42,20 @@ unsigned int shaderCreate(const char* vertexPath, const char* fragmentPath)
 	unsigned int vertex = glCreateShader(GL_VERTEX_SHADER);
 	glShaderSource(vertex, 1, &vShaderCode, NULL);
 	glCompileShader(vertex);
-	checkCompileErrors(vertex, "VERTEX");
+	check_compile_errors(vertex, "VERTEX");
 
 	// fragment Shader
 	unsigned int fragment = glCreateShader(GL_FRAGMENT_SHADER);
 	glShaderSource(fragment, 1, &fShaderCode, NULL);
 	glCompileShader(fragment);
-	checkCompileErrors(fragment, "FRAGMENT");
+	check_compile_errors(fragment, "FRAGMENT");
 
 	// shader Program
 	unsigned int shader = glCreateProgram();
 	glAttachShader(shader, vertex);
 	glAttachShader(shader, fragment);
 	glLinkProgram(shader);
-	checkCompileErrors(shader, "PROGRAM");
+	check_compile_errors(shader, "PROGRAM");
 
 	// delete the shaders as they're linked into our program now and no longer necessary
 	glDeleteShader(vertex);
@@ -64,7 +64,7 @@ unsigned int shaderCreate(const char* vertexPath, const char* fragmentPath)
 	return shader;
 }
 
-unsigned int shaderCreate(const char* vertexPath, const char* geometryPath, const char* fragmentPath)
+unsigned int shader_create(const char* vertexPath, const char* geometryPath, const char* fragmentPath)
 {
 	// 1. retrieve the vertex/fragment source code from filePath
 	std::string vertexCode;
@@ -105,19 +105,19 @@ unsigned int shaderCreate(const char* vertexPath, const char* geometryPath, cons
 	unsigned int vertex = glCreateShader(GL_VERTEX_SHADER);
 	glShaderSource(vertex, 1, &vShaderCode, NULL);
 	glCompileShader(vertex);
-	checkCompileErrors(vertex, "VERTEX");
+	check_compile_errors(vertex, "VERTEX");
 
 	// geometry shader
 	unsigned int geometry = glCreateShader(GL_GEOMETRY_SHADER);
 	glShaderSource(geometry, 1, &gShaderCode, NULL);
 	glCompileShader(geometry);
-	checkCompileErrors(geometry, "GEOMETRY");
+	check_compile_errors(geometry, "GEOMETRY");
 
 	// fragment Shader
 	unsigned int fragment = glCreateShader(GL_FRAGMENT_SHADER);
 	glShaderSource(fragment, 1, &fShaderCode, NULL);
 	glCompileShader(fragment);
-	checkCompileErrors(fragment, "FRAGMENT");
+	check_compile_errors(fragment, "FRAGMENT");
 
 	// shader Program
 	unsigned int shader = glCreateProgram();
@@ -125,7 +125,7 @@ unsigned int shaderCreate(const char* vertexPath, const char* geometryPath, cons
 	glAttachShader(shader, geometry);
 	glAttachShader(shader, fragment);
 	glLinkProgram(shader);
-	checkCompileErrors(shader, "PROGRAM");
+	check_compile_errors(shader, "PROGRAM");
 
 	// delete the shaders as they're linked into our program now and no longer necessary
 	glDeleteShader(vertex);
@@ -135,7 +135,7 @@ unsigned int shaderCreate(const char* vertexPath, const char* geometryPath, cons
 	return shader;
 }
 
-unsigned int shaderCreate(const char* computePath)
+unsigned int shader_create(const char* computePath)
 {
 	// 1. retrieve the vertex/fragment source code from filePath
 	std::string computeCode;
@@ -160,13 +160,13 @@ unsigned int shaderCreate(const char* computePath)
 	unsigned int compute = glCreateShader(GL_COMPUTE_SHADER);
 	glShaderSource(compute, 1, &cShaderCode, NULL);
 	glCompileShader(compute);
-	checkCompileErrors(compute, "COMPUTE");
+	check_compile_errors(compute, "COMPUTE");
 
 	// shader Program
 	unsigned int shader = glCreateProgram();
 	glAttachShader(shader, compute);
 	glLinkProgram(shader);
-	checkCompileErrors(shader, "PROGRAM");
+	check_compile_errors(shader, "PROGRAM");
 
 	// delete the shaders as they're linked into our program now and no longer necessary
 	glDeleteShader(compute);
@@ -174,48 +174,48 @@ unsigned int shaderCreate(const char* computePath)
 	return shader;
 }
 
-void shaderUniform(unsigned int shader, const char* name, bool value)
+void shader_uniform(unsigned int shader, const char* name, bool value)
 {
 	glUniform1i(glGetUniformLocation(shader, name), (int)value);
 }
 
-void shaderUniform(unsigned int shader, const char * name, char * value, int size)
+void shader_uniform(unsigned int shader, const char * name, char * value, int size)
 {
 
 }
 
-void shaderUniform(unsigned int shader, const char* name, int value)
+void shader_uniform(unsigned int shader, const char* name, int value)
 {
 	glUniform1i(glGetUniformLocation(shader, name), value);
 }
 
-void shaderUniform(unsigned int shader, const char* name, float value)
+void shader_uniform(unsigned int shader, const char* name, float value)
 {
 	glUniform1f(glGetUniformLocation(shader, name), value);
 }
 
-void shaderUniform(unsigned int shader, const char* name, const Vector2& value)
+void shader_uniform(unsigned int shader, const char* name, const Vector2& value)
 {
 	glUniform2fv(glGetUniformLocation(shader, name), 1, &value.x);
 }
 
-void shaderUniform(unsigned int shader, const char* name, const glm::vec3& value)
+void shader_uniform(unsigned int shader, const char* name, const glm::vec3& value)
 {
 	glUniform3fv(glGetUniformLocation(shader, name), 1, &value[0]);
 }
 
-void shaderUniform(unsigned int shader, const char* name, const glm::vec4& value)
+void shader_uniform(unsigned int shader, const char* name, const glm::vec4& value)
 {
 	glUniform4fv(glGetUniformLocation(shader, name), 1, &value[0]);
 }
 
-void shaderUniform(unsigned int shader, const char* name, const glm::mat4& value)
+void shader_uniform(unsigned int shader, const char* name, const glm::mat4& value)
 {
 	glUniformMatrix4fv(glGetUniformLocation(shader, name),
 		1, GL_FALSE, glm::value_ptr(value));
 }
 
-void checkCompileErrors(unsigned int shader, const char* type)
+void check_compile_errors(unsigned int shader, const char* type)
 {
 	int success;
 	char infoLog[1024];

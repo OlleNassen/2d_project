@@ -8,7 +8,6 @@ struct Camera
 	glm::vec3 position;
 };
 
-void cameraInitializeDefault(Camera& camera);
-glm::mat4 cameraGetViewMatrix(Camera& camera);
+void camera_initialize_default(Camera& camera);
 
 #endif

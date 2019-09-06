@@ -8,8 +8,8 @@ void drawer_initialize(Drawer& drawer)
 {
 	tilemap_generate(drawer.tilemap, 64, 32, 32, 32);
 
-	drawer.shader = shaderCreate("resources/shaders/2d.vert", "resources/shaders/2d.frag");
-	drawer.shader_tex = shaderCreate("resources/shaders/2dtex.vert", "resources/shaders/2dtex.frag");
+	drawer.shader = shader_create("resources/shaders/2d.vert", "resources/shaders/2d.frag");
+	drawer.shader_tex = shader_create("resources/shaders/2dtex.vert", "resources/shaders/2dtex.frag");
 
 	glGenVertexArrays(1, &drawer.sprite_vao);
 	glBindVertexArray(drawer.sprite_vao);
@@ -31,8 +31,8 @@ void drawer_initialize(Drawer& drawer)
 void drawer_draw(Drawer& drawer, Camera& camera)
 {
 	glUseProgram(drawer.shader);
-	shaderUniform(drawer.shader, "view", vector2_create(camera.position.x, camera.position.y));
-	shaderUniform(drawer.shader, "projection", camera.ortho);
+	shader_uniform(drawer.shader, "view", vector2_create(camera.position.x, camera.position.y));
+	shader_uniform(drawer.shader, "projection", camera.ortho);
 	tilemap_draw(drawer.tilemap);
 
 	Rect rect = rect_create(150, 150, 200, 200);
@@ -45,9 +45,9 @@ void drawer_draw(Drawer& drawer, Camera& camera)
 	glBindVertexArray(drawer.sprite_vao);
 	glBindBuffer(GL_ARRAY_BUFFER, drawer.sprite_vbo);
 
-	shaderUniform(drawer.shader_tex, "view", vector2_create(camera.position.x, camera.position.y));
-	shaderUniform(drawer.shader_tex, "projection", camera.ortho);
-	shaderUniform(drawer.shader_tex, "sprite_tex", 0);
+	shader_uniform(drawer.shader_tex, "view", vector2_create(camera.position.x, camera.position.y));
+	shader_uniform(drawer.shader_tex, "projection", camera.ortho);
+	shader_uniform(drawer.shader_tex, "sprite_tex", 0);
 
 	float time = window_time_get();
 	sprite_draw(&rect, &anim, &drawer.texture, time);

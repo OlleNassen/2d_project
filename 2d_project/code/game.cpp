@@ -5,13 +5,8 @@
 
 void game_initialize(Game & game)
 {
-	cameraInitializeDefault(game.camera);
+	camera_initialize_default(game.camera);
 	drawer_initialize(game.drawer);
-}
-
-void game_start(Game& game)
-{
-
 }
 
 void game_update(Game& game)

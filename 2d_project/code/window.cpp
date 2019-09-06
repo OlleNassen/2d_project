@@ -5,7 +5,7 @@
 struct Window
 {
 	SDL_Window* window;
-	SDL_GLContext glContext;
+	SDL_GLContext gl_context;
 	bool32 window_open;
 	double time;
 	GameButton key_pressed[128];
@@ -43,7 +43,7 @@ void window_initialize(const char* title, int width, int height)
 	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
 	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 4);
 
-	window.glContext = SDL_GL_CreateContext(window.window);
+	window.gl_context = SDL_GL_CreateContext(window.window);
 
 	SDL_GL_SetSwapInterval(1);
 	SDL_SetRelativeMouseMode(SDL_TRUE);

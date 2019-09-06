@@ -10,7 +10,6 @@ struct Game
 };
 
 void game_initialize(Game& game);
-void game_start(Game& game);
 void game_update(Game& game);
 void game_draw(Game& game);
 
