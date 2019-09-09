@@ -16,7 +16,7 @@ struct Drawer
 	unsigned int shader_tex;
 };
 
-void drawer_initialize(Drawer& drawer, unsigned short num_tiles_rows, unsigned short num_tiles_columns);
+void drawer_initialize(Drawer& drawer, const char* type_data, unsigned short num_tiles_rows, unsigned short num_tiles_columns);
 void drawer_draw(Drawer& drawer, Camera& camera);
 
 #endif

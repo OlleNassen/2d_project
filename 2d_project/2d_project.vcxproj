@@ -27,6 +27,7 @@
     <ClCompile Include="code\drawer.cpp" />
     <ClCompile Include="code\shader.cpp" />
     <ClCompile Include="code\sprite.cpp" />
+    <ClCompile Include="code\texture.cpp" />
     <ClCompile Include="code\tilemap.cpp" />
     <ClCompile Include="code\window.cpp" />
   </ItemGroup>
@@ -38,6 +39,7 @@
     <ClInclude Include="code\drawer.h" />
     <ClInclude Include="code\shader.h" />
     <ClInclude Include="code\sprite.h" />
+    <ClInclude Include="code\texture.h" />
     <ClInclude Include="code\tilemap.h" />
     <ClInclude Include="code\window.h" />
   </ItemGroup>

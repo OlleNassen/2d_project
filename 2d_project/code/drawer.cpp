@@ -3,9 +3,9 @@
 #include "glad/glad.h"
 #include "window.h"
 
-void drawer_initialize(Drawer& drawer, unsigned short num_tiles_rows, unsigned short num_tiles_columns)
+void drawer_initialize(Drawer& drawer, const char* type_data, unsigned short num_tiles_rows, unsigned short num_tiles_columns)
 {
-	tilemap_generate(drawer.tilemap, num_tiles_rows, num_tiles_columns, 32, 32);
+	tilemap_generate(drawer.tilemap, type_data, num_tiles_rows, num_tiles_columns, 32, 32);
 
 	drawer.shader = shader_create("resources/shaders/2d.vert", "resources/shaders/2d.frag");
 	drawer.shader_tex = shader_create("resources/shaders/2dtex.vert", "resources/shaders/2dtex.frag");
@@ -32,6 +32,7 @@ void drawer_draw(Drawer& drawer, Camera& camera)
 	glUseProgram(drawer.shader_tex);
 	shader_uniform(drawer.shader_tex, "view", vector2_create(camera.position.x, camera.position.y));
 	shader_uniform(drawer.shader_tex, "projection", camera.ortho);
+	shader_uniform(drawer.shader_tex, "sprite_tex", 0);
 	tilemap_draw(drawer.tilemap);
 
 	Rect rect = rect_create(150, 150, 200, 200);

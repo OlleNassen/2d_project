@@ -4,14 +4,19 @@
 
 typedef Vector2 Tile[4];
 
-void tilemap_draw(Tilemap & tilemap)
+void tilemap_draw(Tilemap& tilemap)
 {
 	glBindVertexArray(tilemap.vao);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, tilemap.texture.id);
 	glDrawElements(GL_TRIANGLES, tilemap.num_tiles_rows * tilemap.num_tiles_columns * 6, GL_UNSIGNED_SHORT, 0);
 }
+#include <iostream>
 
-void tilemap_generate(Tilemap& tilemap, unsigned short num_tiles_rows, unsigned short num_tiles_columns, unsigned int tile_size_x, unsigned int tile_size_y)
+void tilemap_generate(Tilemap& tilemap, const char* type_data, unsigned short num_tiles_rows, unsigned short num_tiles_columns, unsigned int tile_size_x, unsigned int tile_size_y)
 {
+	tilemap.texture = texture_from_file("overworld.png");
+
 	tilemap.num_tiles_rows = num_tiles_rows;
 	tilemap.num_tiles_columns = num_tiles_columns;
 
@@ -46,10 +51,21 @@ void tilemap_generate(Tilemap& tilemap, unsigned short num_tiles_rows, unsigned 
 			vertex_positions[i + j * tilemap.num_tiles_columns][2] = vector2_add(rectangle_coordinates[2], vector2_create((float)i * tile_size_x, (float)j * tile_size_y));
 			vertex_positions[i + j * tilemap.num_tiles_columns][3] = vector2_add(rectangle_coordinates[3], vector2_create((float)i * tile_size_x, (float)j * tile_size_y));
 
-			vertex_tex_coords[i + j * tilemap.num_tiles_columns][0] = vector2_create(0.f, 0.f);
-			vertex_tex_coords[i + j * tilemap.num_tiles_columns][1] = vector2_create(1.f, 0.0f);
-			vertex_tex_coords[i + j * tilemap.num_tiles_columns][2] = vector2_create(1.f, 1.f);
-			vertex_tex_coords[i + j * tilemap.num_tiles_columns][3] = vector2_create(0.f, 1.f);
+			int tile_number = type_data[i + j * tilemap.num_tiles_columns];
+
+			int uv_x = tile_number % (tilemap.texture.width / tile_size_x);
+			int uv_y = tile_number / (tilemap.texture.width / tile_size_x);
+
+			float gl_x = (float)uv_x / (tilemap.texture.width / tile_size_x);
+			float gl_y = (float)uv_y / (tilemap.texture.height / tile_size_y);
+
+			float width = (float)tile_size_x / tilemap.texture.width;
+			float height = (float)tile_size_y / tilemap.texture.height;
+
+			vertex_tex_coords[i + j * tilemap.num_tiles_columns][0] = vector2_create(gl_x, gl_y);
+			vertex_tex_coords[i + j * tilemap.num_tiles_columns][1] = vector2_create(gl_x + width, gl_y);
+			vertex_tex_coords[i + j * tilemap.num_tiles_columns][2] = vector2_create(gl_x + width, gl_y + height);
+			vertex_tex_coords[i + j * tilemap.num_tiles_columns][3] = vector2_create(gl_x, gl_y + height);
 
 			indices[offset++] = offsetVert + 0;
 			indices[offset++] = offsetVert + 1;
