@@ -15,7 +15,7 @@ void game_initialize(Game& game)
 
 void game_update(Game& game)
 {
-
+	camera_update(&game.camera);
 }
 
 void game_draw(Game& game)
