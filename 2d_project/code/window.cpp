@@ -46,7 +46,6 @@ void window_initialize(const char* title, int width, int height)
 	window.gl_context = SDL_GL_CreateContext(window.window);
 
 	SDL_GL_SetSwapInterval(1);
-	SDL_SetRelativeMouseMode(SDL_TRUE);
 
 
 	if (!gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress))
@@ -124,9 +123,19 @@ GameButton window_mouse_pressed(int button)
 	return window.mouse_pressed[button];
 }
 
-void window_mouse_position(int *x, int *y)
+void window_mouse_position_set(int x, int y)
+{
+	SDL_WarpMouseInWindow(window.window, x, y);
+}
+
+void window_mouse_position_get(int *x, int *y)
 {
 	SDL_GetMouseState(x, y);
+}
+
+void window_cursor_visible(bool32 is_visible)
+{
+	SDL_ShowCursor(is_visible);
 }
 
 void window_size_set(int width, int height)

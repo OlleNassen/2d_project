@@ -26,11 +26,13 @@ Vector2 camera_update(Camera *camera)
 	camera->state = mov_none;
 	int mx = camera->mx;
 	int my = camera->my;
-	window_mouse_position(&mx, &my);
+	window_mouse_position_get(&mx, &my);
+	Vector2 direction = vector2_create(0.0f, 0.0f);
 
 	if (mx != camera->mx || my != camera->my)
-	{
-		//camera->state = mov_mouse_cursor;
+	{	
+		window_cursor_visible(true);
+		camera->state = mov_mouse_cursor;
 	}
 
 	GameButton up = {};
@@ -58,6 +60,7 @@ Vector2 camera_update(Camera *camera)
 		right = window_keyboard_pressed(camera->keyboard_keys[3]);
 		if (up.pressed || down.pressed || left.pressed || right.pressed)
 		{
+			window_cursor_visible(false);
 			camera->state = mov_keyboard_keys;
 		}
 	}
@@ -74,16 +77,34 @@ Vector2 camera_update(Camera *camera)
 		}
 	}
 
-	if (camera->state != mov_mouse_cursor)
-	{
-		Vector2 direction = vector2_create(0.0f, 0.0f);
-		if (up.pressed) direction.y -= 1.0f;
-		if (down.pressed) direction.y += 1.0f;
-		if (left.pressed) direction.x += 1.0f;
-		if (right.pressed) direction.x -= 1.0f;
 
-		camera->position.x += direction.x * camera->speed;
-		camera->position.y += direction.y * camera->speed;
-	}
+	int width = 0;
+	int height = 0;
+	window_size_get(&width, &height);
+	int edgex = width * 0.05f;
+	int edgey = height * 0.05f;
+
+	if (mx > width) mx = width;
+	if (my > height) my = height;
+	if (mx < 0) mx = 0;
+	if (my < 0) my = 0;
+	window_mouse_position_set(mx, my);
+
+	camera->mx = mx;
+	camera->my = my;
+
+	if (my < edgey) direction.y -= 1.0f;
+	if (my > height - edgey) direction.y += 1.0f;
+	if (mx < edgex) direction.x += 1.0f;
+	if (mx > width - edgex) direction.x -= 1.0f;
+
+	if (up.pressed) direction.y -= 1.0f;
+	if (down.pressed) direction.y += 1.0f;
+	if (left.pressed) direction.x += 1.0f;
+	if (right.pressed) direction.x -= 1.0f;
+
+	camera->position.x += direction.x * camera->speed;
+	camera->position.y += direction.y * camera->speed;
+
 	return vector2_create(0, 0);
 }
