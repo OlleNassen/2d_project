@@ -3,6 +3,8 @@
 #include <SDL/SDL.h>
 #include <memory.h>
 #include <stdio.h>
+#include <time.h>
+#include <stdlib.h>
 
 #define PI 3.14159
 
@@ -15,6 +17,7 @@ void game_initialize(Game& game)
 	camera_initialize_default(game.camera);
 	drawer_initialize(game.drawer, game.map.tiles, game.map.num_tiles_rows, game.map.num_tiles_columns);
 	generate_character(game.player);
+	srand(time(0));
 }
 
 void game_update(Game& game)
@@ -40,7 +43,11 @@ void create_game_map(GameMap& gameMap)
 	gameMap.tiles = new char[gameMap.num_tiles_rows * gameMap.num_tiles_columns];
 	for (int i = 0; i < gameMap.num_tiles_rows * gameMap.num_tiles_columns; ++i)
 	{
-		i > 180? gameMap.tiles[i] = 0: gameMap.tiles[i] = 1;
+		int row = rand() % 7;
+		row *= 9;
+		row += rand() % 6;
+
+		gameMap.tiles[i] = row;
 	}
 }
 
