@@ -20,13 +20,14 @@ void game_update(Game& game)
 
 	if (window_mouse_pressed(SDL_BUTTON_LEFT).pressed)
 	{
-
+		Vector2 mouse_pos = vector2_create(game.camera.mx, game.camera.my);
+		game.player.position = mouse_pos;
 	}
 }
 
 void game_draw(Game& game)
 {
-	drawer_draw(game.drawer, game.camera);
+	drawer_draw(game.drawer, game.camera, &game.player.position);
 }
 
 void create_game_map(GameMap& gameMap)

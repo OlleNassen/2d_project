@@ -27,7 +27,7 @@ void drawer_initialize(Drawer& drawer, const char* type_data, unsigned short num
 	drawer.texture = texture_from_file("test.png");
 }
 
-void drawer_draw(Drawer& drawer, Camera& camera)
+void drawer_draw(Drawer& drawer, Camera& camera, Vector2* sprites)
 {
 	glUseProgram(drawer.shader_tex);
 	shader_uniform(drawer.shader_tex, "view", vector2_create(camera.position.x, camera.position.y));

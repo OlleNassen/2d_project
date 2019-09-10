@@ -10,13 +10,14 @@ typedef struct
 	char* tiles;
 }GameMap;
 
-struct Player
+struct Actor
 {
 	Vector2 position;
 };
 
 struct Game
 {
+	Actor player;
 	Camera camera;
 	Drawer drawer;
 	GameMap map;

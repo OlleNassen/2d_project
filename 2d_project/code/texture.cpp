@@ -16,7 +16,7 @@ Texture texture_from_file(const char *path)
 	glGenTextures(1, &text.id);
 	glBindTexture(GL_TEXTURE_2D, text.id);
 
-	stbi_set_flip_vertically_on_load(true);
+	stbi_set_flip_vertically_on_load(false);
 
 	int num_components;
 

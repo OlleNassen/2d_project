@@ -11,7 +11,6 @@ void tilemap_draw(Tilemap& tilemap)
 	glBindTexture(GL_TEXTURE_2D, tilemap.texture.id);
 	glDrawElements(GL_TRIANGLES, tilemap.num_tiles_rows * tilemap.num_tiles_columns * 6, GL_UNSIGNED_SHORT, 0);
 }
-#include <iostream>
 
 void tilemap_generate(Tilemap& tilemap, const char* type_data, unsigned short num_tiles_rows, unsigned short num_tiles_columns, unsigned int tile_size_x, unsigned int tile_size_y)
 {
