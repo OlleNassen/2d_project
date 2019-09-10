@@ -7,6 +7,8 @@ struct Window
 	SDL_Window* window;
 	SDL_GLContext gl_context;
 	double time;
+	int mx;
+	int my;
 	GameButton key_pressed[128];
 	GameButton mouse_pressed[6];
 	bool32 window_open : 1;
@@ -88,30 +90,27 @@ void window_events_poll()
 			window.window_open = false;
 			break;
 		}
-		case SDL_KEYDOWN:
+		case SDL_MOUSEMOTION:
 		{
-			if (e.key.keysym.sym < 128)
-			{
-				change_button_state(&window.key_pressed[e.key.keysym.sym], true);
-			}	
+			window.mx = e.motion.x;
+			window.my = e.motion.y;
 			break;
 		}
+		case SDL_KEYDOWN:
 		case SDL_KEYUP:
 		{
 			if (e.key.keysym.sym < 128)
 			{
-				change_button_state(&window.key_pressed[e.key.keysym.sym], false);
-			}
+				bool32 pressed = e.key.state;
+				change_button_state(&window.key_pressed[e.key.keysym.sym], pressed);
+			}	
 			break;
 		}
 		case SDL_MOUSEBUTTONDOWN:
-		{
-			change_button_state(&window.mouse_pressed[e.button.button], true);
-			break;
-		}
 		case SDL_MOUSEBUTTONUP:
 		{
-			change_button_state(&window.mouse_pressed[e.button.button], false);
+			bool32 pressed = e.button.state;
+			change_button_state(&window.mouse_pressed[e.button.button], pressed);
 			break;
 		}
 		case SDL_WINDOWEVENT:
@@ -125,6 +124,11 @@ void window_events_poll()
 			{
 				window.window_focus = false;
 				SDL_SetWindowGrab(window.window, SDL_FALSE);
+				int width = 0;
+				int height = 0;
+				window_size_get(&width, &height);
+				window.mx = width / 2;
+				window.my = height / 2;
 			}
 			break;
 		}
@@ -149,7 +153,8 @@ GameButton window_mouse_pressed(int button)
 
 void window_mouse_position(int *x, int *y)
 {
-	SDL_GetMouseState(x, y);
+	if (x) *x = window.mx;
+	if (y) *y = window.my;
 }
 
 void window_cursor_visible(bool32 is_visible)
