@@ -37,6 +37,6 @@ void create_game_map(GameMap& gameMap)
 	gameMap.tiles = new char[gameMap.num_tiles_rows * gameMap.num_tiles_columns];
 	for (int i = 0; i < gameMap.num_tiles_rows * gameMap.num_tiles_columns; ++i)
 	{
-		i > 180? gameMap.tiles[i] = 0: gameMap.tiles[i] = 20;
+		i > 180? gameMap.tiles[i] = 0: gameMap.tiles[i] = 2;
 	}
 }

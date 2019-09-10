@@ -12,9 +12,19 @@ void tilemap_draw(Tilemap& tilemap)
 	glDrawElements(GL_TRIANGLES, tilemap.num_tiles_rows * tilemap.num_tiles_columns * 6, GL_UNSIGNED_SHORT, 0);
 }
 
+Vector2 screen_to_world(Vector2& v)
+{
+	return vector2_create((v.x + 2.0f*v.y) / 4.0f, (2.0f*v.y - v.x) / 4.0f);
+}
+
+Vector2 world_to_screen(Vector2& v)
+{
+	return vector2_create(2.0f*v.x - 2.0f*v.y, v.x + v.y);
+}
+
 void tilemap_generate(Tilemap& tilemap, const char* type_data, unsigned short num_tiles_rows, unsigned short num_tiles_columns, unsigned int tile_size_x, unsigned int tile_size_y)
 {
-	tilemap.texture = texture_from_file("overworld.png");
+	tilemap.texture = texture_from_file("iso_tiles.png");
 
 	tilemap.num_tiles_rows = num_tiles_rows;
 	tilemap.num_tiles_columns = num_tiles_columns;
@@ -49,6 +59,11 @@ void tilemap_generate(Tilemap& tilemap, const char* type_data, unsigned short nu
 			vertex_positions[i + j * tilemap.num_tiles_columns][1] = vector2_add(rectangle_coordinates[1], vector2_create((float)i * tile_size_x, (float)j * tile_size_y));
 			vertex_positions[i + j * tilemap.num_tiles_columns][2] = vector2_add(rectangle_coordinates[2], vector2_create((float)i * tile_size_x, (float)j * tile_size_y));
 			vertex_positions[i + j * tilemap.num_tiles_columns][3] = vector2_add(rectangle_coordinates[3], vector2_create((float)i * tile_size_x, (float)j * tile_size_y));
+
+			vertex_positions[i + j * tilemap.num_tiles_columns][0] = world_to_screen(vertex_positions[i + j * tilemap.num_tiles_columns][0]);
+			vertex_positions[i + j * tilemap.num_tiles_columns][1] = world_to_screen(vertex_positions[i + j * tilemap.num_tiles_columns][1]);
+			vertex_positions[i + j * tilemap.num_tiles_columns][2] = world_to_screen(vertex_positions[i + j * tilemap.num_tiles_columns][2]);
+			vertex_positions[i + j * tilemap.num_tiles_columns][3] = world_to_screen(vertex_positions[i + j * tilemap.num_tiles_columns][3]);
 
 			int tile_number = type_data[i + j * tilemap.num_tiles_columns];
 
