@@ -47,13 +47,12 @@ void create_game_map(GameMap& gameMap)
 void generate_character(CharacterData& character)
 {
 	FILE* f;
-	char temp[6];
+	char temp[7];
+	temp[6] = 0;
+
 	fopen_s(&f, "names.bin", "r");
-
-	fscanf_s(f, temp);
-
+	fread(temp, sizeof(char), 6, f);
 	fclose(f);
 
-	for(int i = 0; i < 6; ++i)
-		printf(temp);
+	printf(temp);
 }
