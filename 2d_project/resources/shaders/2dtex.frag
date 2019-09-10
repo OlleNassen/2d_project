@@ -8,6 +8,6 @@ uniform sampler2D sprite_tex;
 
 void main()
 {
-	frag = vec4(texture(sprite_tex, uv).xyz, 1.0);
+	frag = texture(sprite_tex, uv);
 	//frag = vec4(1);
 }
