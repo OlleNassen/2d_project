@@ -11,7 +11,7 @@ Vector2 screen_to_world(Vector2& v)
 
 Vector2 world_to_screen(Vector2& v)
 {
-	return vector2_create(2.0f*v.x - 2.0f*v.y, v.x + v.y);
+	return vector2_create(v.x - v.y, (v.x + v.y) / 2.f);
 }
 
 void tilemap_draw(Tilemap& tilemap)
@@ -55,15 +55,12 @@ void tilemap_generate(Tilemap& tilemap, const char* type_data, unsigned short nu
 	{
 		for (unsigned int j = 0; j < tilemap.num_tiles_rows; ++j)
 		{
-			vertex_positions[i + j * tilemap.num_tiles_columns][0] = vector2_add(rectangle_coordinates[0], vector2_create((float)i * tile_size_x, (float)j * tile_size_y));
-			vertex_positions[i + j * tilemap.num_tiles_columns][1] = vector2_add(rectangle_coordinates[1], vector2_create((float)i * tile_size_x, (float)j * tile_size_y));
-			vertex_positions[i + j * tilemap.num_tiles_columns][2] = vector2_add(rectangle_coordinates[2], vector2_create((float)i * tile_size_x, (float)j * tile_size_y));
-			vertex_positions[i + j * tilemap.num_tiles_columns][3] = vector2_add(rectangle_coordinates[3], vector2_create((float)i * tile_size_x, (float)j * tile_size_y));
-
-			//vertex_positions[i + j * tilemap.num_tiles_columns][0] = world_to_screen(vertex_positions[i + j * tilemap.num_tiles_columns][0]);
-			//vertex_positions[i + j * tilemap.num_tiles_columns][1] = world_to_screen(vertex_positions[i + j * tilemap.num_tiles_columns][1]);
-			//vertex_positions[i + j * tilemap.num_tiles_columns][2] = world_to_screen(vertex_positions[i + j * tilemap.num_tiles_columns][2]);
-			//vertex_positions[i + j * tilemap.num_tiles_columns][3] = world_to_screen(vertex_positions[i + j * tilemap.num_tiles_columns][3]);
+			Vector2 convert_positions = vector2_create((float)i * tile_size_x, (float)j * tile_size_y);
+			convert_positions = world_to_screen(convert_positions);
+			vertex_positions[i + j * tilemap.num_tiles_columns][0] = vector2_add(vector2_scale(rectangle_coordinates[0], 2.0f), vector2_create(convert_positions.x, convert_positions.y));
+			vertex_positions[i + j * tilemap.num_tiles_columns][1] = vector2_add(vector2_scale(rectangle_coordinates[1], 2.0f), vector2_create(convert_positions.x, convert_positions.y));
+			vertex_positions[i + j * tilemap.num_tiles_columns][2] = vector2_add(vector2_scale(rectangle_coordinates[2], 2.0f), vector2_create(convert_positions.x, convert_positions.y));
+			vertex_positions[i + j * tilemap.num_tiles_columns][3] = vector2_add(vector2_scale(rectangle_coordinates[3], 2.0f), vector2_create(convert_positions.x, convert_positions.y));
 
 			int tile_number = type_data[i + j * tilemap.num_tiles_columns];
 
