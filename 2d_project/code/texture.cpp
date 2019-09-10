@@ -16,8 +16,6 @@ Texture texture_from_file(const char *path)
 	glGenTextures(1, &text.id);
 	glBindTexture(GL_TEXTURE_2D, text.id);
 
-	stbi_set_flip_vertically_on_load(false);
-
 	int num_components;
 
 	unsigned char* data = stbi_load(path, &text.width, &text.height, &num_components, 4);

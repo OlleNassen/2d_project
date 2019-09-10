@@ -61,10 +61,10 @@ void tilemap_generate(Tilemap& tilemap, const char* type_data, unsigned short nu
 			float width = (float)tile_size_x / tilemap.texture.width;
 			float height = (float)tile_size_y / tilemap.texture.height;
 
-			vertex_tex_coords[i + j * tilemap.num_tiles_columns][0] = vector2_create(gl_x, gl_y);
-			vertex_tex_coords[i + j * tilemap.num_tiles_columns][1] = vector2_create(gl_x + width, gl_y);
-			vertex_tex_coords[i + j * tilemap.num_tiles_columns][2] = vector2_create(gl_x + width, gl_y + height);
-			vertex_tex_coords[i + j * tilemap.num_tiles_columns][3] = vector2_create(gl_x, gl_y + height);
+			vertex_tex_coords[i + j * tilemap.num_tiles_columns][0] = vector2_create(gl_x, gl_y + height);
+			vertex_tex_coords[i + j * tilemap.num_tiles_columns][1] = vector2_create(gl_x + width, gl_y + height);
+			vertex_tex_coords[i + j * tilemap.num_tiles_columns][2] = vector2_create(gl_x + width, gl_y);
+			vertex_tex_coords[i + j * tilemap.num_tiles_columns][3] = vector2_create(gl_x, gl_y);
 
 			indices[offset++] = offsetVert + 0;
 			indices[offset++] = offsetVert + 1;
