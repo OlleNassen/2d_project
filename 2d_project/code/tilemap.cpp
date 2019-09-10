@@ -73,11 +73,6 @@ void tilemap_generate(Tilemap& tilemap, const char* type_data, unsigned short nu
 			float gl_x = (float)uv_x / (tilemap.texture.width / tile_size_x);
 			float gl_y = (float)uv_y / (tilemap.texture.height / tile_size_y);
 
-			Vector2 temp = vector2_create(gl_x, gl_y);
-			temp = world_to_screen(temp);
-			gl_x = temp.x;
-			gl_y = temp.y;
-
 			float width = (float)tile_size_x / tilemap.texture.width;
 			float height = (float)tile_size_y / tilemap.texture.height;
 
