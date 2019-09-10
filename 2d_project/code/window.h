@@ -24,8 +24,7 @@ double window_time_get();
 
 GameButton window_keyboard_pressed(int key);
 GameButton window_mouse_pressed(int button);
-void window_mouse_position_set(int x, int y);
-void window_mouse_position_get(int *x, int *y);
+void window_mouse_position(int *x, int *y);
 void window_cursor_visible(bool32 is_visible);
 
 void window_size_set(int width, int height);
