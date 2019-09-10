@@ -11,7 +11,7 @@ Vector2 screen_to_world(Vector2& v)
 
 Vector2 world_to_screen(Vector2& v)
 {
-	return vector2_create(v.x - v.y, (v.x + v.y) / 2.f);
+	return vector2_create(2.0f*v.x - 2.0f*v.y, v.x + v.y);
 }
 
 void tilemap_draw(Tilemap& tilemap)
@@ -21,7 +21,7 @@ void tilemap_draw(Tilemap& tilemap)
 	glBindTexture(GL_TEXTURE_2D, tilemap.texture.id);
 	glDrawElements(GL_TRIANGLES, tilemap.num_tiles_rows * tilemap.num_tiles_columns * 6, GL_UNSIGNED_SHORT, 0);
 }
-#include <iostream>
+
 void tilemap_generate(Tilemap& tilemap, const char* type_data, unsigned short num_tiles_rows, unsigned short num_tiles_columns, unsigned int tile_size_x, unsigned int tile_size_y)
 {
 	tilemap.texture = texture_from_file("iso_tiles.png");
@@ -57,10 +57,10 @@ void tilemap_generate(Tilemap& tilemap, const char* type_data, unsigned short nu
 		{
 			Vector2 convert_positions = vector2_create((float)i * tile_size_x, (float)j * tile_size_y);
 			convert_positions = world_to_screen(convert_positions);
-			vertex_positions[i + j * tilemap.num_tiles_columns][0] = vector2_add(vector2_scale(rectangle_coordinates[0], 2.0f), vector2_create(convert_positions.x, convert_positions.y));
-			vertex_positions[i + j * tilemap.num_tiles_columns][1] = vector2_add(vector2_scale(rectangle_coordinates[1], 2.0f), vector2_create(convert_positions.x, convert_positions.y));
-			vertex_positions[i + j * tilemap.num_tiles_columns][2] = vector2_add(vector2_scale(rectangle_coordinates[2], 2.0f), vector2_create(convert_positions.x, convert_positions.y));
-			vertex_positions[i + j * tilemap.num_tiles_columns][3] = vector2_add(vector2_scale(rectangle_coordinates[3], 2.0f), vector2_create(convert_positions.x, convert_positions.y));
+			vertex_positions[i + j * tilemap.num_tiles_columns][0] = vector2_add(vector2_scale(rectangle_coordinates[0], 4.0f), vector2_create(convert_positions.x, convert_positions.y));
+			vertex_positions[i + j * tilemap.num_tiles_columns][1] = vector2_add(vector2_scale(rectangle_coordinates[1], 4.0f), vector2_create(convert_positions.x, convert_positions.y));
+			vertex_positions[i + j * tilemap.num_tiles_columns][2] = vector2_add(vector2_scale(rectangle_coordinates[2], 4.0f), vector2_create(convert_positions.x, convert_positions.y));
+			vertex_positions[i + j * tilemap.num_tiles_columns][3] = vector2_add(vector2_scale(rectangle_coordinates[3], 4.0f), vector2_create(convert_positions.x, convert_positions.y));
 
 			int tile_number = type_data[i + j * tilemap.num_tiles_columns];
 
@@ -72,7 +72,6 @@ void tilemap_generate(Tilemap& tilemap, const char* type_data, unsigned short nu
 
 			float width = (float)tile_size_x / tilemap.texture.width;
 			float height = (float)tile_size_y / tilemap.texture.height;
-
 
 			vertex_tex_coords[i + j * tilemap.num_tiles_columns][0] = vector2_create(gl_x, gl_y + height);
 			vertex_tex_coords[i + j * tilemap.num_tiles_columns][1] = vector2_create(gl_x + width, gl_y + height);
