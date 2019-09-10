@@ -6,10 +6,11 @@ struct Window
 {
 	SDL_Window* window;
 	SDL_GLContext gl_context;
-	bool32 window_open;
 	double time;
 	GameButton key_pressed[128];
 	GameButton mouse_pressed[6];
+	bool32 window_open : 1;
+	bool32 window_focus : 1;
 };
 
 static Window window;
@@ -68,6 +69,15 @@ static void change_button_state(GameButton *button, bool32 pressed)
 
 void window_events_poll()
 {
+	for (int i = 0; i < 128; ++i)
+	{
+		window.key_pressed[i].transitions = 0;
+	}
+	for (int i = 0; i < 6; ++i)
+	{
+		window.mouse_pressed[i].transitions = 0;
+	}
+	
 	SDL_Event e;
 	while (SDL_PollEvent(&e))
 	{
@@ -104,6 +114,20 @@ void window_events_poll()
 			change_button_state(&window.mouse_pressed[e.button.button], false);
 			break;
 		}
+		case SDL_WINDOWEVENT:
+		{
+			if (e.window.event == SDL_WINDOWEVENT_FOCUS_GAINED)
+			{
+				window.window_focus = true;
+				SDL_SetWindowGrab(window.window, SDL_TRUE);
+			}
+			if (e.window.event == SDL_WINDOWEVENT_FOCUS_LOST)
+			{
+				window.window_focus = false;
+				SDL_SetWindowGrab(window.window, SDL_FALSE);
+			}
+			break;
+		}
 		}
 	}
 }
@@ -123,12 +147,7 @@ GameButton window_mouse_pressed(int button)
 	return window.mouse_pressed[button];
 }
 
-void window_mouse_position_set(int x, int y)
-{
-	SDL_WarpMouseInWindow(window.window, x, y);
-}
-
-void window_mouse_position_get(int *x, int *y)
+void window_mouse_position(int *x, int *y)
 {
 	SDL_GetMouseState(x, y);
 }

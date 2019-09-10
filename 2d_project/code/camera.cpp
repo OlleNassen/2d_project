@@ -26,7 +26,7 @@ Vector2 camera_update(Camera *camera)
 	camera->state = mov_none;
 	int mx = camera->mx;
 	int my = camera->my;
-	window_mouse_position_get(&mx, &my);
+	window_mouse_position(&mx, &my);
 	Vector2 direction = vector2_create(0.0f, 0.0f);
 
 	if (mx != camera->mx || my != camera->my)
@@ -83,12 +83,6 @@ Vector2 camera_update(Camera *camera)
 	window_size_get(&width, &height);
 	int edgex = width * 0.05f;
 	int edgey = height * 0.05f;
-
-	if (mx > width) mx = width;
-	if (my > height) my = height;
-	if (mx < 0) mx = 0;
-	if (my < 0) my = 0;
-	window_mouse_position_set(mx, my);
 
 	camera->mx = mx;
 	camera->my = my;
