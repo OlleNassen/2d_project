@@ -3,6 +3,19 @@
 #include "camera.h"
 #include "drawer.h"
 
+enum CharacterClass
+{
+	Fighter, Gunman, Demolitionist, Driver
+};
+
+typedef struct
+{
+	CharacterClass character_class;
+	short class_proficiency;
+	const char* name;
+	Vector2 position;
+}CharacterData;
+
 typedef struct
 {
 	unsigned short num_tiles_rows;
@@ -10,14 +23,9 @@ typedef struct
 	char* tiles;
 }GameMap;
 
-struct Actor
-{
-	Vector2 position;
-};
-
 struct Game
 {
-	Actor player;
+	CharacterData player;
 	Camera camera;
 	Drawer drawer;
 	GameMap map;
