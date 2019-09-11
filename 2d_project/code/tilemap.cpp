@@ -4,8 +4,6 @@
 
 typedef Vector2 Tile[4];
 
-Vector2 cart_to_dimetric(Vector2& v);
-
 void tilemap_draw(Tilemap& tilemap)
 {
 	glBindVertexArray(tilemap.vao);
@@ -98,9 +96,4 @@ void tilemap_generate(Tilemap& tilemap, const char* type_data, unsigned short nu
 	delete[] vertex_positions;
 	delete[] vertex_tex_coords;
 	delete[] indices;
-}
-
-Vector2 cart_to_dimetric(Vector2& v)
-{
-	return vector2_create(2.0f*v.x - 2.0f*v.y, v.x + v.y);
 }

@@ -163,3 +163,13 @@ int rect_contains(Rect *r, float x, float y)
 
 	return true;
 }
+
+Vector2 cart_to_dimetric(Vector2& v)
+{
+	return vector2_create(2.0f*v.x - 2.0f*v.y, v.x + v.y);
+}
+
+Vector2 dimetric_to_cart(Vector2& v)
+{
+	return vector2_create((v.x + 2.0f*v.y) / 4.0f, (2.0f*v.y - v.x) / 4.0f);
+}

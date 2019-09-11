@@ -1,7 +1,6 @@
 #version 330
 
 in vec2 uv;
-in float z;
 
 out vec4 frag;
 

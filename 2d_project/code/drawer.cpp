@@ -25,9 +25,10 @@ void drawer_initialize(Drawer& drawer, const char* type_data, unsigned short num
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, stride, pointer + 2);
 
 	drawer.texture = texture_from_file("test.png");
+	drawer.player_texture = texture_from_file("isometric_hero_dezrasdragons.png");
 }
 
-void drawer_draw(Drawer& drawer, Camera& camera, Vector2* sprites)
+void drawer_draw(Drawer& drawer, Camera& camera, Vector2* sprites, unsigned short num_sprites)
 {
 	glUseProgram(drawer.shader_tex);
 	shader_uniform(drawer.shader_tex, "view", vector2_create(camera.position.x, camera.position.y));
@@ -35,20 +36,21 @@ void drawer_draw(Drawer& drawer, Camera& camera, Vector2* sprites)
 	shader_uniform(drawer.shader_tex, "sprite_tex", 0);
 	tilemap_draw(drawer.tilemap);
 
-	Rect rect = rect_create(150, 150, 200, 200);
-	SpriteAnimation anim;
-	anim.speed = 0.5f;
-	anim.sprite = rect_create(0, 0, 24, 32);
-	anim.size = rect_create(0, 0, 24 * 3, 32);
-
-	glUseProgram(drawer.shader_tex);
 	glBindVertexArray(drawer.sprite_vao);
-	glBindBuffer(GL_ARRAY_BUFFER, drawer.sprite_vbo);
+	for (int i = 0; i < num_sprites; ++i)
+	{
+		Vector2 coord_conversion = vector2_create(sprites->x, sprites->y);
+		coord_conversion = cart_to_dimetric(coord_conversion);
+		Rect rect = rect_create(coord_conversion.x, coord_conversion.y, 200, 200);
+		SpriteAnimation anim;
+		anim.speed = 0.5f;
+		anim.sprite = rect_create(0, 0, 32, 32);
+		anim.size = rect_create(0, 0, 24 * 3, 32);
 
-	shader_uniform(drawer.shader_tex, "view", vector2_create(camera.position.x, camera.position.y));
-	shader_uniform(drawer.shader_tex, "projection", camera.ortho);
-	shader_uniform(drawer.shader_tex, "sprite_tex", 0);
+		float time = window_time_get();
+		glDisable(GL_DEPTH_TEST);
+		sprite_draw(&rect, &anim, &drawer.player_texture, time);
+		glEnable(GL_DEPTH_TEST);
+	}
 
-	float time = window_time_get();
-	sprite_draw(&rect, &anim, &drawer.texture, time);
 }

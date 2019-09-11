@@ -38,16 +38,16 @@ void sprite_draw(Rect *rect, SpriteAnimation *anim, Texture *text, float time)
 	uv.h = anim->sprite.h / text->height;
 
 	vertices[0].u = x * uv.w + uv.x + uv.w;
-	vertices[0].v = y * uv.h + uv.y;
+	vertices[0].v = y * uv.h + uv.y + uv.h;
 
 	vertices[1].u = x * uv.w + uv.x;
-	vertices[1].v = y * uv.h + uv.y;
+	vertices[1].v = y * uv.h + uv.y + uv.h;
 
 	vertices[2].u = x * uv.w + uv.x + uv.w;
-	vertices[2].v = y * uv.h + uv.y + uv.h;
+	vertices[2].v = y * uv.h + uv.y;
 
 	vertices[3].u = x * uv.w + uv.x;
-	vertices[3].v = y * uv.h + uv.y + uv.h;
+	vertices[3].v = y * uv.h + uv.y;
 
 	/*vertices[0].u = anim->sprite.x + anim->sprite.w;
 	vertices[0].v = anim->sprite.y;
