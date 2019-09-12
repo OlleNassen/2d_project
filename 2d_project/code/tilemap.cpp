@@ -47,6 +47,7 @@ void tilemap_generate(Tilemap& tilemap, const char* type_data, unsigned short nu
 		{
 			Vector2 convert_positions = vector2_create((float)i * tile_size_x, (float)j * tile_size_y);
 			convert_positions = cart_to_dimetric(convert_positions);
+
 			vertex_positions[i + j * tilemap.num_tiles_columns][0] = vector2_add(vector2_scale(rectangle_coordinates[0], 4.0f), vector2_create(convert_positions.x, convert_positions.y));
 			vertex_positions[i + j * tilemap.num_tiles_columns][1] = vector2_add(vector2_scale(rectangle_coordinates[1], 4.0f), vector2_create(convert_positions.x, convert_positions.y));
 			vertex_positions[i + j * tilemap.num_tiles_columns][2] = vector2_add(vector2_scale(rectangle_coordinates[2], 4.0f), vector2_create(convert_positions.x, convert_positions.y));

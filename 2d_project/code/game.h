@@ -23,8 +23,14 @@ typedef struct
 	char* tiles;
 }GameMap;
 
+typedef struct
+{
+	Vector2 position;
+}Cursor;
+
 struct Game
 {
+	Cursor cursor;
 	CharacterData player;
 	Camera camera;
 	Drawer drawer;
