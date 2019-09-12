@@ -40,8 +40,8 @@ void drawer_draw(Drawer& drawer, Camera& camera, Vector2* sprites, unsigned shor
 	for (int i = 0; i < num_sprites; ++i)
 	{
 		Vector2 coord_conversion = vector2_create(sprites->x, sprites->y);
-		coord_conversion = cart_to_dimetric(coord_conversion);
-		Rect rect = rect_create(coord_conversion.x, coord_conversion.y, 200, 200);
+		//coord_conversion = cart_to_dimetric(coord_conversion);
+		Rect rect = rect_create(sprites->x, sprites->x, 200, 200);
 		SpriteAnimation anim;
 		anim.speed = 0.5f;
 		anim.sprite = rect_create(0, 0, 32, 32);

@@ -21,7 +21,7 @@ void game_initialize(Game& game)
 	game.player.position.y = 32 * 4;
 	srand(time(0));
 }
-#include <iostream>
+
 void game_update(Game& game)
 {
 	camera_update(&game.camera);
@@ -55,15 +55,8 @@ void game_update(Game& game)
 		window_size_get(&w_w, &w_h);
 		int x, y;
 		window_mouse_position(&x, &y);
-		game.camera.position;
-
-		Vector2 result = vector2_create(game.camera.position.x + x, game.camera.position.y + y);
-
-		result = cart_to_dimetric(result);
-
+		Vector2 result = vector2_create(-game.camera.position.x + x, -game.camera.position.y + (w_h - y));
 		game.player.position = result;
-
-		std::cout << game.player.position.x << " " << game.player.position.y << '\n';
 	}
 }
 
