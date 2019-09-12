@@ -21,7 +21,7 @@ void game_initialize(Game& game)
 	game.player.position.y = 32 * 4;
 	srand(time(0));
 }
-
+#include <iostream>
 void game_update(Game& game)
 {
 	camera_update(&game.camera);
@@ -51,30 +51,19 @@ void game_update(Game& game)
 
 	if (window_mouse_pressed(SDL_BUTTON_LEFT).pressed)
 	{
+		int w_w, w_h;
+		window_size_get(&w_w, &w_h);
 		int x, y;
 		window_mouse_position(&x, &y);
-		float conv_x = (2.0f * x) / 1280.f - 1.0f;
-		float conv_y = 1.0f - (2.0f * y) / 720.f;
-		Vector2 ray_nds = vector2_create(conv_x, conv_y);
-		Vector2 inv = vector2_create(game.camera.ortho.elements[12], game.camera.ortho.elements[13]);
+		game.camera.position;
 
-		Mat4 m = game.camera.ortho;
+		Vector2 result = vector2_create(game.camera.position.x + x, game.camera.position.y + y);
 
-		m.elements[12] = m.elements[3];
-		m.elements[13] = m.elements[7];
+		result = cart_to_dimetric(result);
 
-		ray_nds.x += m.elements[12];
-		ray_nds.y += m.elements[13];
+		game.player.position = result;
 
-		ray_nds.x -= game.camera.position.x;
-		ray_nds.y -= game.camera.position.y;
-
-		Vector2 selected_pos = vector2_create(ray_nds.x, ray_nds.y);
-		//selected_pos = cart_to_dimetric(selected_pos);
-		int selected_tile = game.map.tiles[(int)selected_pos.y + (int)selected_pos.x * game.map.num_tiles_columns];
-
-		game.player.position.x = (int)selected_pos.x;
-		game.player.position.y = (int)selected_pos.y;
+		std::cout << game.player.position.x << " " << game.player.position.y << '\n';
 	}
 }
 
