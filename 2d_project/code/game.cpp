@@ -58,6 +58,9 @@ void game_update(Game& game)
 
 		result = dimetric_to_cart(result);
 
+		result.x = (int)result.x;
+		result.y = (int)result.y;
+
 		result.x -= (int)result.x % 32;
 		result.y -= (int)result.y % 32;
 
