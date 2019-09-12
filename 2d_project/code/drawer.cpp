@@ -24,7 +24,7 @@ void drawer_initialize(Drawer& drawer, const char* type_data, unsigned short num
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, stride, pointer);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, stride, pointer + 2);
 
-	drawer.texture = texture_from_file("iso_tiles.png");
+	drawer.texture = texture_from_file("cursor.png");
 	drawer.player_texture = texture_from_file("isometric_hero_dezrasdragons.png");
 }
 
