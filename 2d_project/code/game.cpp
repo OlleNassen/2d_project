@@ -25,32 +25,29 @@ void game_initialize(Game& game)
 void game_update(Game& game)
 {
 	camera_update(&game.camera);
-
-	static int stupid_frame_timer = 0;
-
-	if (stupid_frame_timer >= 60)
+	
+	GameButton up = window_keyboard_pressed(SDLK_i);
+	GameButton left = window_keyboard_pressed(SDLK_j);
+	GameButton down = window_keyboard_pressed(SDLK_k);
+	GameButton right = window_keyboard_pressed(SDLK_l);
+	
+	if (up.pressed && up.transitions > 0)
 	{
-		if (window_keyboard_pressed(SDLK_i).pressed)
-		{
-			game.player.position.y = game.player.position.y + 32;
-			stupid_frame_timer = 0;
-		}
-		if (window_keyboard_pressed(SDLK_j).pressed)
-		{
-			game.player.position.x = game.player.position.x - 32;
-			stupid_frame_timer = 0;
-		}
-		if (window_keyboard_pressed(SDLK_k).pressed)
-		{
-			game.player.position.y = game.player.position.y - 32;
-			stupid_frame_timer = 0;
-		}
-		if (window_keyboard_pressed(SDLK_l).pressed)
-		{
-			game.player.position.x = game.player.position.x + 32;
-			stupid_frame_timer = 0;
-		}
+		game.player.position.y = game.player.position.y + 32;
 	}
+	if (left.pressed && left.transitions > 0)
+	{
+		game.player.position.x = game.player.position.x - 32;
+	}
+	if (down.pressed && down.transitions > 0)
+	{
+		game.player.position.y = game.player.position.y - 32;
+	}
+	if (right.pressed && right.transitions > 0)
+	{
+		game.player.position.x = game.player.position.x + 32;
+	}
+	
 
 	if (window_mouse_pressed(SDL_BUTTON_LEFT).pressed)
 	{
@@ -79,8 +76,6 @@ void game_update(Game& game)
 		game.player.position.x = (int)selected_pos.x;
 		game.player.position.y = (int)selected_pos.y;
 	}
-
-	stupid_frame_timer++;
 }
 
 void game_draw(Game& game)
