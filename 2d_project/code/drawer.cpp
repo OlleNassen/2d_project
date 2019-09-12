@@ -51,9 +51,9 @@ void drawer_draw(Drawer& drawer, Camera& camera, Vector2& sprites, Vector2& curs
 		glEnable(GL_DEPTH_TEST);
 	}
 
-	Vector2 conv_pos = vector2_create(cursor_pos.x, cursor_pos.y);
+	Vector2 conv_pos = vector2_create(cursor_pos.x + 16, cursor_pos.y + 16);
 	conv_pos = cart_to_dimetric(conv_pos);
-	Rect rect = rect_create(conv_pos.x + 32 * 2, conv_pos.y + 32 * 2, 32 * 4, 32 * 4);
+	Rect rect = rect_create(conv_pos.x, conv_pos.y, 32 * 4, 32 * 4);
 	SpriteAnimation anim;
 	anim.speed = 0.0f;
 	anim.sprite = rect_create(0, 0, 32, 32);
