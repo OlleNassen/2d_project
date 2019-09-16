@@ -36,6 +36,8 @@ void load_names_from_file(Game& game, const char* path);
 
 void game_initialize(Game& game)
 {
+	srand(time(0));
+	game.current_state = StateCombat;
 	Tile tiles[16];
 	for (int i = 0; i < 16; ++i) tiles[i].cost = 1;
 	Uint32 path[16];
@@ -51,7 +53,6 @@ void game_initialize(Game& game)
 	create_game_map(game.map);
 	camera_initialize_default(game.camera);
 	drawer_initialize(game.drawer, game.map.tiles, game.map.num_tiles_rows, game.map.num_tiles_columns);
-	srand(time(0));
 	load_names_from_file(game, "names.bin");
 	for(int i = 0; i < 4; ++i)
 		generate_character(game, i);
@@ -65,6 +66,13 @@ void game_update(Game& game)
 	GameButton left = window_keyboard_pressed(SDLK_j);
 	GameButton down = window_keyboard_pressed(SDLK_k);
 	GameButton right = window_keyboard_pressed(SDLK_l);
+
+	if(window_keyboard_pressed(SDLK_1).pressed)
+		game.current_state = StateMainMenu;
+	if (window_keyboard_pressed(SDLK_2).pressed)
+		game.current_state = StateBuild;
+	if (window_keyboard_pressed(SDLK_3).pressed)
+		game.current_state = StateCombat;
 
 	if (window_mouse_pressed(SDL_BUTTON_LEFT).pressed)
 	{
@@ -88,7 +96,18 @@ void game_update(Game& game)
 
 void game_draw(Game& game)
 {
-	drawer_draw(game.drawer, game.camera, game.team_data.positions, game.cursor.position);
+	switch (game.current_state)
+	{
+	case StateBuild:
+		drawer_draw_build(game.drawer, game.camera, game.team_data.names);
+		break;
+	case StateCombat:
+		drawer_draw_combat(game.drawer, game.camera, game.team_data.positions, game.cursor.position);
+		break;
+	case StateMainMenu:
+		drawer_draw_mainmenu(game.drawer, game.camera);
+		break;
+	}
 }
 
 void create_game_map(GameMap& gameMap)
