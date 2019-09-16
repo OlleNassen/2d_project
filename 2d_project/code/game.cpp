@@ -8,6 +8,25 @@
 
 #define PI 3.14159
 
+typedef struct
+{
+	Uint32 cost;
+} Tile;
+
+void flood(Uint32 *path_grid, Tile *tiles, Uint32 width, Uint32 height, Uint32 x, Uint32 y, Uint32 mov)
+{
+	if (x < width && y < height && mov < path_grid[x * y])
+	{
+		mov += tiles[x * y].cost;
+		path_grid[x * y] = mov;
+
+		flood(path_grid, tiles, width, height, x + 1, y, mov);
+		flood(path_grid, tiles, width, height, x - 1, y, mov);
+		flood(path_grid, tiles, width, height, x, y + 1, mov);
+		flood(path_grid, tiles, width, height, x, y - 1, mov);
+	}
+}
+
 void create_game_map(GameMap& gameMap);
 void generate_character(CharacterData& character);
 
