@@ -12,9 +12,9 @@ uniform mat4 projection;
 void main()
 {
 	uv = uvcoord;
-	if(position.y != 0)
-	z = 1-(1/(position.y));
-	else
-	z = 0;
+
+	z = 1.0 - 1.0/gl_VertexID;
+	if(gl_VertexID == 0)
+		z = 0.0;
 	gl_Position = projection * vec4(view + position, 0, 1);
 }
