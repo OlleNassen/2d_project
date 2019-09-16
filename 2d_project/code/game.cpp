@@ -39,14 +39,14 @@ void game_initialize(Game& game)
 	Tile tiles[16];
 	memset(tiles, 1, sizeof(tiles));
 	Uint32 path[16];
-	memset(path, 1, sizeof(path));
+	memset(path, 1000, sizeof(path));
 	
 	flood(path, tiles, 4, 4, 2, 2, 0);
 
-	printf("%i %i %i %i\n", path[0], path[1], path[2], path[3]);
-	printf("%i %i %i %i\n", path[4], path[5], path[6], path[7]);
-	printf("%i %i %i %i\n", path[8], path[9], path[10], path[11]);
-	printf("%i %i %i %i\n", path[12], path[13], path[14], path[15]);
+	printf("%u %u %u %u\n", path[0], path[1], path[2], path[3]);
+	printf("%u %u %u %u\n", path[4], path[5], path[6], path[7]);
+	printf("%u %u %u %u\n", path[8], path[9], path[10], path[11]);
+	printf("%u %u %u %u\n", path[12], path[13], path[14], path[15]);
 	
 	create_game_map(game.map);
 	camera_initialize_default(game.camera);
