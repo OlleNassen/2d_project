@@ -17,8 +17,8 @@ void flood(Uint32 *path_grid, Tile *tiles, Uint32 width, Uint32 height, Uint32 x
 {	
 	if (x < width && y < height && mov < path_grid[x * y])
 	{
-		mov += tiles[x * y].cost;
-		path_grid[x * y] = mov;
+		mov += tiles[x + y * width].cost;
+		path_grid[x + y * width] = mov;
 
 		flood(path_grid, tiles, width, height, x + 1, y, mov);
 		flood(path_grid, tiles, width, height, x - 1, y, mov);
