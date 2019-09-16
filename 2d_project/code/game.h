@@ -10,11 +10,11 @@ enum CharacterClass
 
 typedef struct
 {
-	CharacterClass character_class;
-	short class_proficiency;
-	char* name;
-	Vector2 position;
-}CharacterData;
+	CharacterClass character_classes[4];
+	short class_proficiencies[4];
+	char* names[4];
+	Vector2 positions[4];
+}TeamData;
 
 typedef struct
 {
@@ -31,7 +31,7 @@ typedef struct
 struct Game
 {
 	Cursor cursor;
-	CharacterData player;
+	TeamData team_data;
 	Camera camera;
 	Drawer drawer;
 	GameMap map;

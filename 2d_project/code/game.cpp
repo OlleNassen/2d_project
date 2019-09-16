@@ -28,7 +28,7 @@ void flood(Uint32 *path_grid, Tile *tiles, Uint32 width, Uint32 height, Uint32 x
 }
 
 void create_game_map(GameMap& gameMap);
-void generate_character(Game& game);
+void generate_character(Game& game, int index);
 char* generate_name(Game& game);
 short generate_class(Game& game);
 short generate_proficiency(Game& game);
@@ -51,11 +51,10 @@ void game_initialize(Game& game)
 	create_game_map(game.map);
 	camera_initialize_default(game.camera);
 	drawer_initialize(game.drawer, game.map.tiles, game.map.num_tiles_rows, game.map.num_tiles_columns);
-	game.player.position.x = 32 * 4;
-	game.player.position.y = 32 * 4;
 	srand(time(0));
 	load_names_from_file(game, "names.bin");
-	generate_character(game);
+	for(int i = 0; i < 4; ++i)
+		generate_character(game, i);
 }
 
 void game_update(Game& game)
@@ -66,23 +65,6 @@ void game_update(Game& game)
 	GameButton left = window_keyboard_pressed(SDLK_j);
 	GameButton down = window_keyboard_pressed(SDLK_k);
 	GameButton right = window_keyboard_pressed(SDLK_l);
-	
-	if (up.pressed && up.transitions > 0)
-	{
-		game.player.position.y = game.player.position.y + 32;
-	}
-	if (left.pressed && left.transitions > 0)
-	{
-		game.player.position.x = game.player.position.x - 32;
-	}
-	if (down.pressed && down.transitions > 0)
-	{
-		game.player.position.y = game.player.position.y - 32;
-	}
-	if (right.pressed && right.transitions > 0)
-	{
-		game.player.position.x = game.player.position.x + 32;
-	}
 
 	if (window_mouse_pressed(SDL_BUTTON_LEFT).pressed)
 	{
@@ -106,7 +88,7 @@ void game_update(Game& game)
 
 void game_draw(Game& game)
 {
-	drawer_draw(game.drawer, game.camera, game.player.position, game.cursor.position);
+	drawer_draw(game.drawer, game.camera, game.team_data.positions, game.cursor.position);
 }
 
 void create_game_map(GameMap& gameMap)
@@ -124,11 +106,12 @@ void create_game_map(GameMap& gameMap)
 	}
 }
 
-void generate_character(Game& game)
+void generate_character(Game& game, int index)
 {
-	game.player.name = generate_name(game);
-	game.player.character_class = (CharacterClass)generate_class(game);
-	game.player.class_proficiency = generate_proficiency(game);
+	game.team_data.names[index] = generate_name(game);
+	game.team_data.character_classes[index] = (CharacterClass)generate_class(game);
+	game.team_data.class_proficiencies[index] = generate_proficiency(game);
+	game.team_data.positions[index] = vector2_create(rand() % 10, rand() % 100 * 32);
 }
 
 char* generate_name(Game & game)
