@@ -14,7 +14,7 @@ typedef struct
 	short class_proficiencies[4];
 	char* names[4];
 	Vector2 positions[4];
-}TeamData;
+}PlayerTeamData;
 
 typedef struct
 {
@@ -31,7 +31,7 @@ typedef struct
 struct Game
 {
 	Cursor cursor;
-	TeamData team_data;
+	PlayerTeamData team_data;
 	Camera camera;
 	Drawer drawer;
 	GameMap map;
