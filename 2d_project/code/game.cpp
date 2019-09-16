@@ -14,7 +14,7 @@ typedef struct
 } Tile;
 
 void flood(Uint32 *path_grid, Tile *tiles, Uint32 width, Uint32 height, Uint32 x, Uint32 y, Uint32 mov)
-{
+{	
 	if (x < width && y < height && mov < path_grid[x * y])
 	{
 		mov += tiles[x * y].cost;
@@ -32,6 +32,18 @@ void generate_character(CharacterData& character);
 
 void game_initialize(Game& game)
 {
+	Tile tiles[16];
+	memset(tiles, 1, sizeof(tiles));
+	Uint32 path[16];
+	memset(path, 1, sizeof(path));
+	
+	flood(path, tiles, 4, 4, 2, 2, 0);
+
+	printf("%i %i %i %i\n", path[0], path[1], path[2], path[3]);
+	printf("%i %i %i %i\n", path[4], path[5], path[6], path[7]);
+	printf("%i %i %i %i\n", path[8], path[9], path[10], path[11]);
+	printf("%i %i %i %i\n", path[12], path[13], path[14], path[15]);
+	
 	create_game_map(game.map);
 	camera_initialize_default(game.camera);
 	drawer_initialize(game.drawer, game.map.tiles, game.map.num_tiles_rows, game.map.num_tiles_columns);
