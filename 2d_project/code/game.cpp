@@ -13,17 +13,34 @@ typedef struct
 	Uint32 cost;
 } Tile;
 
-void flood(Uint32 *path_grid, Tile *tiles, Uint32 width, Uint32 height, Uint32 x, Uint32 y, Uint32 mov)
+void shortest_path(Uint32 *path, Uint32 *grid, Uint32 width, Uint32 height, Uint32 x, Uint32 y)
+{
+	int i = 0;
+	while (grid[x + y * width] > 1)
+	{		
+		Uint32 posx = (x + 1) < width  ? grid[(x + 1) + y * width] : 1000;
+		Uint32 negx = (x - 1) < width  ? grid[(x - 1) + y * width] : 1000;
+		Uint32 posy = (y + 1) < height ? grid[x + (y + 1) * width] : 1000;
+		Uint32 negy = (y - 1) < height ? grid[x + (y - 1) * width] : 1000;
+		
+		x = posx < negx ? posx : negx;
+		y = posy < negy ? posy : negy;
+
+		path[i++] = x + y * width;
+	}
+}
+
+void flood(Uint32 *path, Tile *tiles, Uint32 width, Uint32 height, Uint32 x, Uint32 y, Uint32 mov)
 {	
-	if (x < width && y < height && mov < path_grid[x + y * width])
+	if (x < width && y < height && mov < path[x + y * width])
 	{
 		mov += tiles[x + y * width].cost;
-		path_grid[x + y * width] = mov;
+		path[x + y * width] = mov;
 
-		flood(path_grid, tiles, width, height, x + 1, y, mov);
-		flood(path_grid, tiles, width, height, x - 1, y, mov);
-		flood(path_grid, tiles, width, height, x, y + 1, mov);
-		flood(path_grid, tiles, width, height, x, y - 1, mov);
+		flood(path, tiles, width, height, x + 1, y, mov);
+		flood(path, tiles, width, height, x - 1, y, mov);
+		flood(path, tiles, width, height, x, y + 1, mov);
+		flood(path, tiles, width, height, x, y - 1, mov);
 	}
 }
 
