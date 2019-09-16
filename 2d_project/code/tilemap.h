@@ -14,6 +14,8 @@ struct Tilemap
 	unsigned int vbo;
 	unsigned int ebo;
 
+	unsigned short num_indices;
+
 	Texture texture;
 };
 

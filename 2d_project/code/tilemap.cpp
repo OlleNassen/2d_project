@@ -94,6 +94,8 @@ void tilemap_generate(Tilemap& tilemap, const char* type_data, unsigned short nu
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, tilemap.ebo);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned short) * tilemap.num_tiles_rows * tilemap.num_tiles_columns * 6, &indices[0], GL_STATIC_DRAW);
 
+	tilemap.num_indices = offsetVert;
+
 	delete[] vertex_positions;
 	delete[] vertex_tex_coords;
 	delete[] indices;

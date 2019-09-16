@@ -34,6 +34,7 @@ void drawer_draw_combat(Drawer& drawer, Camera& camera, Vector2 team_positions[]
 	shader_uniform(drawer.shader_tex, "view", vector2_create(camera.position.x, camera.position.y));
 	shader_uniform(drawer.shader_tex, "projection", camera.ortho);
 	shader_uniform(drawer.shader_tex, "sprite_tex", 0);
+	shader_uniform(drawer.shader_tex, "num_vertices", (int)drawer.tilemap.num_indices);
 	tilemap_draw(drawer.tilemap);
 
 	glBindVertexArray(drawer.sprite_vao);
