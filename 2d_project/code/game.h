@@ -31,7 +31,7 @@ typedef struct
 struct Game
 {
 	Cursor cursor;
-	CharacterData characters[5];
+	CharacterData player;
 	Camera camera;
 	Drawer drawer;
 	GameMap map;
