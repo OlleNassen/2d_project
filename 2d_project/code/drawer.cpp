@@ -42,8 +42,8 @@ void drawer_draw_combat(Drawer& drawer, Camera& camera, Vector2 team_positions[]
 		Rect rect = rect_create(team_positions[i].x, team_positions[i].y, 200, 200);
 		SpriteAnimation anim;
 		anim.speed = 0.5f;
-		anim.sprite = rect_create(team_classes[i] * 5 * 32, 0, 32,     32);
-		anim.size =   rect_create(team_classes[i] * 5 * 32, 0, 32 * 4, 32);
+		anim.sprite = rect_create(team_classes[i] * 4 * 32, 0, 32,     32);
+		anim.size =   rect_create(team_classes[i] * 4 * 32, 0, 32 * 4, 32);
 
 		float time = window_time_get();
 		glDisable(GL_DEPTH_TEST);
