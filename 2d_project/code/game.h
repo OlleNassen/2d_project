@@ -5,14 +5,14 @@
 
 enum CharacterClass
 {
-	Fighter, Gunman, Demolitionist, Driver
+	Fighter, Gunman, Demolitionist, Driver, NumClasses
 };
 
 typedef struct
 {
 	CharacterClass character_class;
 	short class_proficiency;
-	const char* name;
+	char* name;
 	Vector2 position;
 }CharacterData;
 
@@ -31,10 +31,11 @@ typedef struct
 struct Game
 {
 	Cursor cursor;
-	CharacterData player;
+	CharacterData characters[5];
 	Camera camera;
 	Drawer drawer;
 	GameMap map;
+	char* names;
 };
 
 void game_initialize(Game& game);
