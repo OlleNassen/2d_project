@@ -55,9 +55,9 @@ void drawer_draw_combat(Drawer& drawer, Camera& camera, Vector2 team_positions[]
 	conv_pos = cart_to_dimetric(conv_pos);
 	Rect rect = rect_create(conv_pos.x, conv_pos.y, 32 * 4, 32 * 4);
 	SpriteAnimation anim;
-	anim.speed = 0.0f;
+	anim.speed = 0.5f;
 	anim.sprite = rect_create(0, 0, 32, 32);
-	anim.size = rect_create(0, 0, 32, 32);
+	anim.size = rect_create(0, 0, 32 * 2, 32);
 
 	float time = window_time_get();
 	glDisable(GL_DEPTH_TEST);

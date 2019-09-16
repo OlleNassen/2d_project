@@ -14,7 +14,7 @@ void tilemap_draw(Tilemap& tilemap)
 
 void tilemap_generate(Tilemap& tilemap, const char* type_data, unsigned short num_tiles_rows, unsigned short num_tiles_columns, unsigned int tile_size_x, unsigned int tile_size_y)
 {
-	tilemap.texture = texture_from_file("iso_tiles.png");
+	tilemap.texture = texture_from_file("tiles.png");
 
 	tilemap.num_tiles_rows = num_tiles_rows;
 	tilemap.num_tiles_columns = num_tiles_columns;

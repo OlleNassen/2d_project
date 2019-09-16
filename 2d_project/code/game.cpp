@@ -135,7 +135,7 @@ void create_game_map(GameMap& gameMap)
 	for (int i = 0; i < gameMap.num_tiles_rows * gameMap.num_tiles_columns; ++i)
 	{
 		int row = rand() % 7;
-		row *= 9;
+		row *= 8;
 		row += rand() % 6;
 
 		gameMap.tiles[i] = row;
