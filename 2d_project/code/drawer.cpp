@@ -39,7 +39,9 @@ void drawer_draw_combat(Drawer& drawer, Camera& camera, Vector2 team_positions[]
 	glBindVertexArray(drawer.sprite_vao);
 	for (int i = 0; i < 4; ++i)
 	{
-		Rect rect = rect_create(team_positions[i].x, team_positions[i].y, 200, 200);
+		Vector2 conv_pos = vector2_create(team_positions[i].x, team_positions[i].y);
+		conv_pos = cart_to_dimetric(conv_pos);
+		Rect rect = rect_create(conv_pos.x, conv_pos.y, 200, 200);
 		SpriteAnimation anim;
 		anim.speed = 0.5f;
 		anim.sprite = rect_create(team_classes[i] * 4 * 32, 0, 32,     32);
