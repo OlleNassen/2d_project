@@ -15,10 +15,10 @@ typedef struct
 
 void flood(Uint32 *path_grid, Tile *tiles, Uint32 width, Uint32 height, Uint32 x, Uint32 y, Uint32 mov)
 {	
-	if (x < width && y < height && mov < path_grid[x * y])
+	if (x < width && y < height && mov < path_grid[x + y * width])
 	{
-		mov += tiles[x * y].cost;
-		path_grid[x * y] = mov;
+		mov += tiles[x + y * width].cost;
+		path_grid[x + y * width] = mov;
 
 		flood(path_grid, tiles, width, height, x + 1, y, mov);
 		flood(path_grid, tiles, width, height, x - 1, y, mov);
@@ -37,9 +37,9 @@ void load_names_from_file(Game& game, const char* path);
 void game_initialize(Game& game)
 {
 	Tile tiles[16];
-	memset(tiles, 1, sizeof(tiles));
+	for (int i = 0; i < 16; ++i) tiles[i].cost = 1;
 	Uint32 path[16];
-	memset(path, 1000, sizeof(path));
+	for (int i = 0; i < 16; ++i) path[i] = 1000;
 	
 	flood(path, tiles, 4, 4, 2, 2, 0);
 
