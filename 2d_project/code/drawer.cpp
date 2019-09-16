@@ -28,7 +28,7 @@ void drawer_initialize(Drawer& drawer, const char* type_data, unsigned short num
 	drawer.player_texture = texture_from_file("isometric_hero_dezrasdragons.png");
 }
 
-void drawer_draw_combat(Drawer& drawer, Camera& camera, Vector2 team_positions[], Vector2& cursor_pos)
+void drawer_draw_combat(Drawer& drawer, Camera& camera, Vector2 team_positions[], short team_classes[], Vector2& cursor_pos)
 {
 	glUseProgram(drawer.shader_tex);
 	shader_uniform(drawer.shader_tex, "view", vector2_create(camera.position.x, camera.position.y));
@@ -42,8 +42,8 @@ void drawer_draw_combat(Drawer& drawer, Camera& camera, Vector2 team_positions[]
 		Rect rect = rect_create(team_positions[i].x, team_positions[i].y, 200, 200);
 		SpriteAnimation anim;
 		anim.speed = 0.5f;
-		anim.sprite = rect_create(0, 0, 32, 32);
-		anim.size = rect_create(0, 0, 24 * 3, 32);
+		anim.sprite = rect_create(team_classes[i] * 32, 0, 32, 32);
+		anim.size = rect_create(0, 0, 32 * 4, 32);
 
 		float time = window_time_get();
 		glDisable(GL_DEPTH_TEST);

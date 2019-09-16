@@ -15,7 +15,7 @@ enum CharacterClass
 
 typedef struct
 {
-	CharacterClass character_classes[4];
+	short character_classes[4];
 	short class_proficiencies[4];
 	char* names[4];
 	Vector2 positions[4];

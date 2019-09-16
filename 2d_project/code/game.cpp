@@ -102,7 +102,7 @@ void game_draw(Game& game)
 		drawer_draw_build(game.drawer, game.camera, game.team_data.names);
 		break;
 	case StateCombat:
-		drawer_draw_combat(game.drawer, game.camera, game.team_data.positions, game.cursor.position);
+		drawer_draw_combat(game.drawer, game.camera, game.team_data.positions, game.team_data.character_classes, game.cursor.position);
 		break;
 	case StateMainMenu:
 		drawer_draw_mainmenu(game.drawer, game.camera);
@@ -128,7 +128,7 @@ void create_game_map(GameMap& gameMap)
 void generate_character(Game& game, int index)
 {
 	game.team_data.names[index] = generate_name(game);
-	game.team_data.character_classes[index] = (CharacterClass)generate_class(game);
+	game.team_data.character_classes[index] = generate_class(game);
 	game.team_data.class_proficiencies[index] = generate_proficiency(game);
 	game.team_data.positions[index] = vector2_create(rand() % 10, rand() % 100 * 32);
 }
