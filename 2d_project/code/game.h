@@ -3,6 +3,11 @@
 #include "camera.h"
 #include "drawer.h"
 
+enum State
+{
+	StateMainMenu, StateBuild, StateCombat
+};
+
 enum CharacterClass
 {
 	Fighter, Gunman, Demolitionist, Driver, NumClasses
@@ -30,6 +35,7 @@ typedef struct
 
 struct Game
 {
+	State current_state;
 	Cursor cursor;
 	PlayerTeamData team_data;
 	Camera camera;
