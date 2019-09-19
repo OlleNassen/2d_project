@@ -29,7 +29,7 @@ void drawer_initialize(Drawer& drawer, const Uint32* type_data, unsigned short n
 	tilemap_generate(drawer.tilemap, type_data, drawer.tilemap_texture.width, drawer.tilemap_texture.height, num_tiles_rows, num_tiles_columns, 32, 32);
 }
 
-void drawer_draw_combat(Drawer& drawer, Camera& camera, Vector2 team_positions[], short team_classes[], Vector2& cursor_pos)
+void drawer_draw_combat(Drawer& drawer, Camera& camera, Vector2 team_positions[], short team_classes[], Vector2& cursor_pos, Uint32 *path)
 {
 	glUseProgram(drawer.shader_tex);
 	shader_uniform(drawer.shader_tex, "view", vector2_create(camera.position.x, camera.position.y));
@@ -51,6 +51,22 @@ void drawer_draw_combat(Drawer& drawer, Camera& camera, Vector2 team_positions[]
 	anim.size = rect_create(0, 0, 32 * 2, 32);
 	glDisable(GL_DEPTH_TEST);
 	sprite_draw(&rect, &anim, &drawer.cursor_texture, time);
+	
+
+	for (int i = 0; i < 40 * 60; ++i)
+	{
+		int x = i % 40;
+		int y = i / 60;
+		
+		if (path[i] < 5)
+		{
+			rect = rect_createfv(cart_to_dimetric(vector2_create(x * 32 + 16, y * 32 + 16)), 32 * 4, 32 * 4);
+			anim.speed = 0.5f;
+			anim.sprite = rect_create(0, 0, 32, 32);
+			anim.size = rect_create(0, 0, 32 * 2, 32);
+			sprite_draw(&rect, &anim, &drawer.cursor_texture, time);
+		}
+	}
 	glEnable(GL_DEPTH_TEST);
 
 	for (int i = 0; i < 4; ++i)

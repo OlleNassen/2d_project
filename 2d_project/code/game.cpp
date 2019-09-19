@@ -75,6 +75,7 @@ void game_initialize(Game& game)
 		generate_character(game, i);
 
 	Uint32 *ptr = (Uint32 *)malloc(sizeof(Uint32) * game.map.size * 4);
+	for (int i = 0; i < game.map.size * 4; ++i) ptr[i] = 1000;
 	game.team_data.paths[0] = ptr;
 	game.team_data.paths[1] = ptr + game.map.size;
 	game.team_data.paths[2] = ptr + game.map.size * 2;
@@ -128,7 +129,7 @@ void game_draw(Game& game)
 		drawer_draw_build(game.drawer, game.camera, game.team_data.names);
 		break;
 	case StateCombat:
-		drawer_draw_combat(game.drawer, game.camera, game.team_data.positions, game.team_data.character_classes, game.cursor.position);
+		drawer_draw_combat(game.drawer, game.camera, game.team_data.positions, game.team_data.character_classes, game.cursor.position, game.team_data.paths[0]);
 		break;
 	case StateMainMenu:
 		drawer_draw_mainmenu(game.drawer, game.camera);
