@@ -32,7 +32,7 @@ void shortest_path(Uint32 *path, Uint32 *grid, Uint32 width, Uint32 height, Uint
 
 void flood(Uint32 *path, Uint32 *tiles, Uint32 width, Uint32 height, Uint32 x, Uint32 y, Uint32 mov)
 {	
-	if (x < width && y < height && mov < path[x + y * width])
+	if (x < width && y < height && (mov + tiles[x + y * width]) < path[x + y * width])
 	{
 		mov += tiles[x + y * width];
 		path[x + y * width] = mov;
@@ -118,11 +118,6 @@ void game_update(Game& game)
 		flood(game.team_data.paths[0], 
 			game.map.cost, game.map.width, game.map.height, 
 			(Uint32)game.team_data.positions[0].x / 32, (Uint32)game.team_data.positions[0].y / 32, 0);
-
-		for (int i = 0; i < 60 * 40; ++i)
-		{
-			printf("%u", game.team_data.paths[0][i]);
-		}
 	}
 }
 
