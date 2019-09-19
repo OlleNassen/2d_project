@@ -41,10 +41,7 @@ void drawer_draw_combat(Drawer& drawer, Camera& camera, Vector2 team_positions[]
 	Rect rect;
 	SpriteAnimation anim;
 	float time = window_time_get();
-	Vector2 conv_pos;
-
-	conv_pos = vector2_create(cursor_pos.x + 16, cursor_pos.y + 16);
-	conv_pos = cart_to_dimetric(conv_pos);
+	Vector2 conv_pos = cart_to_dimetric(vector2_create(cursor_pos.x + 16, cursor_pos.y + 16));
 	rect = rect_create(conv_pos.x, conv_pos.y, 32 * 4, 32 * 4);
 	anim.speed = 0.5f;
 	anim.sprite = rect_create(0, 0, 32, 32);
@@ -55,8 +52,7 @@ void drawer_draw_combat(Drawer& drawer, Camera& camera, Vector2 team_positions[]
 
 	for (int i = 0; i < 4; ++i)
 	{
-		Vector2 conv_pos = vector2_create(team_positions[i].x+16, team_positions[i].y+16);
-		conv_pos = cart_to_dimetric(conv_pos);
+		conv_pos = cart_to_dimetric(vector2_create(team_positions[i].x + 16, team_positions[i].y + 16));
 		rect = rect_create(conv_pos.x, conv_pos.y, 32*4, 32*4);
 		anim.speed = 0.5f;
 		anim.sprite = rect_create(team_classes[i] * 4 * 32, 0, 32,     32);
