@@ -6,11 +6,11 @@
 
 struct Tilemap
 {
-	unsigned short num_tiles_rows;
-	unsigned short num_tiles_columns;
+	unsigned short width;
+	unsigned short height;
 
-	unsigned int tile_size_x;
-	unsigned int tile_size_y;
+	unsigned int tile_size_width;
+	unsigned int tile_size_height;
 
 	unsigned int vao;
 	unsigned int vbo;
