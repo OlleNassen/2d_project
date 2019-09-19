@@ -3,6 +3,8 @@
 #include "camera.h"
 #include "drawer.h"
 
+#include <SDL/SDL.h>
+
 enum State
 {
 	StateMainMenu, StateBuild, StateCombat
@@ -11,6 +13,17 @@ enum State
 enum CharacterClass
 {
 	Fighter, Gunman, Demolitionist, Driver, NumClasses
+};
+
+struct Piece
+{
+	Piece *next;
+	Uint32 type;
+	union
+	{
+		float f;
+		int i;
+	};
 };
 
 typedef struct
@@ -23,9 +36,12 @@ typedef struct
 
 typedef struct
 {
-	unsigned short num_tiles_rows;
-	unsigned short num_tiles_columns;
-	char* tiles;
+	Uint32 width;
+	Uint32 height;
+	Uint32 size;
+	Uint32 *tiles;
+	Uint32 *cost;
+	Piece **pieces;
 }GameMap;
 
 typedef struct
