@@ -69,7 +69,7 @@ void game_initialize(Game& game)
 	
 	create_game_map(game.map);
 	camera_initialize_default(game.camera);
-	drawer_initialize(game.drawer, game.map.tiles, game.map.num_tiles_rows, game.map.num_tiles_columns);
+	drawer_initialize(game.drawer, game.map.tiles, game.map.height, game.map.width);
 	load_names_from_file(game, "names.bin");
 	for(int i = 0; i < 4; ++i)
 		generate_character(game, i);
@@ -129,10 +129,13 @@ void game_draw(Game& game)
 
 void create_game_map(GameMap& gameMap)
 {
-	gameMap.num_tiles_rows = 40;
-	gameMap.num_tiles_columns = 60;
-	gameMap.tiles = new char[gameMap.num_tiles_rows * gameMap.num_tiles_columns];
-	for (int i = 0; i < gameMap.num_tiles_rows * gameMap.num_tiles_columns; ++i)
+	gameMap.width = 60;
+	gameMap.height = 40;
+	gameMap.size = gameMap.width * gameMap.height;
+
+	gameMap.tiles = (Uint32 *)malloc(sizeof(Uint32) * gameMap.size);
+
+	for (int i = 0; i < gameMap.size; ++i)
 	{
 		int row = rand() % 7;
 		row *= 8;
@@ -140,6 +143,12 @@ void create_game_map(GameMap& gameMap)
 
 		gameMap.tiles[i] = row;
 	}
+
+	gameMap.cost = (Uint32 *)malloc(sizeof(Uint32) * gameMap.size);
+	memset(gameMap.cost, 0, sizeof(Uint32) * gameMap.size);
+
+	gameMap.pieces = (Piece **)malloc(sizeof(Piece *) * gameMap.size);
+	memset(gameMap.cost, 0, sizeof(Piece *) * gameMap.size);
 }
 
 void generate_character(Game& game, int index)
@@ -147,8 +156,8 @@ void generate_character(Game& game, int index)
 	game.team_data.names[index] = generate_name(game);
 	game.team_data.character_classes[index] = generate_class(game);
 	game.team_data.class_proficiencies[index] = generate_proficiency(game);
-	int x_rand = rand() % game.map.num_tiles_columns+1;
-	int y_rand = rand() % game.map.num_tiles_rows+1;
+	int x_rand = rand() % game.map.width+1;
+	int y_rand = rand() % game.map.height+1;
 	game.team_data.positions[index] = vector2_create(32.f * x_rand,32.f* y_rand);
 }
 
