@@ -117,7 +117,12 @@ void game_update(Game& game)
 		game.cursor.position = result;
 		flood(game.team_data.paths[0], 
 			game.map.cost, game.map.width, game.map.height, 
-			game.team_data.positions[0].x, game.team_data.positions[0].y, 0);
+			(Uint32)game.team_data.positions[0].x / 32, (Uint32)game.team_data.positions[0].y / 32, 0);
+
+		for (int i = 0; i < 60 * 40; ++i)
+		{
+			printf("%u", game.team_data.paths[0][i]);
+		}
 	}
 }
 
