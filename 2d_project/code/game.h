@@ -31,6 +31,7 @@ typedef struct
 	short character_classes[4];
 	short class_proficiencies[4];
 	char* names[4];
+	Uint32 *paths[4];
 	Vector2 positions[4];
 }PlayerTeamData;
 
