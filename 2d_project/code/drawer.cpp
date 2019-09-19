@@ -5,7 +5,6 @@
 
 void drawer_initialize(Drawer& drawer, const Uint32* type_data, unsigned short num_tiles_rows, unsigned short num_tiles_columns)
 {
-	drawer.shader = shader_create("resources/shaders/2d.vert", "resources/shaders/2d.frag");
 	drawer.shader_tex = shader_create("resources/shaders/2dtex.vert", "resources/shaders/2dtex.frag");
 
 	glGenVertexArrays(1, &drawer.sprite_vao);
@@ -51,7 +50,6 @@ void drawer_draw_combat(Drawer& drawer, Camera& camera, Vector2 team_positions[]
 	anim.size = rect_create(0, 0, 32 * 2, 32);
 	glDisable(GL_DEPTH_TEST);
 	sprite_draw(&rect, &anim, &drawer.cursor_texture, time);
-	
 
 	for (int i = 0; i < 40 * 60; ++i)
 	{

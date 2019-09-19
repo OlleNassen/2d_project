@@ -14,7 +14,6 @@ struct Drawer
 	unsigned int sprite_vao;
 	unsigned int sprite_vbo;
 
-	unsigned int shader;
 	unsigned int shader_tex;
 };
 
