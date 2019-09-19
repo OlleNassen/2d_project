@@ -30,11 +30,11 @@ void shortest_path(Uint32 *path, Uint32 *grid, Uint32 width, Uint32 height, Uint
 	}
 }
 
-void flood(Uint32 *path, Tile *tiles, Uint32 width, Uint32 height, Uint32 x, Uint32 y, Uint32 mov)
+void flood(Uint32 *path, Uint32 *tiles, Uint32 width, Uint32 height, Uint32 x, Uint32 y, Uint32 mov)
 {	
 	if (x < width && y < height && mov < path[x + y * width])
 	{
-		mov += tiles[x + y * width].cost;
+		mov += tiles[x + y * width];
 		path[x + y * width] = mov;
 
 		flood(path, tiles, width, height, x + 1, y, mov);
@@ -55,8 +55,8 @@ void game_initialize(Game& game)
 {
 	srand(time(0));
 	game.current_state = StateCombat;
-	Tile tiles[16];
-	for (int i = 0; i < 16; ++i) tiles[i].cost = 1;
+	Uint32 tiles[16];
+	for (int i = 0; i < 16; ++i) tiles[i] = 1;
 	Uint32 path[16];
 	for (int i = 0; i < 16; ++i) path[i] = 1000;
 	
@@ -73,6 +73,12 @@ void game_initialize(Game& game)
 	load_names_from_file(game, "names.bin");
 	for(int i = 0; i < 4; ++i)
 		generate_character(game, i);
+
+	Uint32 *ptr = (Uint32 *)malloc(sizeof(Uint32) * game.map.size * 4);
+	game.team_data.paths[0] = ptr;
+	game.team_data.paths[1] = ptr + game.map.size;
+	game.team_data.paths[2] = ptr + game.map.size * 2;
+	game.team_data.paths[3] = ptr + game.map.size * 3;
 }
 
 void game_update(Game& game)
@@ -108,6 +114,9 @@ void game_update(Game& game)
 		result.y -= (int)result.y % 32;
 
 		game.cursor.position = result;
+		flood(game.team_data.paths[0], 
+			game.map.cost, game.map.width, game.map.width, 
+			game.team_data.positions[0].x, game.team_data.positions[0].y, 0);
 	}
 }
 
@@ -145,10 +154,15 @@ void create_game_map(GameMap& gameMap)
 	}
 
 	gameMap.cost = (Uint32 *)malloc(sizeof(Uint32) * gameMap.size);
-	memset(gameMap.cost, 0, sizeof(Uint32) * gameMap.size);
+
+	for (int i = 0; i < gameMap.size; ++i)
+	{
+		gameMap.cost[i] = 1;
+	}
+
 
 	gameMap.pieces = (Piece **)malloc(sizeof(Piece *) * gameMap.size);
-	memset(gameMap.cost, 0, sizeof(Piece *) * gameMap.size);
+	memset(gameMap.pieces, 0, sizeof(Piece *) * gameMap.size);
 }
 
 void generate_character(Game& game, int index)
