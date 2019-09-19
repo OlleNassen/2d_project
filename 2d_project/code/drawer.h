@@ -1,17 +1,15 @@
 #ifndef DRAWER_H
 #define DRAWER_H
-#include "sprite.h"
-#include "tilemap.h"
+#include "render_data.h"
 #include "camera.h"
-
-
 #include <SDL/SDL.h>
 
 struct Drawer
 {
 	Tilemap tilemap;
 
-	Texture texture;
+	Texture tilemap_texture;
+	Texture cursor_texture;
 	Texture player_texture;
 	unsigned int sprite_vao;
 	unsigned int sprite_vbo;

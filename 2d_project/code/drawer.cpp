@@ -1,12 +1,10 @@
 #include "drawer.h"
 #include "shader.h"
-#include "glad/glad.h"
+#include <glad/glad.h>
 #include "window.h"
 
 void drawer_initialize(Drawer& drawer, const Uint32* type_data, unsigned short num_tiles_rows, unsigned short num_tiles_columns)
 {
-	tilemap_generate(drawer.tilemap, type_data, num_tiles_rows, num_tiles_columns, 32, 32);
-
 	drawer.shader = shader_create("resources/shaders/2d.vert", "resources/shaders/2d.frag");
 	drawer.shader_tex = shader_create("resources/shaders/2dtex.vert", "resources/shaders/2dtex.frag");
 
@@ -24,8 +22,11 @@ void drawer_initialize(Drawer& drawer, const Uint32* type_data, unsigned short n
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, stride, pointer);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, stride, pointer + 2);
 
-	drawer.texture = texture_from_file("cursor.png");
+	drawer.tilemap_texture = texture_from_file("tiles.png");
+	drawer.cursor_texture = texture_from_file("cursor.png");
 	drawer.player_texture = texture_from_file("spritesheet.png");
+
+	tilemap_generate(drawer.tilemap, type_data, drawer.tilemap_texture.width, drawer.tilemap_texture.height, num_tiles_rows, num_tiles_columns, 32, 32);
 }
 
 void drawer_draw_combat(Drawer& drawer, Camera& camera, Vector2 team_positions[], short team_classes[], Vector2& cursor_pos)
@@ -35,25 +36,25 @@ void drawer_draw_combat(Drawer& drawer, Camera& camera, Vector2 team_positions[]
 	shader_uniform(drawer.shader_tex, "projection", camera.ortho);
 	shader_uniform(drawer.shader_tex, "sprite_tex", 0);
 	shader_uniform(drawer.shader_tex, "num_vertices", (int)drawer.tilemap.num_indices);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, drawer.tilemap_texture.id);
 	tilemap_draw(drawer.tilemap);
 
 	glBindVertexArray(drawer.sprite_vao);
 	Rect rect;
 	SpriteAnimation anim;
 	float time = window_time_get();
-	Vector2 conv_pos = cart_to_dimetric(vector2_create(cursor_pos.x + 16, cursor_pos.y + 16));
-	rect = rect_create(conv_pos.x, conv_pos.y, 32 * 4, 32 * 4);
+	rect = rect_createfv(cart_to_dimetric(vector2_create(cursor_pos.x + 16, cursor_pos.y + 16)), 32 * 4, 32 * 4);
 	anim.speed = 0.5f;
 	anim.sprite = rect_create(0, 0, 32, 32);
 	anim.size = rect_create(0, 0, 32 * 2, 32);
 	glDisable(GL_DEPTH_TEST);
-	sprite_draw(&rect, &anim, &drawer.texture, time);
+	sprite_draw(&rect, &anim, &drawer.cursor_texture, time);
 	glEnable(GL_DEPTH_TEST);
 
 	for (int i = 0; i < 4; ++i)
 	{
-		conv_pos = cart_to_dimetric(vector2_create(team_positions[i].x + 16, team_positions[i].y + 16));
-		rect = rect_create(conv_pos.x, conv_pos.y, 32*4, 32*4);
+		rect = rect_createfv(cart_to_dimetric(vector2_create(team_positions[i].x + 16, team_positions[i].y + 16)), 32*4, 32*4);
 		anim.speed = 0.5f;
 		anim.sprite = rect_create(team_classes[i] * 4 * 32, 0, 32,     32);
 		anim.size =   rect_create(team_classes[i] * 4 * 32, 0, 32 * 4, 32);

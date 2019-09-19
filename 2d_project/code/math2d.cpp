@@ -154,6 +154,16 @@ Rect rect_create(float x, float y, float w, float h)
 	return rect;
 }
 
+Rect rect_createfv(Vector2 v, float w, float h)
+{
+	Rect rect;
+	rect.x = v.x;
+	rect.y = v.y;
+	rect.w = w;
+	rect.h = h;
+	return rect;
+}
+
 int rect_contains(Rect *r, float x, float y)
 {
 	if ((r->x - r->w) > x) return false;

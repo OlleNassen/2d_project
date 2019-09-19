@@ -53,6 +53,7 @@ typedef struct
 } Rect;
 
 Rect rect_create(float x, float y, float w, float h);
+Rect rect_createfv(Vector2 v, float w, float h);
 int rect_contains(Rect *r, float x, float y);
 
 Vector2 cart_to_dimetric(Vector2 v);
