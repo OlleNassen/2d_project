@@ -41,6 +41,7 @@ void drawer_draw_combat(Drawer& drawer, Camera& camera, Vector2 team_positions[]
 	tilemap_draw(drawer.tilemap);
 
 	glBindVertexArray(drawer.sprite_vao);
+	glBindBuffer(GL_ARRAY_BUFFER, drawer.sprite_vbo);
 	Rect rect;
 	SpriteAnimation anim;
 	float time = window_time_get();
@@ -58,7 +59,6 @@ void drawer_draw_combat(Drawer& drawer, Camera& camera, Vector2 team_positions[]
 		anim.speed = 0.5f;
 		anim.sprite = rect_create(team_classes[i] * 4 * 32, 0, 32,     32);
 		anim.size =   rect_create(team_classes[i] * 4 * 32, 0, 32 * 4, 32);
-
 		glDisable(GL_DEPTH_TEST);
 		sprite_draw(&rect, &anim, &drawer.player_texture, time);
 		glEnable(GL_DEPTH_TEST);
