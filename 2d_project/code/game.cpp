@@ -90,6 +90,7 @@ void game_update(Game& game)
 	GameButton left = window_keyboard_pressed(SDLK_j);
 	GameButton down = window_keyboard_pressed(SDLK_k);
 	GameButton right = window_keyboard_pressed(SDLK_l);
+	GameButton select = window_mouse_pressed(SDL_BUTTON_LEFT);
 
 	if(window_keyboard_pressed(SDLK_1).pressed)
 		game.current_state = StateMainMenu;
@@ -98,7 +99,8 @@ void game_update(Game& game)
 	if (window_keyboard_pressed(SDLK_3).pressed)
 		game.current_state = StateCombat;
 
-	if (window_mouse_pressed(SDL_BUTTON_LEFT).pressed)
+	
+	if (select.pressed && select.transitions > 0)
 	{
 		int w_w, w_h;
 		window_size_get(&w_w, &w_h);
@@ -115,9 +117,13 @@ void game_update(Game& game)
 		result.y -= (int)result.y % 32;
 
 		game.cursor.position = result;
-		flood(game.team_data.paths[0], 
-			game.map.cost, game.map.width, game.map.height, 
-			(Uint32)game.team_data.positions[0].x / 32, (Uint32)game.team_data.positions[0].y / 32, 0);
+
+		for (int i = 0; i < 4; ++i)
+		{
+			flood(game.team_data.paths[i], 
+				game.map.cost, game.map.width, game.map.height, 
+				(Uint32)game.team_data.positions[i].x / 32, (Uint32)game.team_data.positions[i].y / 32, 0);
+		}	
 	}
 }
 
