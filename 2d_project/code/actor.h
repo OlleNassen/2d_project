@@ -19,19 +19,20 @@ typedef struct
 
 typedef struct
 {
+	unsigned int selected;
 	Actor actors[256];
-} ActorPool;
+} GameState;
 
 typedef struct
 {
-	ActorPool data[128];
-	int bottom;
-	int top;
-} ActorStack;
+	GameState data[128];
+	unsigned int bottom;
+	unsigned int top;
+} GameStack;
 
-ActorPool * actor_stack_push(ActorStack *stack);
-ActorPool * actor_stack_pop(ActorStack *stack);
-ActorPool * actor_stack_peek(ActorStack *stack);
+GameState * game_stack_push(GameStack *stack);
+GameState * game_stack_pop(GameStack *stack);
+GameState * game_stack_peek(GameStack *stack);
 
 
 #endif

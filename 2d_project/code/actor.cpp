@@ -1,9 +1,8 @@
 #include "actor.h"
 
-
-ActorPool * actor_stack_push(ActorStack *stack)
+GameState * game_stack_push(GameStack *stack)
 {
-	ActorPool *src = &stack->data[stack->top];
+	GameState *src = &stack->data[stack->top];
 	unsigned int new_top = (stack->top + 1) % 128;
 
 	if (stack->bottom != stack->top)
@@ -11,9 +10,9 @@ ActorPool * actor_stack_push(ActorStack *stack)
 		stack->top = new_top;
 	}
 
-	ActorPool *dst = &stack->data[stack->top];
+	GameState *dst = &stack->data[stack->top];
 
-	for (unsigned int i = 0; i < 128; ++i)
+	for (unsigned int i = 0; i < 256; ++i)
 	{
 		dst[i] = src[i];
 	}
@@ -21,7 +20,7 @@ ActorPool * actor_stack_push(ActorStack *stack)
 	return &stack->data[stack->top];
 }
 
-ActorPool * actor_stack_pop(ActorStack *stack)
+GameState * game_stack_pop(GameStack *stack)
 {
 	unsigned int new_top = (stack->top - 1) % 128;
 
@@ -32,7 +31,7 @@ ActorPool * actor_stack_pop(ActorStack *stack)
 	return &stack->data[stack->top];
 }
 
-ActorPool * actor_stack_peek(ActorStack *stack)
+GameState * game_stack_peek(GameStack *stack)
 {
 	return &stack->data[stack->top];
 }
