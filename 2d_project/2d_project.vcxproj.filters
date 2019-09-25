@@ -11,6 +11,7 @@
     <ClCompile Include="code\drawer.cpp" />
     <ClCompile Include="code\texture.cpp" />
     <ClCompile Include="code\render_data.cpp" />
+    <ClCompile Include="code\actor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="code\camera.h" />
@@ -22,6 +23,7 @@
     <ClInclude Include="code\drawer.h" />
     <ClInclude Include="code\texture.h" />
     <ClInclude Include="code\render_data.h" />
+    <ClInclude Include="code\actor.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="resources\shaders\2d.frag" />

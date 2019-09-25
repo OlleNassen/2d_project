@@ -56,9 +56,9 @@ void drawer_draw_combat(Drawer& drawer, Camera& camera, Vector2 team_positions[]
 		int x = i % 60;
 		int y = i / 60;
 		
-		if (path[i] < 5)
+		//if (path[i] < 5)
 		{
-			rect = rect_createfv(cart_to_dimetric(vector2_create(x * 32, y * 32)), 32 * 4, 32 * 4);
+			rect = rect_createfv(cart_to_dimetric(vector2_create(x * 32 + 16, y * 32 + 16)), 32 * 4, 32 * 4);
 			anim.speed = 0.5f;
 			anim.sprite = rect_create(0, 0, 32, 32);
 			anim.size = rect_create(0, 0, 32 * 2, 32);
