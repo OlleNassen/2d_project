@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="code\actor.cpp" />
     <ClCompile Include="code\camera.cpp" />
     <ClCompile Include="code\engine.cpp" />
     <ClCompile Include="code\game.cpp" />
@@ -31,6 +32,7 @@
     <ClCompile Include="code\window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="code\actor.h" />
     <ClInclude Include="code\camera.h" />
     <ClInclude Include="code\engine.h" />
     <ClInclude Include="code\game.h" />

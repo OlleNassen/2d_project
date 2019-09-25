@@ -2,6 +2,7 @@
 #define GAME_H
 #include "camera.h"
 #include "drawer.h"
+#include "actor.h"
 
 #include <SDL/SDL.h>
 
@@ -52,6 +53,7 @@ typedef struct
 
 struct Game
 {
+	GameStack stack;
 	State current_state;
 	Cursor cursor;
 	PlayerTeamData team_data;
