@@ -18,6 +18,7 @@ struct Drawer
 	Texture player_texture;
 	unsigned int sprite_vao;
 	unsigned int sprite_vbo;
+	unsigned int sprite_ebo;
 
 	unsigned int sprite_storage;
 

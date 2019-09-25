@@ -9,7 +9,7 @@ void tilemap_draw(Tilemap& tilemap)
 	glBindVertexArray(tilemap.vao);
 	glDrawElements(GL_TRIANGLES, tilemap.height * tilemap.width * 6, GL_UNSIGNED_SHORT, 0);
 }
-#include <iostream>
+
 void tilemap_generate(Tilemap& tilemap, const Uint32* type_data, unsigned int texture_width, unsigned int texture_height, unsigned short height, unsigned short width, unsigned int tile_size_width, unsigned int tile_size_height)
 {
 	tilemap.height = height;
