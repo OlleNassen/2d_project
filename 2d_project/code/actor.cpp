@@ -1,38 +1,38 @@
 #include "actor.h"
 
 
-Actor * actor_stack_push(ActorStack *stack)
+ActorPool * actor_stack_push(ActorStack *stack)
 {
-	char *src = (char *)stack->top;
-	stack->top += stack->num_actors;
+	ActorPool *src = &stack->data[stack->top];
+	unsigned int new_top = (stack->top + 1) % 128;
 
-	if (stack->top > (stack->actors + stack->max_actors))
+	if (stack->bottom != stack->top)
 	{	
-		stack->top = 0;
+		stack->top = new_top;
 	}
 
-	char *dst = (char *)stack->top;
+	ActorPool *dst = &stack->data[stack->top];
 
-	for (unsigned int i = 0; i < stack->num_actors; ++i)
+	for (unsigned int i = 0; i < 128; ++i)
 	{
 		dst[i] = src[i];
 	}
 
-	return stack->top;
+	return &stack->data[stack->top];
 }
 
-Actor * actor_stack_pop(ActorStack *stack)
+ActorPool * actor_stack_pop(ActorStack *stack)
 {
-	stack->top -= stack->num_actors;
+	unsigned int new_top = (stack->top - 1) % 128;
 
-	if (stack->top < stack->actors)
+	if (new_top != stack->bottom)
 	{
-		stack->top = (stack->actors + stack->max_actors) - stack->num_actors;
+		stack->top = new_top;
 	}
-	return stack->top;
+	return &stack->data[stack->top];
 }
 
-Actor * actor_stack_peek(ActorStack *stack)
+ActorPool * actor_stack_peek(ActorStack *stack)
 {
-	return stack->top;
+	return &stack->data[stack->top];
 }

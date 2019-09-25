@@ -19,15 +19,19 @@ typedef struct
 
 typedef struct
 {
-	Actor *actors;
-	Actor *top;
-	int max_actors;
-	int num_actors;
+	Actor actors[256];
+} ActorPool;
+
+typedef struct
+{
+	ActorPool data[128];
+	int bottom;
+	int top;
 } ActorStack;
 
-Actor * actor_stack_push(ActorStack *stack);
-Actor * actor_stack_pop(ActorStack *stack);
-Actor * actor_stack_peek(ActorStack *stack);
+ActorPool * actor_stack_push(ActorStack *stack);
+ActorPool * actor_stack_pop(ActorStack *stack);
+ActorPool * actor_stack_peek(ActorStack *stack);
 
 
 #endif
