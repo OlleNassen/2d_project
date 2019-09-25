@@ -31,8 +31,7 @@ void tilemap_generate(Tilemap& tilemap, const Uint32* type_data, unsigned int te
 	glGenBuffers(1, &tilemap.vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, tilemap.vbo);
 
-	Tile* vertex_positions = new Tile[tilemap.height*tilemap.width];
-	Tile* vertex_world_positions = new Tile[tilemap.height*tilemap.width];
+	Vector2* vertex_world_positions = new Vector2[tilemap.height*tilemap.width];
 	Tile* vertex_tex_coords = new Tile[tilemap.height*tilemap.width];
 	unsigned short* indices = new unsigned short[tilemap.height * tilemap.width * 6];
 
@@ -44,10 +43,7 @@ void tilemap_generate(Tilemap& tilemap, const Uint32* type_data, unsigned int te
 		{
 			Vector2 world_position = vector2_create((float)i * tile_size_width, (float)j * tile_size_height);
 
-			vertex_world_positions[i + j * tilemap.width][0] = world_position;
-			vertex_world_positions[i + j * tilemap.width][1] = world_position;
-			vertex_world_positions[i + j * tilemap.width][2] = world_position;
-			vertex_world_positions[i + j * tilemap.width][3] = world_position;
+			vertex_world_positions[i + j * tilemap.width] = world_position;
 
 			int tile_number = type_data[i + j * tilemap.width];
 
@@ -91,7 +87,7 @@ void tilemap_generate(Tilemap& tilemap, const Uint32* type_data, unsigned int te
 
 	glGenBuffers(1, &tilemap.ssbo);
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, tilemap.ssbo);
-	glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(Tile) * tilemap.height * tilemap.width, &vertex_world_positions[0], GL_DYNAMIC_COPY);
+	glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(Vector2) * tilemap.height * tilemap.width, &vertex_world_positions[0], GL_DYNAMIC_COPY);
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, tilemap.ssbo);
 
 	delete[] vertex_world_positions;

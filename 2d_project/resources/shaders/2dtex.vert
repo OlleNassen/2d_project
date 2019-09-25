@@ -31,7 +31,7 @@ void main()
 	local_coords[2]	= vec2(32.0,32.0);
 	local_coords[3]	= vec2(0.0,32.0);
 
-	vec2 position = 4*local_coords[gl_VertexID % 4] + cart_to_dimetric(positions[gl_VertexID]);
+	vec2 position = 4*local_coords[gl_VertexID % 4] + cart_to_dimetric(positions[gl_VertexID / 4]);
 
 	gl_Position = projection * vec4(view + position, 0, 1);
 }
