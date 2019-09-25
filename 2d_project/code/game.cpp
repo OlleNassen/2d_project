@@ -80,6 +80,10 @@ void game_initialize(Game& game)
 	game.team_data.paths[1] = ptr + game.map.size;
 	game.team_data.paths[2] = ptr + game.map.size * 2;
 	game.team_data.paths[3] = ptr + game.map.size * 3;
+
+	game.stack.top = 1;
+	game.stack.data[0].selected = 1;
+	game.stack.data[1].selected = 1;
 }
 
 void game_update(Game& game)
@@ -132,6 +136,7 @@ void game_update(Game& game)
 	{
 		game_state = game_stack_push(&game.stack);
 		printf("%u\n", game.stack.top);
+		game_state->selected = 0;
 	}
 
 	if (cancel.pressed && cancel.transitions > 0)
@@ -143,13 +148,14 @@ void game_update(Game& game)
 
 void game_draw(Game& game)
 {
+	GameState *game_state = game_stack_peek(&game.stack);
 	switch (game.current_state)
 	{
 	case StateBuild:
 		drawer_draw_build(game.drawer, game.camera, game.team_data.names);
 		break;
 	case StateCombat:
-		drawer_draw_combat(game.drawer, game.camera, game.team_data.positions, game.team_data.character_classes, game.cursor.position, game.team_data.paths[0]);
+		drawer_draw_combat(game.drawer, game.camera, game.team_data.positions, game.team_data.character_classes, game.cursor.position, game.team_data.paths[game_state->selected]);
 		break;
 	case StateMainMenu:
 		drawer_draw_mainmenu(game.drawer, game.camera);
