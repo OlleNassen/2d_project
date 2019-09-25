@@ -44,6 +44,8 @@ void drawer_draw_combat(Drawer& drawer, Camera& camera, Vector2 team_positions[]
 	shader_uniform(drawer.shader_tex, "num_vertices", (int)drawer.tilemap.num_indices);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, drawer.tilemap_texture.id);
+
+	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, drawer.tilemap.ssbo);
 	tilemap_draw(drawer.tilemap);
 
 	glBindVertexArray(drawer.sprite_vao);
@@ -57,7 +59,7 @@ void drawer_draw_combat(Drawer& drawer, Camera& camera, Vector2 team_positions[]
 	anim.sprite = rect_create(0, 0, 32, 32);
 	anim.size = rect_create(0, 0, 32 * 2, 32);
 	glDisable(GL_DEPTH_TEST);
-	sprite_draw(&rect, &anim, &drawer.cursor_texture, time);
+	/*sprite_draw(&rect, &anim, &drawer.cursor_texture, time);
 
 	for (int i = 0; i < 40 * 60; ++i)
 	{
@@ -72,7 +74,7 @@ void drawer_draw_combat(Drawer& drawer, Camera& camera, Vector2 team_positions[]
 			anim.size = rect_create(0, 0, 32 * 2, 32);
 			sprite_draw(&rect, &anim, &drawer.cursor_texture, time);
 		}
-	}
+	}*/
 	glEnable(GL_DEPTH_TEST);
 
 	for (int i = 0; i < 4; ++i)
@@ -82,10 +84,11 @@ void drawer_draw_combat(Drawer& drawer, Camera& camera, Vector2 team_positions[]
 		anim.sprite = rect_create(team_classes[i] * 4 * 32, 0, 32,     32);
 		anim.size =   rect_create(team_classes[i] * 4 * 32, 0, 32, 32);
 		glDisable(GL_DEPTH_TEST);
-		sprite_draw(&rect, &anim, &drawer.player_texture, time);
-		glEnable(GL_DEPTH_TEST);*/
-		//drawer.vertices[i].position = team_positions[i];
+		sprite_draw(&rect, &anim, &drawer.player_texture, time); */
+		drawer.vertices[i].position = team_positions[i];
 	}
+	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, drawer.sprite_storage);
+	glDrawArrays(GL_TRIANGLES, 0, 4 * 6);
 }
 
 void drawer_draw_build(Drawer & drawer, Camera & camera, char* names[4])
