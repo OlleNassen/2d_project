@@ -4,6 +4,11 @@
 #include "camera.h"
 #include <SDL/SDL.h>
 
+struct Vertex
+{
+	Vector2 position;
+};
+
 struct Drawer
 {
 	Tilemap tilemap;
@@ -14,7 +19,10 @@ struct Drawer
 	unsigned int sprite_vao;
 	unsigned int sprite_vbo;
 
+	unsigned int sprite_storage;
+
 	unsigned int shader_tex;
+	Vertex *vertices;
 };
 
 void drawer_initialize(Drawer& drawer, const Uint32* type_data, unsigned short num_tiles_rows, unsigned short num_tiles_columns);

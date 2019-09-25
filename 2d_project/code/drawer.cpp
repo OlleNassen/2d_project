@@ -26,6 +26,13 @@ void drawer_initialize(Drawer& drawer, const Uint32* type_data, unsigned short n
 	drawer.player_texture = texture_from_file("spritesheet.png");
 
 	tilemap_generate(drawer.tilemap, type_data, drawer.tilemap_texture.width, drawer.tilemap_texture.height, num_tiles_rows, num_tiles_columns, 32, 32);
+
+	GLenum flags = GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT | GL_MAP_COHERENT_BIT;
+	unsigned int size = 1024 * 1024;
+	glGenBuffers(1, &drawer.sprite_storage);
+	glBindBuffer(GL_SHADER_STORAGE_BUFFER, drawer.sprite_storage);
+	glBufferStorage(GL_SHADER_STORAGE_BUFFER, size, 0, flags);
+	drawer.vertices = (Vertex *)glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, size, flags);
 }
 
 void drawer_draw_combat(Drawer& drawer, Camera& camera, Vector2 team_positions[], short team_classes[], Vector2& cursor_pos, Uint32 *path)
@@ -70,13 +77,14 @@ void drawer_draw_combat(Drawer& drawer, Camera& camera, Vector2 team_positions[]
 
 	for (int i = 0; i < 4; ++i)
 	{
-		rect = rect_createfv(vector2_create(team_positions[i].x+16, team_positions[i].y+16), 32, 32);
+		/*rect = rect_createfv(vector2_create(team_positions[i].x+16, team_positions[i].y+16), 32, 32);
 		anim.speed = 0.5f;
 		anim.sprite = rect_create(team_classes[i] * 4 * 32, 0, 32,     32);
 		anim.size =   rect_create(team_classes[i] * 4 * 32, 0, 32, 32);
 		glDisable(GL_DEPTH_TEST);
 		sprite_draw(&rect, &anim, &drawer.player_texture, time);
-		glEnable(GL_DEPTH_TEST);
+		glEnable(GL_DEPTH_TEST);*/
+		//drawer.vertices[i].position = team_positions[i];
 	}
 }
 
