@@ -7,7 +7,6 @@ typedef Vector2 Tile[4];
 void tilemap_draw(Tilemap& tilemap)
 {
 	glBindVertexArray(tilemap.vao);
-	glBindBuffer(GL_SHADER_STORAGE_BUFFER, tilemap.ssbo);
 	glDrawElements(GL_TRIANGLES, tilemap.height * tilemap.width * 6, GL_UNSIGNED_SHORT, 0);
 }
 #include <iostream>
@@ -22,9 +21,9 @@ void tilemap_generate(Tilemap& tilemap, const Uint32* type_data, unsigned int te
 	Tile rectangle_coordinates =
 	{
 		vector2_create(0.f, 0.f),
-		vector2_create(1, 0.f),
-		vector2_create(1, 1),
-		vector2_create(0.f, 1)
+		vector2_create((float)tile_size_width, 0.f),
+		vector2_create((float)tile_size_width, (float)tile_size_height),
+		vector2_create(0.f, (float)tile_size_height)
 	};
 
 	glGenVertexArrays(1, &tilemap.vao);
@@ -43,7 +42,7 @@ void tilemap_generate(Tilemap& tilemap, const Uint32* type_data, unsigned int te
 	{
 		for (unsigned int j = 0; j < tilemap.height; ++j)
 		{
-			Vector2 world_position = cart_to_dimetric(vector2_create((float)i * tile_size_width, (float)j * tile_size_height));
+			Vector2 world_position = vector2_create((float)i * tile_size_width, (float)j * tile_size_height);
 
 			vertex_world_positions[i + j * tilemap.width][0] = world_position;
 			vertex_world_positions[i + j * tilemap.width][1] = world_position;

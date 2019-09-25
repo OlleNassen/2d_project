@@ -25,7 +25,7 @@ void main()
 	uv = vec2(uvcoord.x, uvcoord.y);
 	z = float(gl_VertexID) / float(num_vertices);
 
-	vec2 position = pos + positions[gl_VertexID];
+	vec2 position = pos + cart_to_dimetric(positions[gl_VertexID]);
 
 	gl_Position = projection * vec4(view + position, 0, 1);
 }
