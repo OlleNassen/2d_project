@@ -49,11 +49,6 @@ void tilemap_generate(Tilemap& tilemap, const Uint32* type_data, unsigned int te
 			vertex_world_positions[i + j * tilemap.width][2] = world_position;
 			vertex_world_positions[i + j * tilemap.width][3] = world_position;
 
-			vertex_positions[i + j * tilemap.width][0] = rectangle_coordinates[0];
-			vertex_positions[i + j * tilemap.width][1] = rectangle_coordinates[1];
-			vertex_positions[i + j * tilemap.width][2] = rectangle_coordinates[2];
-			vertex_positions[i + j * tilemap.width][3] = rectangle_coordinates[3];
-
 			int tile_number = type_data[i + j * tilemap.width];
 
 			int uv_x = tile_number % (texture_width / tile_size_width);
@@ -81,15 +76,12 @@ void tilemap_generate(Tilemap& tilemap, const Uint32* type_data, unsigned int te
 		}
 	}
 
-	glBufferData(GL_ARRAY_BUFFER, sizeof(Tile) * tilemap.height * tilemap.width * 2, 0, GL_STATIC_DRAW);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(Tile) * tilemap.height * tilemap.width, &vertex_positions[0]);
-	glBufferSubData(GL_ARRAY_BUFFER, sizeof(Tile) * tilemap.height * tilemap.width, sizeof(Tile) * tilemap.height * tilemap.width, &vertex_tex_coords[0]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(Tile) * tilemap.height * tilemap.width, 0, GL_STATIC_DRAW);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(Tile) * tilemap.height * tilemap.width, &vertex_tex_coords[0]);
 
 	glEnableVertexAttribArray(0);
-	glEnableVertexAttribArray(1);
 
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, (void*)0);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, (void*)(sizeof(Tile) * tilemap.height * tilemap.width));
 
 	glGenBuffers(1, &tilemap.ebo);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, tilemap.ebo);
@@ -102,7 +94,6 @@ void tilemap_generate(Tilemap& tilemap, const Uint32* type_data, unsigned int te
 	glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(Tile) * tilemap.height * tilemap.width, &vertex_world_positions[0], GL_DYNAMIC_COPY);
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, tilemap.ssbo);
 
-	delete[] vertex_positions;
 	delete[] vertex_world_positions;
 	delete[] vertex_tex_coords;
 	delete[] indices;
