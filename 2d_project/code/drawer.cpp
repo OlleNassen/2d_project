@@ -44,7 +44,8 @@ void drawer_draw_combat(Drawer& drawer, Camera& camera, Vector2 team_positions[]
 	Rect rect;
 	SpriteAnimation anim;
 	float time = window_time_get();
-	rect = rect_createfv(cart_to_dimetric(vector2_create(cursor_pos.x + 16, cursor_pos.y + 16)), 32 * 4, 32 * 4);
+	rect = rect_createfv(vector2_create(cursor_pos.x + 16, cursor_pos.y + 16), 32, 32);
+
 	anim.speed = 0.5f;
 	anim.sprite = rect_create(0, 0, 32, 32);
 	anim.size = rect_create(0, 0, 32 * 2, 32);
@@ -58,7 +59,7 @@ void drawer_draw_combat(Drawer& drawer, Camera& camera, Vector2 team_positions[]
 		
 		if (path[i] < 5)
 		{
-			rect = rect_createfv(cart_to_dimetric(vector2_create(x * 32, y * 32)), 32 * 4, 32 * 4);
+			rect = rect_createfv(vector2_create(x * 32+16, y * 32+16), 32, 32);
 			anim.speed = 0.5f;
 			anim.sprite = rect_create(0, 0, 32, 32);
 			anim.size = rect_create(0, 0, 32 * 2, 32);
@@ -69,10 +70,10 @@ void drawer_draw_combat(Drawer& drawer, Camera& camera, Vector2 team_positions[]
 
 	for (int i = 0; i < 4; ++i)
 	{
-		rect = rect_createfv(cart_to_dimetric(vector2_create(team_positions[i].x + 16, team_positions[i].y + 16)), 32*4, 32*4);
+		rect = rect_createfv(vector2_create(team_positions[i].x+16, team_positions[i].y+16), 32, 32);
 		anim.speed = 0.5f;
 		anim.sprite = rect_create(team_classes[i] * 4 * 32, 0, 32,     32);
-		anim.size =   rect_create(team_classes[i] * 4 * 32, 0, 32 * 4, 32);
+		anim.size =   rect_create(team_classes[i] * 4 * 32, 0, 32, 32);
 		glDisable(GL_DEPTH_TEST);
 		sprite_draw(&rect, &anim, &drawer.player_texture, time);
 		glEnable(GL_DEPTH_TEST);
