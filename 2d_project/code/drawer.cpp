@@ -63,8 +63,8 @@ void drawer_draw_combat(Drawer& drawer, Camera& camera, Vector2 team_positions[]
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, drawer.tilemap.ssbo);
 	tilemap_draw(drawer.tilemap);
 
-	glBindVertexArray(drawer.sprite_vao);
-	glBindBuffer(GL_ARRAY_BUFFER, drawer.sprite_vbo);
+	//glBindVertexArray(drawer.sprite_vao);
+	//glBindBuffer(GL_ARRAY_BUFFER, drawer.sprite_vbo);
 	Rect rect;
 	SpriteAnimation anim;
 	float time = window_time_get();
@@ -102,6 +102,9 @@ void drawer_draw_combat(Drawer& drawer, Camera& camera, Vector2 team_positions[]
 		sprite_draw(&rect, &anim, &drawer.player_texture, time); */
 		drawer.vertices[i].position = team_positions[i];
 	}
+
+	glBindTexture(GL_TEXTURE_2D, drawer.player_texture.id);
+
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, drawer.sprite_storage);
 	glDrawElements(GL_TRIANGLES, 4 * 6, GL_UNSIGNED_SHORT, 0);
 
