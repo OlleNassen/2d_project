@@ -3,24 +3,11 @@
 #include "game.h"
 #include <SDL/SDL.h>
 
-typedef enum
-{
-
-} GameState;
-
-void game_update(GameState state, Game *game)
-{
-	switch (state)
-	{
-	default: game_update(*game); break;
-	}
-}
-
 void engine_run()
 {
 	window_initialize("Royale", 1280, 720);
 	
-	Game game;
+	Game game = {};
 	game_initialize(game);
 
 	double last_time = window_time_get();

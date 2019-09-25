@@ -10,12 +10,7 @@ GameState * game_stack_push(GameStack *stack)
 		stack->top = new_top;
 	}
 
-	GameState *dst = &stack->data[stack->top];
-
-	for (unsigned int i = 0; i < 256; ++i)
-	{
-		dst[i] = src[i];
-	}
+	stack->data[stack->top] = *src;
 
 	return &stack->data[stack->top];
 }

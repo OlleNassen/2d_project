@@ -91,6 +91,7 @@ void game_update(Game& game)
 	GameButton down = window_keyboard_pressed(SDLK_k);
 	GameButton right = window_keyboard_pressed(SDLK_l);
 	GameButton select = window_mouse_pressed(SDL_BUTTON_LEFT);
+	GameButton cancel = window_mouse_pressed(SDL_BUTTON_RIGHT);
 
 	if(window_keyboard_pressed(SDLK_1).pressed)
 		game.current_state = StateMainMenu;
@@ -124,6 +125,19 @@ void game_update(Game& game)
 				game.map.cost, game.map.width, game.map.height, 
 				(Uint32)game.team_data.positions[i].x / 32, (Uint32)game.team_data.positions[i].y / 32, 0);
 		}	
+	}
+	GameState *game_state = game_stack_peek(&game.stack);
+
+	if (select.pressed && select.transitions > 0)
+	{
+		game_state = game_stack_push(&game.stack);
+		printf("%u\n", game.stack.top);
+	}
+
+	if (cancel.pressed && cancel.transitions > 0)
+	{
+		game_state = game_stack_pop(&game.stack);
+		printf("%u\n", game.stack.top);
 	}
 }
 
