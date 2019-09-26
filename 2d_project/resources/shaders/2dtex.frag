@@ -6,7 +6,7 @@ in float z;
 out vec4 frag;
 out float gl_FragDepth;
 
-uniform sampler2D sprite_tex;
+layout(location = 3)uniform sampler2D sprite_tex;
 
 void main()
 {

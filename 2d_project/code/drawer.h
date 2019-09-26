@@ -33,7 +33,7 @@ struct Drawer
 
 	unsigned int sprite_storage;
 
-	unsigned int shader_tex;
+	unsigned int shader;
 	Vertex *vertices;
 };
 

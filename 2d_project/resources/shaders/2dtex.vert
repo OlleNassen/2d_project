@@ -11,9 +11,9 @@ layout(std430, binding = 3) buffer world_positions
 out vec2 uv;
 out float z;
 
-uniform int num_vertices;
-uniform vec2 view;
-uniform mat4 projection;
+layout (location = 0) uniform vec2 view;
+layout (location = 1) uniform mat4 projection;
+layout (location = 2) uniform int num_vertices;
 
 vec2 cart_to_dimetric(vec2 v)
 {

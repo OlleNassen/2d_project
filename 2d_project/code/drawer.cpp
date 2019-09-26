@@ -9,7 +9,7 @@ void generate_buffers(Drawer& drawer);
 
 void drawer_initialize(Drawer& drawer, const Uint32* type_data, unsigned short num_tiles_rows, unsigned short num_tiles_columns)
 {
-	drawer.shader_tex = shader_create("resources/shaders/2dtex.vert", "resources/shaders/2dtex.frag");
+	drawer.shader = shader_program_create("resources/shaders/2dtex.vert", "resources/shaders/2dtex.frag");
 
 	drawer.tilemap_texture = texture_from_file("tiles.png");
 	drawer.cursor_texture = texture_from_file("cursor.png");
@@ -35,11 +35,11 @@ void drawer_initialize(Drawer& drawer, const Uint32* type_data, unsigned short n
 
 void drawer_draw_combat(Drawer& drawer, Camera& camera, Vector2 team_positions[], short team_classes[], Vector2& cursor_pos, Uint32 *path)
 {
-	glUseProgram(drawer.shader_tex);
-	shader_uniform(drawer.shader_tex, "view", vector2_create(camera.position.x, camera.position.y));
-	shader_uniform(drawer.shader_tex, "projection", camera.ortho);
-	shader_uniform(drawer.shader_tex, "sprite_tex", 0);
-	shader_uniform(drawer.shader_tex, "num_vertices", (int)drawer.total_num_vertices);
+	glUseProgram(drawer.shader);
+	glUniform2fv(0, 1, &vector2_create(camera.position.x, camera.position.y).x);
+	glUniformMatrix4fv(1, 1, GL_FALSE, &camera.ortho.elements[0]);
+	glUniform1i(2, (int)drawer.total_num_vertices);
+	glUniform1i(3, 0);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, drawer.tilemap_texture.id);
 
