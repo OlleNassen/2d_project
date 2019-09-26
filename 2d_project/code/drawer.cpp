@@ -36,7 +36,7 @@ void drawer_initialize(Drawer& drawer, const Uint32* type_data, unsigned short n
 void drawer_draw_combat(Drawer& drawer, Camera& camera, Vector2 team_positions[], short team_classes[], Vector2& cursor_pos, Uint32 *path)
 {
 	glUseProgram(drawer.shader);
-	glUniform2fv(0, 1, &vector2_create(camera.position.x, camera.position.y).x);
+	glUniform2fv(0, 1, &camera.position.x);
 	glUniformMatrix4fv(1, 1, GL_FALSE, &camera.ortho.elements[0]);
 	glUniform1i(2, (int)drawer.total_num_vertices);
 	glUniform1i(3, 0);
