@@ -51,11 +51,17 @@ void drawer_draw_combat(Drawer& drawer, Camera& camera, Vector2 team_positions[]
 
 		if (path[i] < 5)
 		{
-			drawer.vertex_colors[i] = color_create(55, 55, 255);
+			drawer.vertex_colors[i * 4 + 0] = color_create(55, 55, 255);
+			drawer.vertex_colors[i * 4 + 1] = color_create(55, 55, 255);
+			drawer.vertex_colors[i * 4 + 2] = color_create(55, 55, 255);
+			drawer.vertex_colors[i * 4 + 3] = color_create(55, 55, 255);
 		}
 		else
 		{
-			drawer.vertex_colors[i] = color_create(255, 255, 255);
+			drawer.vertex_colors[i * 4 + 0] = color_create(255, 255, 255);
+			drawer.vertex_colors[i * 4 + 1] = color_create(255, 255, 255);
+			drawer.vertex_colors[i * 4 + 2] = color_create(255, 255, 255);
+			drawer.vertex_colors[i * 4 + 3] = color_create(255, 255, 255);
 		}	
 	}
 	
