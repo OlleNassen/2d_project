@@ -198,8 +198,8 @@ void generate_character(Game& game, int index)
 	game.team_data.names[index] = generate_name(game);
 	game.team_data.character_classes[index] = generate_class(game);
 	game.team_data.class_proficiencies[index] = generate_proficiency(game);
-	int x_rand = rand() % game.map.width+1;
-	int y_rand = rand() % game.map.height+1;
+	int x_rand = rand() % game.map.width;
+	int y_rand = rand() % game.map.height;
 	game.team_data.positions[index] = vector2_create(32.f * x_rand,32.f* y_rand);
 }
 
