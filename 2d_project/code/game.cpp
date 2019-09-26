@@ -113,7 +113,7 @@ void game_update(Game& game)
 		window_mouse_position(&x, &y);
 		Vector2 result = vector2_create(-game.camera.position.x + x, -game.camera.position.y + (w_h - y));
 
-		//result = dimetric_to_cart(result);
+		result = dimetric_to_cart(result);
 
 		result.x = (int)result.x;
 		result.y = (int)result.y;

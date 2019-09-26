@@ -7,6 +7,15 @@ void generate_tilemap(Drawer& drawer, const Uint32* type_data, unsigned short he
 void generate_actors(Drawer& drawer, int num_actors, unsigned short classes[]);
 void generate_buffers(Drawer& drawer);
 
+inline Color color_create(unsigned char r, unsigned char g, unsigned char b)
+{
+	Color color;
+	color.r = r;
+	color.g = g;
+	color.b = b;
+	return color;
+}
+
 void drawer_initialize(Drawer& drawer, const Uint32* type_data, unsigned short num_tiles_rows, unsigned short num_tiles_columns)
 {
 	drawer.the_one_shader = shader_program_create("resources/shaders/2dtex.vert", "resources/shaders/2dtex.frag");
@@ -35,6 +44,14 @@ void drawer_initialize(Drawer& drawer, const Uint32* type_data, unsigned short n
 
 void drawer_draw_combat(Drawer& drawer, Camera& camera, Vector2 team_positions[], short team_classes[], Vector2& cursor_pos, Uint32 *path)
 {
+	for (int i = 0; i < 4; ++i)
+	{
+		drawer.vertex_colors[(i + 4*((int)cursor_pos.x + (int)cursor_pos.y * 60)/32) - 4] = color_create(255,0,0);
+	}
+	unsigned int size = sizeof(Vector2) * drawer.total_num_vertices;
+
+	glBufferSubData(GL_ARRAY_BUFFER, size * 2, drawer.total_num_vertices * sizeof(Color), &drawer.vertex_colors[0]);
+
 	glUseProgram(drawer.the_one_shader);
 	glUniform2fv(0, 1, &camera.position.x);
 	glUniformMatrix4fv(1, 1, GL_FALSE, &camera.ortho.elements[0]);
@@ -66,15 +83,6 @@ void drawer_draw_build(Drawer& drawer, Camera & camera, char* names[4])
 void drawer_draw_mainmenu(Drawer & drawer, Camera & camera)
 {
 
-}
-
-inline Color color_create(unsigned char r, unsigned char g, unsigned char b)
-{
-	Color color;
-	color.r = r;
-	color.g = g;
-	color.b = b;
-	return color;
 }
 
 void generate_tilemap(Drawer& drawer, const Uint32* type_data, unsigned short height, unsigned short width, unsigned int tile_size_width, unsigned int tile_size_height)
