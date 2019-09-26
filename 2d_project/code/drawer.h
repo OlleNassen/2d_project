@@ -14,6 +14,7 @@ struct Vertex
 
 struct Drawer
 {
+	unsigned int the_one_shader;
 	Texture the_one_texture;
 
 	Vector2* sprites_world_positions;
@@ -29,9 +30,6 @@ struct Drawer
 	unsigned int ebo;
 	unsigned int ssbo;
 
-	unsigned int sprite_storage;
-
-	unsigned int shader;
 	Vertex *vertices;
 };
 

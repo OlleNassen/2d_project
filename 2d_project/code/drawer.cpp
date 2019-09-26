@@ -4,13 +4,12 @@
 #include "window.h"
 
 void generate_tilemap(Drawer& drawer, const Uint32* type_data, unsigned int texture_width, unsigned int texture_height, unsigned short height, unsigned short width, unsigned int tile_size_width, unsigned int tile_size_height);
-void generate_actors(Drawer& drawer, int num_actors);
+void generate_actors(Drawer& drawer, int num_actors, unsigned short classes[]);
 void generate_buffers(Drawer& drawer);
 
 void drawer_initialize(Drawer& drawer, const Uint32* type_data, unsigned short num_tiles_rows, unsigned short num_tiles_columns)
 {
-	drawer.shader = shader_program_create("resources/shaders/2dtex.vert", "resources/shaders/2dtex.frag");
-
+	drawer.the_one_shader = shader_program_create("resources/shaders/2dtex.vert", "resources/shaders/2dtex.frag");
 	drawer.the_one_texture = texture_from_file("all_sprites.png");
 
 	unsigned int size = 1024 * 1024;
@@ -22,18 +21,20 @@ void drawer_initialize(Drawer& drawer, const Uint32* type_data, unsigned short n
 	drawer.total_num_vertices = 0;
 
 	generate_tilemap(drawer, type_data, drawer.the_one_texture.width, drawer.the_one_texture.height, num_tiles_rows, num_tiles_columns, 32, 32);
+	unsigned short temp[] = {1,2,3,4};
+	generate_actors(drawer, 4, temp);
 
-	GLenum flags = GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT | GL_MAP_COHERENT_BIT;
-	glGenBuffers(1, &drawer.sprite_storage);
-	glBindBuffer(GL_SHADER_STORAGE_BUFFER, drawer.sprite_storage);
-	glBufferStorage(GL_SHADER_STORAGE_BUFFER, size, 0, flags);
-	drawer.vertices = (Vertex *)glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, size, flags);
+	//GLenum flags = GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT | GL_MAP_COHERENT_BIT;
+	//glGenBuffers(1, &drawer.ssbo);
+	//glBindBuffer(GL_SHADER_STORAGE_BUFFER, drawer.ssbo);
+	//glBufferStorage(GL_SHADER_STORAGE_BUFFER, size, 0, flags);
+	//drawer.vertices = (Vertex *)glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, size, flags);
 	generate_buffers(drawer);
 }
 
 void drawer_draw_combat(Drawer& drawer, Camera& camera, Vector2 team_positions[], short team_classes[], Vector2& cursor_pos, Uint32 *path)
 {
-	glUseProgram(drawer.shader);
+	glUseProgram(drawer.the_one_shader);
 	glUniform2fv(0, 1, &camera.position.x);
 	glUniformMatrix4fv(1, 1, GL_FALSE, &camera.ortho.elements[0]);
 	glUniform1i(2, (int)drawer.total_num_vertices);
@@ -91,7 +92,7 @@ void generate_tilemap(Drawer& drawer, const Uint32* type_data, unsigned int text
 			drawer.vertex_local_coords[i + j * width][2] = rectangle_coordinates[2];
 			drawer.vertex_local_coords[i + j * width][3] = rectangle_coordinates[3];
 
-			int tile_number = type_data[i + j * width] + 32*15;
+			int tile_number = type_data[i + j * width] + 32*15; // 32*15 is to offset to the tiles in the one texture
 
 			int uv_x = tile_number % (texture_width / tile_size_width);
 			int uv_y = tile_number / (texture_width / tile_size_width);
@@ -122,7 +123,7 @@ void generate_tilemap(Drawer& drawer, const Uint32* type_data, unsigned int text
 	drawer.total_num_indices += tilemap_indices;
 }
 
-void generate_actors(Drawer& drawer, int num_actors)
+void generate_actors(Drawer& drawer, int num_actors, unsigned short classes[])
 {
 	//Quad rectangle_coordinates =
 	//{
