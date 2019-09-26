@@ -11,9 +11,7 @@ void drawer_initialize(Drawer& drawer, const Uint32* type_data, unsigned short n
 {
 	drawer.shader = shader_program_create("resources/shaders/2dtex.vert", "resources/shaders/2dtex.frag");
 
-	drawer.tilemap_texture = texture_from_file("tiles.png");
-	drawer.cursor_texture = texture_from_file("cursor.png");
-	drawer.player_texture = texture_from_file("spritesheet.png");
+	drawer.the_one_texture = texture_from_file("all_sprites.png");
 
 	unsigned int size = 1024 * 1024;
 	drawer.sprites_world_positions = new Vector2[size];
@@ -23,7 +21,7 @@ void drawer_initialize(Drawer& drawer, const Uint32* type_data, unsigned short n
 	drawer.total_num_indices = 0;
 	drawer.total_num_vertices = 0;
 
-	generate_tilemap(drawer, type_data, drawer.tilemap_texture.width, drawer.tilemap_texture.height, num_tiles_rows, num_tiles_columns, 32, 32);
+	generate_tilemap(drawer, type_data, drawer.the_one_texture.width, drawer.the_one_texture.height, num_tiles_rows, num_tiles_columns, 32, 32);
 
 	GLenum flags = GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT | GL_MAP_COHERENT_BIT;
 	glGenBuffers(1, &drawer.sprite_storage);
@@ -41,7 +39,7 @@ void drawer_draw_combat(Drawer& drawer, Camera& camera, Vector2 team_positions[]
 	glUniform1i(2, (int)drawer.total_num_vertices);
 	glUniform1i(3, 0);
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, drawer.tilemap_texture.id);
+	glBindTexture(GL_TEXTURE_2D, drawer.the_one_texture.id);
 
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, drawer.ssbo);
 
@@ -51,16 +49,16 @@ void drawer_draw_combat(Drawer& drawer, Camera& camera, Vector2 team_positions[]
 
 void drawer_draw_build(Drawer& drawer, Camera & camera, char* names[4])
 {
-	Rect rect = rect_create(camera.position.x + 1280 / 2, camera.position.y + 720 / 2, 1280, 720);
-	SpriteAnimation anim;
-	anim.speed = 0.5f;
-	anim.sprite = rect_create(0, 0, 32, 32);
-	anim.size = rect_create(0, 0, 24 * 3, 32);
-
-	float time = window_time_get();
-	glDisable(GL_DEPTH_TEST);
-	sprite_draw(&rect, &anim, &drawer.player_texture, time);
-	glEnable(GL_DEPTH_TEST);
+	//Rect rect = rect_create(camera.position.x + 1280 / 2, camera.position.y + 720 / 2, 1280, 720);
+	//SpriteAnimation anim;
+	//anim.speed = 0.5f;
+	//anim.sprite = rect_create(0, 0, 32, 32);
+	//anim.size = rect_create(0, 0, 24 * 3, 32);
+	//
+	//float time = window_time_get();
+	//glDisable(GL_DEPTH_TEST);
+	//sprite_draw(&rect, &anim, &drawer.player_texture, time);
+	//glEnable(GL_DEPTH_TEST);
 }
 
 void drawer_draw_mainmenu(Drawer & drawer, Camera & camera)
@@ -93,7 +91,7 @@ void generate_tilemap(Drawer& drawer, const Uint32* type_data, unsigned int text
 			drawer.vertex_local_coords[i + j * width][2] = rectangle_coordinates[2];
 			drawer.vertex_local_coords[i + j * width][3] = rectangle_coordinates[3];
 
-			int tile_number = type_data[i + j * width];
+			int tile_number = type_data[i + j * width] + 32*15;
 
 			int uv_x = tile_number % (texture_width / tile_size_width);
 			int uv_y = tile_number / (texture_width / tile_size_width);

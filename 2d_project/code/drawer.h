@@ -14,9 +14,7 @@ struct Vertex
 
 struct Drawer
 {
-	Texture tilemap_texture;
-	Texture cursor_texture;
-	Texture player_texture;
+	Texture the_one_texture;
 
 	Vector2* sprites_world_positions;
 	Quad* vertex_local_coords;
