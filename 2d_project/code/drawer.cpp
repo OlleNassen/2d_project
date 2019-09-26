@@ -93,9 +93,12 @@ void generate_tilemap(Drawer& drawer, const Uint32* type_data, unsigned short he
 			drawer.vertex_local_coords[i + j * width][2] = rectangle_coordinates[2];
 			drawer.vertex_local_coords[i + j * width][3] = rectangle_coordinates[3];
 
-			drawer.vertex_colors[i + j * width].r = 255;
-			drawer.vertex_colors[i + j * width].g = 255;
-			drawer.vertex_colors[i + j * width].b = 255;
+			for (int k = 0; k < 4; ++k)
+			{
+				drawer.vertex_colors[i + j * width + k].r = 255;
+				drawer.vertex_colors[i + j * width + k].g = 0;
+				drawer.vertex_colors[i + j * width + k].b = 0;
+			}
 
 			int tile_number = type_data[i + j * width] + 32*15; // 32*15 is to offset to the tiles in the one texture
 
@@ -150,9 +153,12 @@ void generate_actors(Drawer& drawer, int num_actors, unsigned short classes[])
 		drawer.vertex_local_coords[drawer.total_num_vertices/4][2] = rectangle_coordinates[2];
 		drawer.vertex_local_coords[drawer.total_num_vertices/4][3] = rectangle_coordinates[3];
 
-		drawer.vertex_colors[drawer.total_num_vertices/4].r = 255;
-		drawer.vertex_colors[drawer.total_num_vertices/4].g = 0;
-		drawer.vertex_colors[drawer.total_num_vertices/4].b = 0;
+		for (int k = 0; k < 4; ++k)
+		{
+			drawer.vertex_colors[drawer.total_num_vertices / 4+k].r = 255;
+			drawer.vertex_colors[drawer.total_num_vertices / 4+k].g = 0;
+			drawer.vertex_colors[drawer.total_num_vertices / 4+k].b = 0;
+		}
 	
 		int tile_number = classes[i] * 4;
 	
@@ -201,7 +207,6 @@ void generate_buffers(Drawer& drawer)
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(Vector2), (void*)0);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vector2), (void*)(size));
 	glVertexAttribPointer(2, 3, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(Color), (void*)(size * 2));
-
 
 	glGenBuffers(1, &drawer.ebo);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, drawer.ebo);
