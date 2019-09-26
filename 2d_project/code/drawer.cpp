@@ -102,11 +102,8 @@ void generate_tilemap(Drawer& drawer, const Uint32* type_data, unsigned short he
 			drawer.vertex_local_coords[i + j * width][2] = rectangle_coordinates[2];
 			drawer.vertex_local_coords[i + j * width][3] = rectangle_coordinates[3];
 
-			drawer.vertex_colors[(i + j * width) * 4 + 0] = color_create(255, 255, 255);
-			drawer.vertex_colors[(i + j * width) * 4 + 1] = color_create(255, 255, 255);
-			drawer.vertex_colors[(i + j * width) * 4 + 2] = color_create(255, 255, 255);
-			drawer.vertex_colors[(i + j * width) * 4 + 3] = color_create(255, 255, 255);
-
+			for(int k = 0; k < 4; ++k)
+				drawer.vertex_colors[(i + j * width) * 4 + k] = color_create(255, 255, 255);
 
 			int tile_number = type_data[i + j * width] + 32*15; // 32*15 is to offset to the tiles in the one texture
 
@@ -161,10 +158,8 @@ void generate_actors(Drawer& drawer, int num_actors, unsigned short classes[])
 		drawer.vertex_local_coords[drawer.total_num_vertices/4][2] = rectangle_coordinates[2];
 		drawer.vertex_local_coords[drawer.total_num_vertices/4][3] = rectangle_coordinates[3];
 
-		drawer.vertex_colors[drawer.total_num_vertices + 0] = color_create(255, 0, 0);
-		drawer.vertex_colors[drawer.total_num_vertices + 1] = color_create(255, 0, 0);
-		drawer.vertex_colors[drawer.total_num_vertices + 2] = color_create(255, 0, 0);
-		drawer.vertex_colors[drawer.total_num_vertices + 3] = color_create(255, 0, 0);
+		for(int k = 0; k < 4; ++k)
+			drawer.vertex_colors[drawer.total_num_vertices + k] = color_create(255, 255, 255);
 	
 		int tile_number = classes[i] * 4;
 	
