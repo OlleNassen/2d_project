@@ -30,9 +30,9 @@ void drawer_initialize(Drawer& drawer, const Uint32* type_data, unsigned short n
 	drawer.total_num_indices = 0;
 	drawer.total_num_vertices = 0;
 
-	generate_tilemap(drawer, type_data, num_tiles_rows, num_tiles_columns, 32, 32);
 	unsigned short temp[] = {0,1,2,3};
 	generate_actors(drawer, 4, temp);
+	generate_tilemap(drawer, type_data, num_tiles_rows, num_tiles_columns, 32, 32);
 
 	//GLenum flags = GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT | GL_MAP_COHERENT_BIT;
 	//glGenBuffers(1, &drawer.ssbo);
@@ -124,12 +124,12 @@ void generate_tilemap(Drawer& drawer, const Uint32* type_data, unsigned short he
 		{
 			Vector2 world_position = vector2_create((float)i * tile_size_width, (float)j * tile_size_height);
 
-			drawer.sprites_world_positions[i + j * width] = world_position;
+			drawer.sprites_world_positions[drawer.total_num_vertices / 4] = world_position;
 
-			drawer.vertex_local_coords[i + j * width][0] = rectangle_coordinates[0];
-			drawer.vertex_local_coords[i + j * width][1] = rectangle_coordinates[1];
-			drawer.vertex_local_coords[i + j * width][2] = rectangle_coordinates[2];
-			drawer.vertex_local_coords[i + j * width][3] = rectangle_coordinates[3];
+			drawer.vertex_local_coords[drawer.total_num_vertices / 4][0] = rectangle_coordinates[0];
+			drawer.vertex_local_coords[drawer.total_num_vertices / 4][1] = rectangle_coordinates[1];
+			drawer.vertex_local_coords[drawer.total_num_vertices / 4][2] = rectangle_coordinates[2];
+			drawer.vertex_local_coords[drawer.total_num_vertices / 4][3] = rectangle_coordinates[3];
 
 			for(int k = 0; k < 4; ++k)
 				drawer.vertex_colors[(i + j * width) * 4 + k] = color_create(255, 255, 255);
@@ -145,10 +145,10 @@ void generate_tilemap(Drawer& drawer, const Uint32* type_data, unsigned short he
 			float tex_width = (float)tile_size_width / drawer.the_one_texture.width;
 			float tex_height = (float)tile_size_height / drawer.the_one_texture.height;
 
-			drawer.vertex_tex_coords[i + j * width][0] = vector2_create(gl_x, gl_y + tex_height);
-			drawer.vertex_tex_coords[i + j * width][1] = vector2_create(gl_x + tex_width, gl_y + tex_height);
-			drawer.vertex_tex_coords[i + j * width][2] = vector2_create(gl_x + tex_width, gl_y);
-			drawer.vertex_tex_coords[i + j * width][3] = vector2_create(gl_x, gl_y);
+			drawer.vertex_tex_coords[drawer.total_num_vertices / 4][0] = vector2_create(gl_x, gl_y + tex_height);
+			drawer.vertex_tex_coords[drawer.total_num_vertices / 4][1] = vector2_create(gl_x + tex_width, gl_y + tex_height);
+			drawer.vertex_tex_coords[drawer.total_num_vertices / 4][2] = vector2_create(gl_x + tex_width, gl_y);
+			drawer.vertex_tex_coords[drawer.total_num_vertices / 4][3] = vector2_create(gl_x, gl_y);
 
 			drawer.vertex_indices[tilemap_indices++] = tilemap_vertices + 0;
 			drawer.vertex_indices[tilemap_indices++] = tilemap_vertices + 1;
@@ -158,11 +158,10 @@ void generate_tilemap(Drawer& drawer, const Uint32* type_data, unsigned short he
 			drawer.vertex_indices[tilemap_indices++] = tilemap_vertices + 3;
 
 			tilemap_vertices += 4;
+			drawer.total_num_vertices += 4;
+			drawer.total_num_indices += 6;
 		}
 	}
-
-	drawer.total_num_vertices += tilemap_vertices;
-	drawer.total_num_indices += tilemap_indices;
 }
 
 void generate_actors(Drawer& drawer, int num_actors, unsigned short classes[])
