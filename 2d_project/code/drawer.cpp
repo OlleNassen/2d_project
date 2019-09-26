@@ -122,8 +122,6 @@ void generate_tilemap(Drawer& drawer, const Uint32* type_data, unsigned short he
 		vector2_create(0.f, (float)tile_size_height)
 	};
 
-	unsigned short tilemap_vertices = 0;
-	unsigned short tilemap_indices = 0;
 	for (unsigned int i = 0; i < width; ++i)
 	{
 		for (unsigned int j = 0; j < height; ++j)
@@ -138,7 +136,7 @@ void generate_tilemap(Drawer& drawer, const Uint32* type_data, unsigned short he
 			drawer.vertex_local_coords[drawer.total_num_vertices / 4][3] = rectangle_coordinates[3];
 
 			for(int k = 0; k < 4; ++k)
-				drawer.vertex_colors[(i + j * width) * 4 + k] = color_create(255, 255, 255);
+				drawer.vertex_colors[drawer.total_num_vertices + k] = color_create(255, 255, 255);
 
 			int tile_number = type_data[i + j * width] + 32*15; // 32*15 is to offset to the tiles in the one texture
 
@@ -156,16 +154,14 @@ void generate_tilemap(Drawer& drawer, const Uint32* type_data, unsigned short he
 			drawer.vertex_tex_coords[drawer.total_num_vertices / 4][2] = vector2_create(gl_x + tex_width, gl_y);
 			drawer.vertex_tex_coords[drawer.total_num_vertices / 4][3] = vector2_create(gl_x, gl_y);
 
-			drawer.vertex_indices[tilemap_indices++] = tilemap_vertices + 0;
-			drawer.vertex_indices[tilemap_indices++] = tilemap_vertices + 1;
-			drawer.vertex_indices[tilemap_indices++] = tilemap_vertices + 2;
-			drawer.vertex_indices[tilemap_indices++] = tilemap_vertices + 0;
-			drawer.vertex_indices[tilemap_indices++] = tilemap_vertices + 2;
-			drawer.vertex_indices[tilemap_indices++] = tilemap_vertices + 3;
+			drawer.vertex_indices[drawer.total_num_indices++] = drawer.total_num_vertices + 0;
+			drawer.vertex_indices[drawer.total_num_indices++] = drawer.total_num_vertices + 1;
+			drawer.vertex_indices[drawer.total_num_indices++] = drawer.total_num_vertices + 2;
+			drawer.vertex_indices[drawer.total_num_indices++] = drawer.total_num_vertices + 0;
+			drawer.vertex_indices[drawer.total_num_indices++] = drawer.total_num_vertices + 2;
+			drawer.vertex_indices[drawer.total_num_indices++] = drawer.total_num_vertices + 3;
 
-			tilemap_vertices += 4;
 			drawer.total_num_vertices += 4;
-			drawer.total_num_indices += 6;
 		}
 	}
 }
