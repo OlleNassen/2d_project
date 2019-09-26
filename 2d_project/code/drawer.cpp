@@ -45,7 +45,7 @@ void drawer_draw_combat(Drawer& drawer, Camera& camera, Vector2 team_positions[]
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, drawer.ssbo);
 
 	glBindVertexArray(drawer.vao);
-	glDrawElements(GL_TRIANGLES, drawer.total_num_vertices, GL_UNSIGNED_SHORT, 0);
+	glDrawElements(GL_TRIANGLES, drawer.total_num_indices, GL_UNSIGNED_SHORT, 0);
 }
 
 void drawer_draw_build(Drawer& drawer, Camera & camera, char* names[4])
@@ -139,7 +139,7 @@ void generate_buffers(Drawer& drawer)
 	glEnableVertexAttribArray(1);
 
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(Vector2), (void*)0);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vector2), (void*)(sizeof(Vector2)));
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vector2), (void*)(size));
 
 	glGenBuffers(1, &drawer.ebo);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, drawer.ebo);
