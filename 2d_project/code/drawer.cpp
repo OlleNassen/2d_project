@@ -21,7 +21,7 @@ void drawer_initialize(Drawer& drawer, const Uint32* type_data, unsigned short n
 	drawer.total_num_vertices = 0;
 
 	generate_tilemap(drawer, type_data, num_tiles_rows, num_tiles_columns, 32, 32);
-	unsigned short temp[] = {1,2,3,4};
+	unsigned short temp[] = {0,1,2,3};
 	generate_actors(drawer, 4, temp);
 
 	//GLenum flags = GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT | GL_MAP_COHERENT_BIT;
@@ -138,14 +138,14 @@ void generate_actors(Drawer& drawer, int num_actors, unsigned short classes[])
 	
 	for (int i = 0; i < num_actors; ++i)
 	{
-		drawer.sprites_world_positions[drawer.total_num_vertices/4] = vector2_create(0,0);
+		drawer.sprites_world_positions[drawer.total_num_vertices/4] = vector2_create(-100,0);
 
-		drawer.vertex_local_coords[drawer.total_num_vertices][0] = rectangle_coordinates[0];
-		drawer.vertex_local_coords[drawer.total_num_vertices][1] = rectangle_coordinates[1];
-		drawer.vertex_local_coords[drawer.total_num_vertices][2] = rectangle_coordinates[2];
-		drawer.vertex_local_coords[drawer.total_num_vertices][3] = rectangle_coordinates[3];
+		drawer.vertex_local_coords[drawer.total_num_vertices/4][0] = rectangle_coordinates[0];
+		drawer.vertex_local_coords[drawer.total_num_vertices/4][1] = rectangle_coordinates[1];
+		drawer.vertex_local_coords[drawer.total_num_vertices/4][2] = rectangle_coordinates[2];
+		drawer.vertex_local_coords[drawer.total_num_vertices/4][3] = rectangle_coordinates[3];
 	
-		int tile_number = classes[i] * 32 * 4;
+		int tile_number = classes[i] * 4;
 	
 		int uv_x = tile_number % (drawer.the_one_texture.width / sprite_width);
 		int uv_y = tile_number / (drawer.the_one_texture.width / sprite_width);
@@ -156,20 +156,19 @@ void generate_actors(Drawer& drawer, int num_actors, unsigned short classes[])
 		float tex_width = (float)sprite_width / drawer.the_one_texture.width;
 		float tex_height = (float)sprite_height / drawer.the_one_texture.height;
 	
-		drawer.vertex_tex_coords[drawer.total_num_vertices][0] = vector2_create(gl_x, gl_y + tex_height);
-		drawer.vertex_tex_coords[drawer.total_num_vertices][1] = vector2_create(gl_x + tex_width, gl_y + tex_height);
-		drawer.vertex_tex_coords[drawer.total_num_vertices][2] = vector2_create(gl_x + tex_width, gl_y);
-		drawer.vertex_tex_coords[drawer.total_num_vertices][3] = vector2_create(gl_x, gl_y);
+		drawer.vertex_tex_coords[drawer.total_num_vertices/4][0] = vector2_create(gl_x, gl_y + tex_height);
+		drawer.vertex_tex_coords[drawer.total_num_vertices/4][1] = vector2_create(gl_x + tex_width, gl_y + tex_height);
+		drawer.vertex_tex_coords[drawer.total_num_vertices/4][2] = vector2_create(gl_x + tex_width, gl_y);
+		drawer.vertex_tex_coords[drawer.total_num_vertices/4][3] = vector2_create(gl_x, gl_y);
 
-		drawer.vertex_indices[drawer.total_num_indices+0] = drawer.total_num_vertices + 0;
-		drawer.vertex_indices[drawer.total_num_indices+1] = drawer.total_num_vertices + 1;
-		drawer.vertex_indices[drawer.total_num_indices+2] = drawer.total_num_vertices + 2;
-		drawer.vertex_indices[drawer.total_num_indices+3] = drawer.total_num_vertices + 0;
-		drawer.vertex_indices[drawer.total_num_indices+4] = drawer.total_num_vertices + 2;
-		drawer.vertex_indices[drawer.total_num_indices+5] = drawer.total_num_vertices + 3;
+		drawer.vertex_indices[drawer.total_num_indices++] = drawer.total_num_vertices + 0;
+		drawer.vertex_indices[drawer.total_num_indices++] = drawer.total_num_vertices + 1;
+		drawer.vertex_indices[drawer.total_num_indices++] = drawer.total_num_vertices + 2;
+		drawer.vertex_indices[drawer.total_num_indices++] = drawer.total_num_vertices + 0;
+		drawer.vertex_indices[drawer.total_num_indices++] = drawer.total_num_vertices + 2;
+		drawer.vertex_indices[drawer.total_num_indices++] = drawer.total_num_vertices + 3;
 	
 		drawer.total_num_vertices += 4;
-		drawer.total_num_indices += 6;
 	}
 }
 
