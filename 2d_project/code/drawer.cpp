@@ -70,8 +70,14 @@ void drawer_draw_combat(Drawer& drawer, Camera& camera, Vector2 team_positions[]
 		drawer.vertex_colors[(i + 4*((int)cursor_pos.x + (int)cursor_pos.y * 60)/32) - 4] = color_create(255,0,0);
 	}
 	unsigned int size = sizeof(Vector2) * drawer.total_num_vertices;
-
+	glBindBuffer(GL_ARRAY_BUFFER, drawer.vbo);
 	glBufferSubData(GL_ARRAY_BUFFER, size * 2, drawer.total_num_vertices * sizeof(Color), &drawer.vertex_colors[0]);
+
+	for(int i = 0; i < 4; ++i)
+		drawer.sprites_world_positions[drawer.total_num_vertices/4 -4 + i] = team_positions[i];
+
+	glBindBuffer(GL_SHADER_STORAGE_BUFFER, drawer.ssbo);
+	glBufferData(GL_SHADER_STORAGE_BUFFER, size / 4, &drawer.sprites_world_positions[0], GL_DYNAMIC_COPY);
 
 	glUseProgram(drawer.the_one_shader);
 	glUniform2fv(0, 1, &camera.position.x);
