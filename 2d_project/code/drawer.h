@@ -7,6 +7,13 @@
 
 typedef Vector2 Quad[4];
 
+struct Color
+{
+	unsigned char r;
+	unsigned char g;
+	unsigned char b;
+};
+
 struct Vertex
 {
 	Vector2 position;
@@ -20,6 +27,7 @@ struct Drawer
 	Vector2* sprites_world_positions;
 	Quad* vertex_local_coords;
 	Quad* vertex_tex_coords;
+	Color* vertex_colors;
 	unsigned short* vertex_indices;
 
 	unsigned short total_num_indices;
