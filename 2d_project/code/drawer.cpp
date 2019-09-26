@@ -3,7 +3,8 @@
 #include <glad/glad.h>
 #include "window.h"
 
-void tilemap_generate(Drawer& drawer, const Uint32* type_data, unsigned int texture_width, unsigned int texture_height, unsigned short height, unsigned short width, unsigned int tile_size_width, unsigned int tile_size_height);
+void generate_tilemap(Drawer& drawer, const Uint32* type_data, unsigned int texture_width, unsigned int texture_height, unsigned short height, unsigned short width, unsigned int tile_size_width, unsigned int tile_size_height);
+void generate_actors(Drawer& drawer, int num_actors);
 void generate_buffers(Drawer& drawer);
 
 void drawer_initialize(Drawer& drawer, const Uint32* type_data, unsigned short num_tiles_rows, unsigned short num_tiles_columns)
@@ -22,7 +23,7 @@ void drawer_initialize(Drawer& drawer, const Uint32* type_data, unsigned short n
 	drawer.total_num_indices = 0;
 	drawer.total_num_vertices = 0;
 
-	tilemap_generate(drawer, type_data, drawer.tilemap_texture.width, drawer.tilemap_texture.height, num_tiles_rows, num_tiles_columns, 32, 32);
+	generate_tilemap(drawer, type_data, drawer.tilemap_texture.width, drawer.tilemap_texture.height, num_tiles_rows, num_tiles_columns, 32, 32);
 
 	GLenum flags = GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT | GL_MAP_COHERENT_BIT;
 	glGenBuffers(1, &drawer.sprite_storage);
@@ -67,7 +68,7 @@ void drawer_draw_mainmenu(Drawer & drawer, Camera & camera)
 
 }
 
-void tilemap_generate(Drawer& drawer, const Uint32* type_data, unsigned int texture_width, unsigned int texture_height, unsigned short height, unsigned short width, unsigned int tile_size_width, unsigned int tile_size_height)
+void generate_tilemap(Drawer& drawer, const Uint32* type_data, unsigned int texture_width, unsigned int texture_height, unsigned short height, unsigned short width, unsigned int tile_size_width, unsigned int tile_size_height)
 {
 	Quad rectangle_coordinates =
 	{
@@ -77,8 +78,8 @@ void tilemap_generate(Drawer& drawer, const Uint32* type_data, unsigned int text
 		vector2_create(0.f, (float)tile_size_height)
 	};
 
-	unsigned short offsetVert = 0;
-	unsigned short offset = 0;
+	unsigned short tilemap_vertices = 0;
+	unsigned short tilemap_indices = 0;
 	for (unsigned int i = 0; i < width; ++i)
 	{
 		for (unsigned int j = 0; j < height; ++j)
@@ -108,19 +109,35 @@ void tilemap_generate(Drawer& drawer, const Uint32* type_data, unsigned int text
 			drawer.vertex_tex_coords[i + j * width][2] = vector2_create(gl_x + tex_width, gl_y);
 			drawer.vertex_tex_coords[i + j * width][3] = vector2_create(gl_x, gl_y);
 
-			drawer.vertex_indices[offset++] = offsetVert + 0;
-			drawer.vertex_indices[offset++] = offsetVert + 1;
-			drawer.vertex_indices[offset++] = offsetVert + 2;
-			drawer.vertex_indices[offset++] = offsetVert + 0;
-			drawer.vertex_indices[offset++] = offsetVert + 2;
-			drawer.vertex_indices[offset++] = offsetVert + 3;
+			drawer.vertex_indices[tilemap_indices++] = tilemap_vertices + 0;
+			drawer.vertex_indices[tilemap_indices++] = tilemap_vertices + 1;
+			drawer.vertex_indices[tilemap_indices++] = tilemap_vertices + 2;
+			drawer.vertex_indices[tilemap_indices++] = tilemap_vertices + 0;
+			drawer.vertex_indices[tilemap_indices++] = tilemap_vertices + 2;
+			drawer.vertex_indices[tilemap_indices++] = tilemap_vertices + 3;
 
-			offsetVert += 4;
+			tilemap_vertices += 4;
 		}
 	}
 
-	drawer.total_num_vertices += offsetVert;
-	drawer.total_num_indices += offset;
+	drawer.total_num_vertices += tilemap_vertices;
+	drawer.total_num_indices += tilemap_indices;
+}
+
+void generate_actors(Drawer& drawer, int num_actors)
+{
+	//Quad rectangle_coordinates =
+	//{
+	//	vector2_create(0.f, 0.f),
+	//	vector2_create((float)tile_size_width, 0.f),
+	//	vector2_create((float)tile_size_width, (float)tile_size_height),
+	//	vector2_create(0.f, (float)tile_size_height)
+	//};
+	//
+	//for (int i = 0; i < num_actors; ++i)
+	//{
+	//
+	//}
 }
 
 void generate_buffers(Drawer& drawer)
