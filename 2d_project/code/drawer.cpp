@@ -122,7 +122,7 @@ void tilemap_generate(Drawer& drawer, const Uint32* type_data, unsigned int text
 	drawer.total_num_vertices += offsetVert;
 	drawer.total_num_indices += offset;
 }
-#include <iostream>
+
 void generate_buffers(Drawer& drawer)
 {
 	glGenVertexArrays(1, &drawer.vao);
