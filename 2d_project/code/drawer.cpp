@@ -21,6 +21,21 @@ void drawer_initialize(Drawer& drawer, const Uint32* type_data, unsigned short n
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, stride, pointer);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, stride, pointer + 2);
 
+	unsigned short* indices = new unsigned short[6*4];
+	for (int i = 0; i < 4*6; i+=6)
+	{
+		indices[i+0] = i+0;
+		indices[i+1] = i+1;
+		indices[i+2] = i+2;
+		indices[i+3] = i+0;
+		indices[i+4] = i+2;
+		indices[i+5] = i+3;
+	}
+
+	glGenBuffers(1, &drawer.sprite_ebo);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, drawer.sprite_ebo);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned short) * 4*6, &indices[0], GL_STATIC_DRAW);
+
 	drawer.tilemap_texture = texture_from_file("tiles.png");
 	drawer.cursor_texture = texture_from_file("cursor.png");
 	drawer.player_texture = texture_from_file("spritesheet.png");
@@ -48,8 +63,8 @@ void drawer_draw_combat(Drawer& drawer, Camera& camera, Vector2 team_positions[]
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, drawer.tilemap.ssbo);
 	tilemap_draw(drawer.tilemap);
 
-	glBindVertexArray(drawer.sprite_vao);
-	glBindBuffer(GL_ARRAY_BUFFER, drawer.sprite_vbo);
+	//glBindVertexArray(drawer.sprite_vao);
+	//glBindBuffer(GL_ARRAY_BUFFER, drawer.sprite_vbo);
 	Rect rect;
 	SpriteAnimation anim;
 	float time = window_time_get();
@@ -75,7 +90,7 @@ void drawer_draw_combat(Drawer& drawer, Camera& camera, Vector2 team_positions[]
 			sprite_draw(&rect, &anim, &drawer.cursor_texture, time);
 		}
 	}*/
-	
+	glEnable(GL_DEPTH_TEST);
 
 	for (int i = 0; i < 4; ++i)
 	{
@@ -87,10 +102,12 @@ void drawer_draw_combat(Drawer& drawer, Camera& camera, Vector2 team_positions[]
 		sprite_draw(&rect, &anim, &drawer.player_texture, time); */
 		drawer.vertices[i].position = team_positions[i];
 	}
-	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, drawer.sprite_storage);
-	glDrawArrays(GL_TRIANGLES, 0, 4 * 6);
 
-	glEnable(GL_DEPTH_TEST);
+	glBindTexture(GL_TEXTURE_2D, drawer.player_texture.id);
+
+	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, drawer.sprite_storage);
+	glDrawElements(GL_TRIANGLES, 4 * 6, GL_UNSIGNED_SHORT, 0);
+
 }
 
 void drawer_draw_build(Drawer & drawer, Camera & camera, char* names[4])
