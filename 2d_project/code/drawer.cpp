@@ -102,10 +102,10 @@ void generate_tilemap(Drawer& drawer, const Uint32* type_data, unsigned short he
 			drawer.vertex_local_coords[i + j * width][2] = rectangle_coordinates[2];
 			drawer.vertex_local_coords[i + j * width][3] = rectangle_coordinates[3];
 
-			drawer.vertex_colors[i + j * width + 0] = color_create(255, 255, 255);
-			drawer.vertex_colors[i + j * width + 1] = color_create(255, 255, 255);
-			drawer.vertex_colors[i + j * width + 2] = color_create(255, 255, 255);
-			drawer.vertex_colors[i + j * width + 3] = color_create(255, 255, 255);
+			drawer.vertex_colors[(i + j * width) * 4 + 0] = color_create(255, 255, 255);
+			drawer.vertex_colors[(i + j * width) * 4 + 1] = color_create(255, 255, 255);
+			drawer.vertex_colors[(i + j * width) * 4 + 2] = color_create(255, 255, 255);
+			drawer.vertex_colors[(i + j * width) * 4 + 3] = color_create(255, 255, 255);
 
 
 			int tile_number = type_data[i + j * width] + 32*15; // 32*15 is to offset to the tiles in the one texture
