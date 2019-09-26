@@ -17,6 +17,18 @@ typedef struct
 	};
 } Actor;
 
+#include "math2d.h" 
+typedef struct
+{
+	Rect rect;
+
+} Peice;
+
+typedef struct
+{
+
+} Inventory;
+
 typedef struct
 {
 	unsigned int selected;
@@ -34,5 +46,13 @@ GameState * game_stack_push(GameStack *stack);
 GameState * game_stack_pop(GameStack *stack);
 GameState * game_stack_peek(GameStack *stack);
 
+static bool can_push_state(GameState *state)
+{
+	if (state->selected != 0)
+	{
+		return true;
+	}
+	return false;
+}
 
 #endif

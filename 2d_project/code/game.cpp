@@ -132,17 +132,20 @@ void game_update(Game& game)
 	}
 	GameState *game_state = game_stack_peek(&game.stack);
 
-	if (select.pressed && select.transitions > 0)
+#define pressed_once(button) button.pressed && button.transitions == 1
+
+	if (pressed_once(select) && can_push_state(game_state))
 	{
 		game_state = game_stack_push(&game.stack);
 		printf("%u\n", game.stack.top);
 		game_state->selected = 0;
 	}
 
-	if (cancel.pressed && cancel.transitions > 0)
+	if (pressed_once(cancel))
 	{
 		game_state = game_stack_pop(&game.stack);
 		printf("%u\n", game.stack.top);
+		game_state->selected = 1;
 	}
 }
 

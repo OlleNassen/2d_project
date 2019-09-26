@@ -75,7 +75,7 @@ void drawer_draw_combat(Drawer& drawer, Camera& camera, Vector2 team_positions[]
 			sprite_draw(&rect, &anim, &drawer.cursor_texture, time);
 		}
 	}*/
-	glEnable(GL_DEPTH_TEST);
+	
 
 	for (int i = 0; i < 4; ++i)
 	{
@@ -89,6 +89,8 @@ void drawer_draw_combat(Drawer& drawer, Camera& camera, Vector2 team_positions[]
 	}
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, drawer.sprite_storage);
 	glDrawArrays(GL_TRIANGLES, 0, 4 * 6);
+
+	glEnable(GL_DEPTH_TEST);
 }
 
 void drawer_draw_build(Drawer & drawer, Camera & camera, char* names[4])
