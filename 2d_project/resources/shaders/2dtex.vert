@@ -1,6 +1,7 @@
 #version 440
 
-layout(location = 0) in vec2 uvcoord;
+layout(location = 0) in vec2 local_pos;
+layout(location = 1) in vec2 uvcoord;
 
 layout(std430, binding = 3) buffer world_positions
 {
@@ -24,14 +25,7 @@ void main()
 	uv = vec2(uvcoord.x, uvcoord.y);
 	z = float(gl_VertexID) / float(num_vertices);
 
-	vec2 local_coords[6];
-
-	local_coords[0]	= vec2(0.0,0.0);
-	local_coords[1]	= vec2(32.0,0.0);
-	local_coords[2]	= vec2(32.0,32.0);
-	local_coords[3]	= vec2(0.0,32.0);
-
-	vec2 position = 4*local_coords[gl_VertexID % 4] + cart_to_dimetric(positions[gl_VertexID / 4]);
+	vec2 position = 4*local_pos + cart_to_dimetric(positions[gl_VertexID / 4]);
 
 	gl_Position = projection * vec4(view + position, 0, 1);
 }
