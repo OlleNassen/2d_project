@@ -44,6 +44,21 @@ void drawer_initialize(Drawer& drawer, const Uint32* type_data, unsigned short n
 
 void drawer_draw_combat(Drawer& drawer, Camera& camera, Vector2 team_positions[], short team_classes[], Vector2& cursor_pos, Uint32 *path)
 {
+	for (int i = 0; i < 40 * 60; ++i)
+	{
+		int x = i % 60;
+		int y = i / 60;
+
+		if (path[i] < 5)
+		{
+			drawer.vertex_colors[i] = color_create(55, 55, 255);
+		}
+		else
+		{
+			drawer.vertex_colors[i] = color_create(255, 255, 255);
+		}	
+	}
+	
 	for (int i = 0; i < 4; ++i)
 	{
 		drawer.vertex_colors[(i + 4*((int)cursor_pos.x + (int)cursor_pos.y * 60)/32) - 4] = color_create(255,0,0);
