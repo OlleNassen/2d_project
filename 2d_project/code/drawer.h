@@ -3,6 +3,9 @@
 #include "render_data.h"
 #include "camera.h"
 #include <SDL/SDL.h>
+#include "math2d.h"
+
+typedef Vector2 Quad[4];
 
 struct Vertex
 {
@@ -11,14 +14,22 @@ struct Vertex
 
 struct Drawer
 {
-	Tilemap tilemap;
-
 	Texture tilemap_texture;
 	Texture cursor_texture;
 	Texture player_texture;
-	unsigned int sprite_vao;
-	unsigned int sprite_vbo;
-	unsigned int sprite_ebo;
+
+	Vector2* sprites_world_positions;
+	Quad* vertex_local_coords;
+	Quad* vertex_tex_coords;
+	unsigned short* vertex_indices;
+
+	unsigned short total_num_indices;
+	unsigned short total_num_vertices;
+
+	unsigned int vao;
+	unsigned int vbo;
+	unsigned int ebo;
+	unsigned int ssbo;
 
 	unsigned int sprite_storage;
 

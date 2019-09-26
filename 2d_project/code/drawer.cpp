@@ -3,51 +3,33 @@
 #include <glad/glad.h>
 #include "window.h"
 
+void tilemap_generate(Drawer& drawer, const Uint32* type_data, unsigned int texture_width, unsigned int texture_height, unsigned short height, unsigned short width, unsigned int tile_size_width, unsigned int tile_size_height);
+void generate_buffers(Drawer& drawer);
+
 void drawer_initialize(Drawer& drawer, const Uint32* type_data, unsigned short num_tiles_rows, unsigned short num_tiles_columns)
 {
 	drawer.shader_tex = shader_create("resources/shaders/2dtex.vert", "resources/shaders/2dtex.frag");
-
-	glGenVertexArrays(1, &drawer.sprite_vao);
-	glBindVertexArray(drawer.sprite_vao);
-	glGenBuffers(1, &drawer.sprite_vbo);
-	glBindBuffer(GL_ARRAY_BUFFER, drawer.sprite_vbo);
-	glBufferData(GL_ARRAY_BUFFER, 128, 0, GL_STATIC_DRAW);
-
-	glEnableVertexAttribArray(0);
-	glEnableVertexAttribArray(1);
-
-	float *pointer = 0;
-	unsigned int stride = sizeof(float) * 4;
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, stride, pointer);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, stride, pointer + 2);
-
-	unsigned short* indices = new unsigned short[6*4];
-	for (int i = 0; i < 4*6; i+=6)
-	{
-		indices[i+0] = i+0;
-		indices[i+1] = i+1;
-		indices[i+2] = i+2;
-		indices[i+3] = i+0;
-		indices[i+4] = i+2;
-		indices[i+5] = i+3;
-	}
-
-	glGenBuffers(1, &drawer.sprite_ebo);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, drawer.sprite_ebo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned short) * 4*6, &indices[0], GL_STATIC_DRAW);
 
 	drawer.tilemap_texture = texture_from_file("tiles.png");
 	drawer.cursor_texture = texture_from_file("cursor.png");
 	drawer.player_texture = texture_from_file("spritesheet.png");
 
-	tilemap_generate(drawer.tilemap, type_data, drawer.tilemap_texture.width, drawer.tilemap_texture.height, num_tiles_rows, num_tiles_columns, 32, 32);
+	unsigned int size = 1024 * 1024;
+	drawer.sprites_world_positions = new Vector2[size];
+	drawer.vertex_local_coords = new Quad[size];
+	drawer.vertex_tex_coords = new Quad[size];
+	drawer.vertex_indices = new unsigned short[size * 6];
+	drawer.total_num_indices = 0;
+	drawer.total_num_vertices = 0;
+
+	tilemap_generate(drawer, type_data, drawer.tilemap_texture.width, drawer.tilemap_texture.height, num_tiles_rows, num_tiles_columns, 32, 32);
 
 	GLenum flags = GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT | GL_MAP_COHERENT_BIT;
-	unsigned int size = 1024 * 1024;
 	glGenBuffers(1, &drawer.sprite_storage);
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, drawer.sprite_storage);
 	glBufferStorage(GL_SHADER_STORAGE_BUFFER, size, 0, flags);
 	drawer.vertices = (Vertex *)glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, size, flags);
+	generate_buffers(drawer);
 }
 
 void drawer_draw_combat(Drawer& drawer, Camera& camera, Vector2 team_positions[], short team_classes[], Vector2& cursor_pos, Uint32 *path)
@@ -56,61 +38,17 @@ void drawer_draw_combat(Drawer& drawer, Camera& camera, Vector2 team_positions[]
 	shader_uniform(drawer.shader_tex, "view", vector2_create(camera.position.x, camera.position.y));
 	shader_uniform(drawer.shader_tex, "projection", camera.ortho);
 	shader_uniform(drawer.shader_tex, "sprite_tex", 0);
-	shader_uniform(drawer.shader_tex, "num_vertices", (int)drawer.tilemap.num_indices);
+	shader_uniform(drawer.shader_tex, "num_vertices", (int)drawer.total_num_vertices);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, drawer.tilemap_texture.id);
 
-	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, drawer.tilemap.ssbo);
-	tilemap_draw(drawer.tilemap);
+	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, drawer.ssbo);
 
-	//glBindVertexArray(drawer.sprite_vao);
-	//glBindBuffer(GL_ARRAY_BUFFER, drawer.sprite_vbo);
-	Rect rect;
-	SpriteAnimation anim;
-	float time = window_time_get();
-	rect = rect_createfv(vector2_create(cursor_pos.x + 16, cursor_pos.y + 16), 32, 32);
-
-	anim.speed = 0.5f;
-	anim.sprite = rect_create(0, 0, 32, 32);
-	anim.size = rect_create(0, 0, 32 * 2, 32);
-	glDisable(GL_DEPTH_TEST);
-	/*sprite_draw(&rect, &anim, &drawer.cursor_texture, time);
-
-	for (int i = 0; i < 40 * 60; ++i)
-	{
-		int x = i % 60;
-		int y = i / 60;
-		
-		if (path[i] < 5)
-		{
-			rect = rect_createfv(vector2_create(x * 32+16, y * 32+16), 32, 32);
-			anim.speed = 0.5f;
-			anim.sprite = rect_create(0, 0, 32, 32);
-			anim.size = rect_create(0, 0, 32 * 2, 32);
-			sprite_draw(&rect, &anim, &drawer.cursor_texture, time);
-		}
-	}*/
-	glEnable(GL_DEPTH_TEST);
-
-	for (int i = 0; i < 4; ++i)
-	{
-		/*rect = rect_createfv(vector2_create(team_positions[i].x+16, team_positions[i].y+16), 32, 32);
-		anim.speed = 0.5f;
-		anim.sprite = rect_create(team_classes[i] * 4 * 32, 0, 32,     32);
-		anim.size =   rect_create(team_classes[i] * 4 * 32, 0, 32, 32);
-		glDisable(GL_DEPTH_TEST);
-		sprite_draw(&rect, &anim, &drawer.player_texture, time); */
-		drawer.vertices[i].position = team_positions[i];
-	}
-
-	glBindTexture(GL_TEXTURE_2D, drawer.player_texture.id);
-
-	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, drawer.sprite_storage);
-	glDrawElements(GL_TRIANGLES, 4 * 6, GL_UNSIGNED_SHORT, 0);
-
+	glBindVertexArray(drawer.vao);
+	glDrawElements(GL_TRIANGLES, drawer.total_num_vertices, GL_UNSIGNED_SHORT, 0);
 }
 
-void drawer_draw_build(Drawer & drawer, Camera & camera, char* names[4])
+void drawer_draw_build(Drawer& drawer, Camera & camera, char* names[4])
 {
 	Rect rect = rect_create(camera.position.x + 1280 / 2, camera.position.y + 720 / 2, 1280, 720);
 	SpriteAnimation anim;
@@ -127,4 +65,88 @@ void drawer_draw_build(Drawer & drawer, Camera & camera, char* names[4])
 void drawer_draw_mainmenu(Drawer & drawer, Camera & camera)
 {
 
+}
+
+void tilemap_generate(Drawer& drawer, const Uint32* type_data, unsigned int texture_width, unsigned int texture_height, unsigned short height, unsigned short width, unsigned int tile_size_width, unsigned int tile_size_height)
+{
+	Quad rectangle_coordinates =
+	{
+		vector2_create(0.f, 0.f),
+		vector2_create((float)tile_size_width, 0.f),
+		vector2_create((float)tile_size_width, (float)tile_size_height),
+		vector2_create(0.f, (float)tile_size_height)
+	};
+
+	unsigned short offsetVert = 0;
+	unsigned short offset = 0;
+	for (unsigned int i = 0; i < width; ++i)
+	{
+		for (unsigned int j = 0; j < height; ++j)
+		{
+			Vector2 world_position = vector2_create((float)i * tile_size_width, (float)j * tile_size_height);
+
+			drawer.sprites_world_positions[i + j * width] = world_position;
+
+			drawer.vertex_local_coords[i + j * width][0] = rectangle_coordinates[0];
+			drawer.vertex_local_coords[i + j * width][1] = rectangle_coordinates[1];
+			drawer.vertex_local_coords[i + j * width][2] = rectangle_coordinates[2];
+			drawer.vertex_local_coords[i + j * width][3] = rectangle_coordinates[3];
+
+			int tile_number = type_data[i + j * width];
+
+			int uv_x = tile_number % (texture_width / tile_size_width);
+			int uv_y = tile_number / (texture_width / tile_size_width);
+
+			float gl_x = (float)uv_x / (texture_width / tile_size_width);
+			float gl_y = (float)uv_y / (texture_height / tile_size_height);
+
+			float tex_width = (float)tile_size_width / texture_width;
+			float tex_height = (float)tile_size_height / texture_height;
+
+			drawer.vertex_tex_coords[i + j * width][0] = vector2_create(gl_x, gl_y + tex_height);
+			drawer.vertex_tex_coords[i + j * width][1] = vector2_create(gl_x + tex_width, gl_y + tex_height);
+			drawer.vertex_tex_coords[i + j * width][2] = vector2_create(gl_x + tex_width, gl_y);
+			drawer.vertex_tex_coords[i + j * width][3] = vector2_create(gl_x, gl_y);
+
+			drawer.vertex_indices[offset++] = offsetVert + 0;
+			drawer.vertex_indices[offset++] = offsetVert + 1;
+			drawer.vertex_indices[offset++] = offsetVert + 2;
+			drawer.vertex_indices[offset++] = offsetVert + 0;
+			drawer.vertex_indices[offset++] = offsetVert + 2;
+			drawer.vertex_indices[offset++] = offsetVert + 3;
+
+			offsetVert += 4;
+		}
+	}
+
+	drawer.total_num_vertices += offsetVert;
+	drawer.total_num_indices += offset;
+}
+#include <iostream>
+void generate_buffers(Drawer& drawer)
+{
+	glGenVertexArrays(1, &drawer.vao);
+	glBindVertexArray(drawer.vao);
+	glGenBuffers(1, &drawer.vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, drawer.vbo);
+
+	unsigned int size = sizeof(Vector2) * drawer.total_num_vertices;
+	glBufferData(GL_ARRAY_BUFFER, size * 2, 0, GL_STATIC_DRAW);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, size, &drawer.vertex_local_coords[0]);
+	glBufferSubData(GL_ARRAY_BUFFER, size, size, &drawer.vertex_tex_coords[0]);
+
+	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
+
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(Vector2), (void*)0);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vector2), (void*)(sizeof(Vector2)));
+
+	glGenBuffers(1, &drawer.ebo);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, drawer.ebo);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned short) * drawer.total_num_indices, &drawer.vertex_indices[0], GL_STATIC_DRAW);
+
+	glGenBuffers(1, &drawer.ssbo);
+	glBindBuffer(GL_SHADER_STORAGE_BUFFER, drawer.ssbo);
+	glBufferData(GL_SHADER_STORAGE_BUFFER, size / 4, &drawer.sprites_world_positions[0], GL_DYNAMIC_COPY);
+	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, drawer.ssbo);
 }
