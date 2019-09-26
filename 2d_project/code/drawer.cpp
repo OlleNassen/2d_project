@@ -3,7 +3,7 @@
 #include <glad/glad.h>
 #include "window.h"
 
-void generate_tilemap(Drawer& drawer, const Uint32* type_data, unsigned int texture_width, unsigned int texture_height, unsigned short height, unsigned short width, unsigned int tile_size_width, unsigned int tile_size_height);
+void generate_tilemap(Drawer& drawer, const Uint32* type_data, unsigned short height, unsigned short width, unsigned int tile_size_width, unsigned int tile_size_height);
 void generate_actors(Drawer& drawer, int num_actors, unsigned short classes[]);
 void generate_buffers(Drawer& drawer);
 
@@ -20,7 +20,7 @@ void drawer_initialize(Drawer& drawer, const Uint32* type_data, unsigned short n
 	drawer.total_num_indices = 0;
 	drawer.total_num_vertices = 0;
 
-	generate_tilemap(drawer, type_data, drawer.the_one_texture.width, drawer.the_one_texture.height, num_tiles_rows, num_tiles_columns, 32, 32);
+	generate_tilemap(drawer, type_data, num_tiles_rows, num_tiles_columns, 32, 32);
 	unsigned short temp[] = {1,2,3,4};
 	generate_actors(drawer, 4, temp);
 
@@ -67,7 +67,7 @@ void drawer_draw_mainmenu(Drawer & drawer, Camera & camera)
 
 }
 
-void generate_tilemap(Drawer& drawer, const Uint32* type_data, unsigned int texture_width, unsigned int texture_height, unsigned short height, unsigned short width, unsigned int tile_size_width, unsigned int tile_size_height)
+void generate_tilemap(Drawer& drawer, const Uint32* type_data, unsigned short height, unsigned short width, unsigned int tile_size_width, unsigned int tile_size_height)
 {
 	Quad rectangle_coordinates =
 	{
@@ -94,14 +94,14 @@ void generate_tilemap(Drawer& drawer, const Uint32* type_data, unsigned int text
 
 			int tile_number = type_data[i + j * width] + 32*15; // 32*15 is to offset to the tiles in the one texture
 
-			int uv_x = tile_number % (texture_width / tile_size_width);
-			int uv_y = tile_number / (texture_width / tile_size_width);
+			int uv_x = tile_number % (drawer.the_one_texture.width / tile_size_width);
+			int uv_y = tile_number / (drawer.the_one_texture.width / tile_size_width);
 
-			float gl_x = (float)uv_x / (texture_width / tile_size_width);
-			float gl_y = (float)uv_y / (texture_height / tile_size_height);
+			float gl_x = (float)uv_x / (drawer.the_one_texture.width / tile_size_width);
+			float gl_y = (float)uv_y / (drawer.the_one_texture.height / tile_size_height);
 
-			float tex_width = (float)tile_size_width / texture_width;
-			float tex_height = (float)tile_size_height / texture_height;
+			float tex_width = (float)tile_size_width / drawer.the_one_texture.width;
+			float tex_height = (float)tile_size_height / drawer.the_one_texture.height;
 
 			drawer.vertex_tex_coords[i + j * width][0] = vector2_create(gl_x, gl_y + tex_height);
 			drawer.vertex_tex_coords[i + j * width][1] = vector2_create(gl_x + tex_width, gl_y + tex_height);
@@ -125,18 +125,52 @@ void generate_tilemap(Drawer& drawer, const Uint32* type_data, unsigned int text
 
 void generate_actors(Drawer& drawer, int num_actors, unsigned short classes[])
 {
-	//Quad rectangle_coordinates =
-	//{
-	//	vector2_create(0.f, 0.f),
-	//	vector2_create((float)tile_size_width, 0.f),
-	//	vector2_create((float)tile_size_width, (float)tile_size_height),
-	//	vector2_create(0.f, (float)tile_size_height)
-	//};
-	//
-	//for (int i = 0; i < num_actors; ++i)
-	//{
-	//
-	//}
+	const int sprite_width = 32.f;
+	const int sprite_height = 32.f;
+
+	Quad rectangle_coordinates =
+	{
+		vector2_create(0.f, 0.f),
+		vector2_create(sprite_width, 0.f),
+		vector2_create(sprite_width, sprite_height),
+		vector2_create(0.f, sprite_height)
+	};
+	
+	for (int i = 0; i < num_actors; ++i)
+	{
+		drawer.sprites_world_positions[drawer.total_num_vertices/4] = vector2_create(0,0);
+
+		drawer.vertex_local_coords[drawer.total_num_vertices][0] = rectangle_coordinates[0];
+		drawer.vertex_local_coords[drawer.total_num_vertices][1] = rectangle_coordinates[1];
+		drawer.vertex_local_coords[drawer.total_num_vertices][2] = rectangle_coordinates[2];
+		drawer.vertex_local_coords[drawer.total_num_vertices][3] = rectangle_coordinates[3];
+	
+		int tile_number = classes[i] * 32 * 4;
+	
+		int uv_x = tile_number % (drawer.the_one_texture.width / sprite_width);
+		int uv_y = tile_number / (drawer.the_one_texture.width / sprite_width);
+	
+		float gl_x = (float)uv_x / (drawer.the_one_texture.width / sprite_width);
+		float gl_y = (float)uv_y / (drawer.the_one_texture.height / sprite_height);
+	
+		float tex_width = (float)sprite_width / drawer.the_one_texture.width;
+		float tex_height = (float)sprite_height / drawer.the_one_texture.height;
+	
+		drawer.vertex_tex_coords[drawer.total_num_vertices][0] = vector2_create(gl_x, gl_y + tex_height);
+		drawer.vertex_tex_coords[drawer.total_num_vertices][1] = vector2_create(gl_x + tex_width, gl_y + tex_height);
+		drawer.vertex_tex_coords[drawer.total_num_vertices][2] = vector2_create(gl_x + tex_width, gl_y);
+		drawer.vertex_tex_coords[drawer.total_num_vertices][3] = vector2_create(gl_x, gl_y);
+
+		drawer.vertex_indices[drawer.total_num_indices+0] = drawer.total_num_vertices + 0;
+		drawer.vertex_indices[drawer.total_num_indices+1] = drawer.total_num_vertices + 1;
+		drawer.vertex_indices[drawer.total_num_indices+2] = drawer.total_num_vertices + 2;
+		drawer.vertex_indices[drawer.total_num_indices+3] = drawer.total_num_vertices + 0;
+		drawer.vertex_indices[drawer.total_num_indices+4] = drawer.total_num_vertices + 2;
+		drawer.vertex_indices[drawer.total_num_indices+5] = drawer.total_num_vertices + 3;
+	
+		drawer.total_num_vertices += 4;
+		drawer.total_num_indices += 6;
+	}
 }
 
 void generate_buffers(Drawer& drawer)
