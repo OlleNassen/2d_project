@@ -52,7 +52,7 @@ short generate_proficiency(Game& game);
 void load_names_from_file(Game& game, const char* path);
 
 void game_initialize(Game& game)
-{
+{	
 	srand(time(0));
 	game.current_state = StateCombat;
 	Uint32 tiles[16];

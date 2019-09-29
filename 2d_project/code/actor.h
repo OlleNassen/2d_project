@@ -55,4 +55,57 @@ static bool can_push_state(GameState *state)
 	return false;
 }
 
+struct Action;
+
+struct ActionResult
+{
+	bool succeded;
+	Action *alternative;
+};
+
+struct Action
+{
+	ActionResult(*execute)(struct Action *);
+};
+
+struct Actor2
+{
+	int energy;
+	Action *next_action;
+};
+
+static Actor2 actors[128];
+static int current_actor;
+
+static void process()
+{
+	Action *action = actors[current_actor].next_action;
+	ActionResult result = action->execute(action);
+
+	while (result.succeded && result.alternative)
+	{
+		result = action->execute(action);
+		action = result.alternative;
+	}
+
+	if (result.succeded)
+	{
+		current_actor = (current_actor + 1) % 128;
+	}
+
+}
+
+
+struct MoveAction
+{
+	Action head;
+
+	float direction;
+};
+
+static void move_action(Action *action)
+{
+	MoveAction *move = (MoveAction *)action;
+}
+
 #endif
