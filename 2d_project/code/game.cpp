@@ -52,15 +52,14 @@ short generate_proficiency(Game& game);
 void load_names_from_file(Game& game, const char* path);
 
 void game_initialize(Game& game)
-{
+{	
 	srand(time(0));
-	game.cursor.position.x = 10;
 	game.current_state = StateCombat;
 	Uint32 tiles[16];
 	for (int i = 0; i < 16; ++i) tiles[i] = 1;
 	Uint32 path[16];
 	for (int i = 0; i < 16; ++i) path[i] = 1000;
-
+	
 	flood(path, tiles, 4, 4, 2, 2, 0);
 
 	printf("%u %u %u %u\n", path[0], path[1], path[2], path[3]);
@@ -71,15 +70,12 @@ void game_initialize(Game& game)
 	game.stack.top = 1;
 	game.stack.data[0].selected = 0;
 	game.stack.data[1].selected = 0;
-
-	GameState *state = game_stack_peek(&game.stack);
-	for (int i = 0; i < 256; ++i) state->actors[i].x = -100.0f;
-
+	
 	create_game_map(game.map);
 	camera_initialize_default(game.camera);
 	drawer_initialize(game.drawer, game.map.tiles, game.map.height, game.map.width);
 	load_names_from_file(game, "names.bin");
-	for (int i = 0; i < 4; ++i)
+	for(int i = 0; i < 4; ++i)
 		generate_character(game, i);
 
 	Uint32 *ptr = (Uint32 *)malloc(sizeof(Uint32) * game.map.size * 5);
@@ -117,17 +113,15 @@ void game_update(Game& game)
 		window_size_get(&w_w, &w_h);
 		int x, y;
 		window_mouse_position(&x, &y);
-		Vector2 result = vector2_create((-game.camera.position.x + x) / 32.0, (-game.camera.position.y + (w_h - y)) / 32.0);
-		double fract, temp;
-		fract = modf(result.x, &temp);
-		result.x -= fract;
-		fract = modf(result.y, &temp);
-		result.y -= fract;
-
-		//std::cout << result.x << " " << result.y << '\n';
+		Vector2 result = vector2_create(-game.camera.position.x + x, -game.camera.position.y + (w_h - y));
 
 		result = dimetric_to_cart(result);
 
+		result.x = (int)result.x;
+		result.y = (int)result.y;
+
+		result.x -= (int)result.x % 32;
+		result.y -= (int)result.y % 32;
 
 		game.cursor.position = result;	
 	}
@@ -220,9 +214,7 @@ void game_update(Game& game)
 
 void game_draw(Game& game)
 {
-	
 	GameState *game_state = game_stack_peek(&game.stack);
-	//printf("%i\n", game_state->selected);
 	drawer_update(game.drawer, game.team_data.positions, 
 		game.team_data.character_classes, 
 		game.cursor.position, game.team_data.paths[game_state->selected], game_state->actors[game_state->selected].num_mov);

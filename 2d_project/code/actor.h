@@ -96,18 +96,17 @@ struct SelectAction
 	int y;
 	GameState *state;
 };
-#include <stdio.h>
+
 static ActionResult select_execute(Action *action)
 {
 	SelectAction *select = (SelectAction *)action;
 
 	for (int i = 0; i < 256; ++i)
 	{
-		if ((int)select->state->actors[i].x / 32 == select->x &&
-			(int)select->state->actors[i].y / 32 == select->y)
+		if ((int)select->state->actors[i].x / 32 == select->x / 32 &&
+			(int)select->state->actors[i].y / 32 == select->y / 32)
 		{
 			select->state->selected = i;
-			printf("%i", i);
 		}
 	}
 	
@@ -140,24 +139,35 @@ static ActionResult move_execute(Action *action)
 	MoveAction *move = (MoveAction *)action;
 	Actor *actor = move->selected;
 
+<<<<<<< HEAD
 	move->oldx = actor->x;
 	move->oldy = actor->y;
 	move->old_mov = actor->num_mov;
 	
-	int x = move->x;
-	int y = move->y;
+=======
+>>>>>>> parent of b39cd1f... hmm
+	int x = move->x / 32;
+	int y = move->y / 32;
 	
 	if (x < move->width && y < move->height)
 	{
+<<<<<<< HEAD
 		unsigned cost = move->path[x + y * move->width];
 		if (cost < actor->num_mov)
 		{
 			actor->num_mov -= cost - 1;
-			actor->x = move->x * 32;
-			actor->y = move->y * 32;
+			actor->x = move->x;
+			actor->y = move->y;
 		}
 		
 		
+=======
+		move->oldx = actor->x;
+		move->oldy = actor->y;
+
+		actor->x = move->x;
+		actor->y = move->y;
+>>>>>>> parent of b39cd1f... hmm
 	}
 	
 	return {};
