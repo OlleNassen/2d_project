@@ -32,6 +32,8 @@ void drawer_initialize(Drawer& drawer, const Uint32* type_data, unsigned short n
 	drawer.vertex_indices = new unsigned short[size * 6];
 	drawer.total_num_indices = 0;
 	drawer.total_num_vertices = 0;
+	drawer.actor_start_vertex = 0;
+	drawer.tilemap_start_vertex = 0;
 
 	text_render(drawer, "ABCabc", 6);
 	unsigned short temp[] = {0,1,2,3};
@@ -46,43 +48,8 @@ void drawer_initialize(Drawer& drawer, const Uint32* type_data, unsigned short n
 	generate_buffers(drawer);
 }
 
-void drawer_draw_combat(Drawer& drawer, Camera& camera, Vector2 team_positions[], short team_classes[], Vector2& cursor_pos, Uint32 *path)
+void drawer_draw_combat(Drawer& drawer, Camera& camera)
 {
-	for (int i = 0; i < 40 * 60; ++i)
-	{
-		int x = i % 60;
-		int y = i / 60;
-	
-		if (path[i] < 5)
-		{
-			drawer.vertex_colors[drawer.tilemap_start_vertex + i * 4 + 0] = color_create(55, 55, 255);
-			drawer.vertex_colors[drawer.tilemap_start_vertex + i * 4 + 1] = color_create(55, 55, 255);
-			drawer.vertex_colors[drawer.tilemap_start_vertex + i * 4 + 2] = color_create(55, 55, 255);
-			drawer.vertex_colors[drawer.tilemap_start_vertex + i * 4 + 3] = color_create(55, 55, 255);
-		}									
-		else								
-		{									
-			drawer.vertex_colors[drawer.tilemap_start_vertex + i * 4 + 0] = color_create(255, 255, 255);
-			drawer.vertex_colors[drawer.tilemap_start_vertex + i * 4 + 1] = color_create(255, 255, 255);
-			drawer.vertex_colors[drawer.tilemap_start_vertex + i * 4 + 2] = color_create(255, 255, 255);
-			drawer.vertex_colors[drawer.tilemap_start_vertex + i * 4 + 3] = color_create(255, 255, 255);
-		}	
-	}
-	
-	for (int i = 0; i < 4; ++i)
-	{
-		drawer.vertex_colors[drawer.tilemap_start_vertex + (i + 4*((int)cursor_pos.x + (int)cursor_pos.y * 60)/32) - 4] = color_create(255,0,0);
-	}
-	unsigned int size = sizeof(Vector2) * drawer.total_num_vertices;
-	glBindBuffer(GL_ARRAY_BUFFER, drawer.vbo);
-	glBufferSubData(GL_ARRAY_BUFFER, size * 2, drawer.total_num_vertices * sizeof(Color), &drawer.vertex_colors[0]);
-
-	for(int i = 0; i < 4; ++i)
-		drawer.sprites_world_positions[6+i] = team_positions[i];
-
-	glBindBuffer(GL_SHADER_STORAGE_BUFFER, drawer.ssbo);
-	glBufferData(GL_SHADER_STORAGE_BUFFER, size / 4, &drawer.sprites_world_positions[0], GL_DYNAMIC_COPY);
-
 	glUseProgram(drawer.the_one_shader);
 	glUniform2fv(0, 1, &camera.position.x);
 	glUniformMatrix4fv(1, 1, GL_FALSE, &camera.ortho.elements[0]);
@@ -118,6 +85,8 @@ void drawer_draw_mainmenu(Drawer & drawer, Camera & camera)
 
 void generate_tilemap(Drawer& drawer, const Uint32* type_data, unsigned short height, unsigned short width, unsigned int tile_size_width, unsigned int tile_size_height)
 {
+	drawer.tilemap_start_vertex = drawer.total_num_vertices;
+
 	Quad rectangle_coordinates =
 	{
 		vector2_create(0.f, 0.f),
@@ -125,8 +94,6 @@ void generate_tilemap(Drawer& drawer, const Uint32* type_data, unsigned short he
 		vector2_create((float)tile_size_width, (float)tile_size_height),
 		vector2_create(0.f, (float)tile_size_height)
 	};
-
-	drawer.tilemap_start_vertex = drawer.total_num_vertices;
 
 	for (unsigned int i = 0; i < width; ++i)
 	{
@@ -174,6 +141,8 @@ void generate_tilemap(Drawer& drawer, const Uint32* type_data, unsigned short he
 
 void generate_actors(Drawer& drawer, int num_actors, unsigned short classes[])
 {
+	drawer.actor_start_vertex = drawer.total_num_vertices;
+
 	const int sprite_width = 32.f;
 	const int sprite_height = 32.f;
 
@@ -328,4 +297,42 @@ void generate_buffers(Drawer& drawer)
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, drawer.ssbo);
 	glBufferData(GL_SHADER_STORAGE_BUFFER, size / 4, &drawer.sprites_world_positions[0], GL_DYNAMIC_COPY);
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, drawer.ssbo);
+}
+
+void drawer_update(Drawer& drawer, Vector2 team_positions[], short team_classes[], Vector2& cursor_pos, Uint32 *path)
+{
+	for (int i = 0; i < 40 * 60; ++i)
+	{
+		int x = i % 60;
+		int y = i / 60;
+
+		if (path[i] < 5)
+		{
+			drawer.vertex_colors[drawer.tilemap_start_vertex + i * 4 + 0] = color_create(55, 55, 255);
+			drawer.vertex_colors[drawer.tilemap_start_vertex + i * 4 + 1] = color_create(55, 55, 255);
+			drawer.vertex_colors[drawer.tilemap_start_vertex + i * 4 + 2] = color_create(55, 55, 255);
+			drawer.vertex_colors[drawer.tilemap_start_vertex + i * 4 + 3] = color_create(55, 55, 255);
+		}
+		else
+		{
+			drawer.vertex_colors[drawer.tilemap_start_vertex + i * 4 + 0] = color_create(255, 255, 255);
+			drawer.vertex_colors[drawer.tilemap_start_vertex + i * 4 + 1] = color_create(255, 255, 255);
+			drawer.vertex_colors[drawer.tilemap_start_vertex + i * 4 + 2] = color_create(255, 255, 255);
+			drawer.vertex_colors[drawer.tilemap_start_vertex + i * 4 + 3] = color_create(255, 255, 255);
+		}
+	}
+
+	for (int i = 0; i < 4; ++i)
+	{
+		drawer.vertex_colors[drawer.tilemap_start_vertex + (i + 4 * ((int)cursor_pos.x + (int)cursor_pos.y * 60) / 32) - 4] = color_create(255, 0, 0);
+	}
+	unsigned int size = sizeof(Vector2) * drawer.total_num_vertices;
+	glBindBuffer(GL_ARRAY_BUFFER, drawer.vbo);
+	glBufferSubData(GL_ARRAY_BUFFER, size * 2, drawer.total_num_vertices * sizeof(Color), &drawer.vertex_colors[0]);
+
+	for (int i = 0; i < 4; ++i)
+		drawer.sprites_world_positions[drawer.actor_start_vertex / 4 + i] = team_positions[i];
+
+	glBindBuffer(GL_SHADER_STORAGE_BUFFER, drawer.ssbo);
+	glBufferData(GL_SHADER_STORAGE_BUFFER, size / 4, &drawer.sprites_world_positions[0], GL_DYNAMIC_COPY);
 }

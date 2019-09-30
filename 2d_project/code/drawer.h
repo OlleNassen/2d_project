@@ -32,6 +32,8 @@ struct Drawer
 
 	unsigned short total_num_indices;
 	unsigned short total_num_vertices;
+
+	unsigned short actor_start_vertex;
 	unsigned short tilemap_start_vertex;
 
 	unsigned int vao;
@@ -43,9 +45,10 @@ struct Drawer
 };
 
 void drawer_initialize(Drawer& drawer, const Uint32* type_data, unsigned short num_tiles_rows, unsigned short num_tiles_columns);
-void drawer_draw_combat(Drawer& drawer, Camera& camera, Vector2 team_positions[], short team_classes[], Vector2& cursor_pos, Uint32 *path);
+void drawer_draw_combat(Drawer& drawer, Camera& camera);
 void drawer_draw_build(Drawer& drawer, Camera& camera, char* names[4]);
 void drawer_draw_mainmenu(Drawer& drawer, Camera& camera);
+void drawer_update(Drawer& drawer, Vector2 team_positions[], short team_classes[], Vector2& cursor_pos, Uint32 *path);
 void text_render(Drawer& drawer, const char* text, unsigned short num_letters);
 
 #endif
