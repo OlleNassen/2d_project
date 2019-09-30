@@ -8,8 +8,6 @@
 
 #define PI 3.14159
 
-static bool32 action_select(GameState *game_state);
-
 typedef struct
 {
 	Uint32 cost;
@@ -138,6 +136,8 @@ void game_update(Game& game)
 	selact.head.execute = &select_execute;
 	selact.head.undo = &select_undo;
 	selact.state = game_state;
+	selact.x = game.cursor.position.x;
+	selact.y = game.cursor.position.y;
 
 	Action *action = (Action *)&selact;
 
@@ -212,6 +212,10 @@ void generate_character(Game& game, int index)
 	int x_rand = rand() % game.map.width;
 	int y_rand = rand() % game.map.height;
 	game.team_data.positions[index] = vector2_create(32.f * x_rand,32.f* y_rand);
+
+	GameState *state = game_stack_peek(&game.stack);
+	state->actors[index + 1].x = game.team_data.positions[index].x;
+	state->actors[index + 1].y = game.team_data.positions[index].y;
 }
 
 char* generate_name(Game & game)
