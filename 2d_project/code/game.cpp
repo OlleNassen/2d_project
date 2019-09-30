@@ -70,6 +70,9 @@ void game_initialize(Game& game)
 	game.stack.top = 1;
 	game.stack.data[0].selected = 0;
 	game.stack.data[1].selected = 0;
+
+	GameState *state = game_stack_peek(&game.stack);
+	for (int i = 0; i < 256; ++i) state->actors[i].x = -100.0f;
 	
 	create_game_map(game.map);
 	camera_initialize_default(game.camera);

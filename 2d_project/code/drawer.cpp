@@ -306,7 +306,7 @@ void drawer_update(Drawer& drawer, Vector2 team_positions[], short team_classes[
 		int x = i % 60;
 		int y = i / 60;
 
-		if (path[i] < 5)
+		if (path[i] < num_mov)
 		{
 			drawer.vertex_colors[drawer.tilemap_start_vertex + i * 4 + 0] = color_create(55, 55, 255);
 			drawer.vertex_colors[drawer.tilemap_start_vertex + i * 4 + 1] = color_create(55, 55, 255);
