@@ -182,13 +182,14 @@ void game_update(Game& game)
 void game_draw(Game& game)
 {
 	GameState *game_state = game_stack_peek(&game.stack);
+	drawer_update(game.drawer, game.team_data.positions, game.team_data.character_classes, game.cursor.position, game.team_data.paths[game_state->selected]);
 	switch (game.current_state)
 	{
 	case StateBuild:
 		drawer_draw_build(game.drawer, game.camera, game.team_data.names);
 		break;
 	case StateCombat:
-		drawer_draw_combat(game.drawer, game.camera, game.team_data.positions, game.team_data.character_classes, game.cursor.position, game.team_data.paths[game_state->selected]);
+		drawer_draw_combat(game.drawer, game.camera);
 		break;
 	case StateMainMenu:
 		drawer_draw_mainmenu(game.drawer, game.camera);
