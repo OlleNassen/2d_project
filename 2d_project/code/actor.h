@@ -10,6 +10,8 @@ typedef struct
 	ActorType type;
 	float x;
 	float y;
+	int max_mov;
+	int num_mov;
 	union 
 	{
 		float f;
@@ -125,6 +127,7 @@ struct MoveAction
 	float y;
 	float oldx;
 	float oldy;
+	unsigned old_mov;
 	Actor *selected;
 	unsigned *path;
 	unsigned width;
@@ -136,16 +139,24 @@ static ActionResult move_execute(Action *action)
 	MoveAction *move = (MoveAction *)action;
 	Actor *actor = move->selected;
 
+	move->oldx = actor->x;
+	move->oldy = actor->y;
+	move->old_mov = actor->num_mov;
+	
 	int x = move->x / 32;
 	int y = move->y / 32;
 	
-	if (x < move->width && y < move->height && move->path[x + y * move->width] < 5)
+	if (x < move->width && y < move->height)
 	{
-		move->oldx = actor->x;
-		move->oldy = actor->y;
-
-		actor->x = move->x;
-		actor->y = move->y;
+		unsigned cost = move->path[x + y * move->width];
+		if (cost < actor->num_mov)
+		{
+			actor->num_mov -= cost - 1;
+			actor->x = move->x;
+			actor->y = move->y;
+		}
+		
+		
 	}
 	
 	return {};
@@ -158,6 +169,7 @@ static ActionResult move_undo(Action *action)
 
 	actor->x = move->oldx;
 	actor->y = move->oldy;
+	actor->num_mov = move->old_mov;
 	return {};
 }
 

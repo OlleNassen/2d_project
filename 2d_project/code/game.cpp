@@ -137,7 +137,10 @@ void game_update(Game& game)
 			(Uint32)game_state->actors[i].x / 32, (Uint32)game_state->actors[i].y / 32, 0);
 	}
 
-	SelectAction selact;
+	static Action *actions[128];
+	static unsigned top;
+
+	/*SelectAction selact;
 	selact.head.execute = &select_execute;
 	selact.head.undo = &select_undo;
 	selact.state = game_state;
@@ -152,32 +155,53 @@ void game_update(Game& game)
 	movact.width = game.map.width;
 	movact.height = game.map.height;
 	movact.x = game.cursor.position.x;
-	movact.y = game.cursor.position.y;
-	
-
-	Action *action = &selact.head;
-
-	if (game_state->selected)
-	{
-		action = &movact.head;
-	}
-
+	movact.y = game.cursor.position.y;*/
+			
 	if (select.pressed && select.transitions > 0)
 	{
-		printf("%u\n", game.stack.top);
+		if (game_state->selected)
+		{
+			MoveAction *movact = (MoveAction *)malloc(sizeof(MoveAction));
+			movact->head.execute = &move_execute;
+			movact->head.undo = &move_undo;
+			movact->selected = &game_state->actors[game_state->selected];
+			movact->path = game.team_data.paths[game_state->selected];
+			movact->width = game.map.width;
+			movact->height = game.map.height;
+			movact->x = game.cursor.position.x;
+			movact->y = game.cursor.position.y;
+			
+			
+			actions[++top] = &movact->head;
+		}
+		else
+		{
+			SelectAction *selact = (SelectAction *)malloc(sizeof(SelectAction));
+			selact->head.execute = &select_execute;
+			selact->head.undo = &select_undo;
+			selact->state = game_state;
+			selact->x = game.cursor.position.x;
+			selact->y = game.cursor.position.y;
+
+			actions[++top] = &selact->head;
+		}
+		
+		Action *action = actions[top];
 		if (action->execute)
 		{
 			action->execute(action);
 		}
 	}
 
-	action = &selact.head;
+
+
 	if (cancel.pressed && cancel.transitions > 0)
 	{
-		printf("%u\n", game.stack.top);
-		if (action->undo)
+		Action *action = actions[top];
+		if (action && action->undo)
 		{
 			action->undo(action);
+			--top;
 		}
 	}
 
@@ -191,7 +215,9 @@ void game_update(Game& game)
 void game_draw(Game& game)
 {
 	GameState *game_state = game_stack_peek(&game.stack);
-	drawer_update(game.drawer, game.team_data.positions, game.team_data.character_classes, game.cursor.position, game.team_data.paths[game_state->selected]);
+	drawer_update(game.drawer, game.team_data.positions, 
+		game.team_data.character_classes, 
+		game.cursor.position, game.team_data.paths[game_state->selected], game_state->actors[game_state->selected].num_mov);
 	switch (game.current_state)
 	{
 	case StateBuild:
@@ -245,6 +271,7 @@ void generate_character(Game& game, int index)
 	GameState *state = game_stack_peek(&game.stack);
 	state->actors[index + 1].x = game.team_data.positions[index].x;
 	state->actors[index + 1].y = game.team_data.positions[index].y;
+	state->actors[index + 1].num_mov = 5;
 }
 
 char* generate_name(Game & game)
