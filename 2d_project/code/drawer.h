@@ -48,7 +48,7 @@ void drawer_initialize(Drawer& drawer, const Uint32* type_data, unsigned short n
 void drawer_draw_combat(Drawer& drawer, Camera& camera);
 void drawer_draw_build(Drawer& drawer, Camera& camera, char* names[4]);
 void drawer_draw_mainmenu(Drawer& drawer, Camera& camera);
-void drawer_update(Drawer& drawer, Vector2 team_positions[], short team_classes[], Vector2& cursor_pos, Uint32 *path);
+void drawer_update(Drawer& drawer, Vector2 team_positions[], short team_classes[], Vector2& cursor_pos, Uint32 *path, Uint32 num_mov);
 void text_render(Drawer& drawer, const char* text, unsigned short num_letters);
 
 #endif
