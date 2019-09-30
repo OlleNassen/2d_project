@@ -177,6 +177,12 @@ void game_update(Game& game)
 			action->undo(action);
 		}
 	}
+
+	for (int i = 0; i < 4; ++i)
+	{
+		game.team_data.positions[i].x = game_state->actors[i + 1].x;
+		game.team_data.positions[i].y = game_state->actors[i + 1].y;
+	}
 }
 
 void game_draw(Game& game)
