@@ -135,7 +135,7 @@ static ActionResult move_execute(Action *action)
 {
 	MoveAction *move = (MoveAction *)action;
 	Actor *actor = move->selected;
-
+	
 	int x = move->x / 32;
 	int y = move->y / 32;
 	
@@ -143,7 +143,7 @@ static ActionResult move_execute(Action *action)
 	{
 		move->oldx = actor->x;
 		move->oldy = actor->y;
-
+	
 		actor->x = move->x;
 		actor->y = move->y;
 	}

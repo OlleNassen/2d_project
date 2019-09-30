@@ -54,6 +54,7 @@ void load_names_from_file(Game& game, const char* path);
 void game_initialize(Game& game)
 {	
 	srand(time(0));
+	game.cursor.position.x = 10;
 	game.current_state = StateCombat;
 	Uint32 tiles[16];
 	for (int i = 0; i < 16; ++i) tiles[i] = 1;
@@ -113,15 +114,17 @@ void game_update(Game& game)
 		window_size_get(&w_w, &w_h);
 		int x, y;
 		window_mouse_position(&x, &y);
-		Vector2 result = vector2_create(-game.camera.position.x + x, -game.camera.position.y + (w_h - y));
+		Vector2 result = vector2_create((-game.camera.position.x + x) / 32.0, (-game.camera.position.y + (w_h - y)) / 32.0);
+		double fract, temp;
+		fract = modf(result.x, &temp);
+		result.x -= fract;
+		fract = modf(result.y, &temp);
+		result.y -= fract;
+
+		//std::cout << result.x << " " << result.y << '\n';
 
 		result = dimetric_to_cart(result);
 
-		result.x = (int)result.x;
-		result.y = (int)result.y;
-
-		result.x -= (int)result.x % 32;
-		result.y -= (int)result.y % 32;
 
 		game.cursor.position = result;	
 	}
