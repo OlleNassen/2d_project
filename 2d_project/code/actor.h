@@ -144,8 +144,8 @@ static ActionResult move_execute(Action *action)
 	move->oldy = actor->y;
 	move->old_mov = actor->num_mov;
 	
-	int x = move->x / 32;
-	int y = move->y / 32;
+	int x = move->x;
+	int y = move->y;
 	
 	if (x < move->width && y < move->height)
 	{
@@ -153,8 +153,8 @@ static ActionResult move_execute(Action *action)
 		if (cost < actor->num_mov)
 		{
 			actor->num_mov -= cost - 1;
-			actor->x = move->x;
-			actor->y = move->y;
+			actor->x = move->x * 32;
+			actor->y = move->y * 32;
 		}
 		
 		
