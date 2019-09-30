@@ -33,6 +33,7 @@ void drawer_initialize(Drawer& drawer, const Uint32* type_data, unsigned short n
 	drawer.total_num_indices = 0;
 	drawer.total_num_vertices = 0;
 
+	text_render(drawer, "LOL", 3);
 	unsigned short temp[] = {0,1,2,3};
 	generate_actors(drawer, 4, temp);
 	generate_tilemap(drawer, type_data, num_tiles_rows, num_tiles_columns, 32, 32);
@@ -47,37 +48,37 @@ void drawer_initialize(Drawer& drawer, const Uint32* type_data, unsigned short n
 
 void drawer_draw_combat(Drawer& drawer, Camera& camera, Vector2 team_positions[], short team_classes[], Vector2& cursor_pos, Uint32 *path)
 {
-	for (int i = 0; i < 40 * 60; ++i)
-	{
-		int x = i % 60;
-		int y = i / 60;
-	
-		if (path[i] < 5)
-		{
-			drawer.vertex_colors[12 + i * 4 + 0] = color_create(55, 55, 255);
-			drawer.vertex_colors[12 + i * 4 + 1] = color_create(55, 55, 255);
-			drawer.vertex_colors[12 + i * 4 + 2] = color_create(55, 55, 255);
-			drawer.vertex_colors[12 + i * 4 + 3] = color_create(55, 55, 255);
-		}									
-		else								
-		{									
-			drawer.vertex_colors[12 + i * 4 + 0] = color_create(255, 255, 255);
-			drawer.vertex_colors[12 + i * 4 + 1] = color_create(255, 255, 255);
-			drawer.vertex_colors[12 + i * 4 + 2] = color_create(255, 255, 255);
-			drawer.vertex_colors[12 + i * 4 + 3] = color_create(255, 255, 255);
-		}	
-	}
-	
-	for (int i = 0; i < 4; ++i)
-	{
-		drawer.vertex_colors[16+ (i + 4*((int)cursor_pos.x + (int)cursor_pos.y * 60)/32) - 4] = color_create(255,0,0);
-	}
+	//for (int i = 0; i < 40 * 60; ++i)
+	//{
+	//	int x = i % 60;
+	//	int y = i / 60;
+	//
+	//	if (path[i] < 5)
+	//	{
+	//		drawer.vertex_colors[12 + i * 4 + 0] = color_create(55, 55, 255);
+	//		drawer.vertex_colors[12 + i * 4 + 1] = color_create(55, 55, 255);
+	//		drawer.vertex_colors[12 + i * 4 + 2] = color_create(55, 55, 255);
+	//		drawer.vertex_colors[12 + i * 4 + 3] = color_create(55, 55, 255);
+	//	}									
+	//	else								
+	//	{									
+	//		drawer.vertex_colors[12 + i * 4 + 0] = color_create(255, 255, 255);
+	//		drawer.vertex_colors[12 + i * 4 + 1] = color_create(255, 255, 255);
+	//		drawer.vertex_colors[12 + i * 4 + 2] = color_create(255, 255, 255);
+	//		drawer.vertex_colors[12 + i * 4 + 3] = color_create(255, 255, 255);
+	//	}	
+	//}
+	//
+	//for (int i = 0; i < 4; ++i)
+	//{
+	//	drawer.vertex_colors[16+ (i + 4*((int)cursor_pos.x + (int)cursor_pos.y * 60)/32) - 4] = color_create(255,0,0);
+	//}
 	unsigned int size = sizeof(Vector2) * drawer.total_num_vertices;
 	glBindBuffer(GL_ARRAY_BUFFER, drawer.vbo);
 	glBufferSubData(GL_ARRAY_BUFFER, size * 2, drawer.total_num_vertices * sizeof(Color), &drawer.vertex_colors[0]);
 
 	for(int i = 0; i < 4; ++i)
-		drawer.sprites_world_positions[i] = team_positions[i];
+		drawer.sprites_world_positions[3+i] = team_positions[i];
 
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, drawer.ssbo);
 	glBufferData(GL_SHADER_STORAGE_BUFFER, size / 4, &drawer.sprites_world_positions[0], GL_DYNAMIC_COPY);
@@ -238,6 +239,16 @@ void text_render(Drawer& drawer, const char * text, unsigned short num_letters)
 
 	for (int i = 0; i < num_letters; ++i)
 	{
+		drawer.sprites_world_positions[drawer.total_num_vertices / 4] = vector2_create(i * 32, 32);
+
+		drawer.vertex_local_coords[drawer.total_num_vertices / 4][0] = text_coordinates[0];
+		drawer.vertex_local_coords[drawer.total_num_vertices / 4][1] = text_coordinates[1];
+		drawer.vertex_local_coords[drawer.total_num_vertices / 4][2] = text_coordinates[2];
+		drawer.vertex_local_coords[drawer.total_num_vertices / 4][3] = text_coordinates[3];
+
+		for (int k = 0; k < 4; ++k)
+			drawer.vertex_colors[drawer.total_num_vertices + k] = color_create(255, 255, 255);
+
 		int tile_number = map_letter(text[i]);
 
 		int uv_x = tile_number % (drawer.the_one_texture.width / sprite_width);

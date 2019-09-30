@@ -31,4 +31,10 @@ void main()
 	vec2 position = 4*local_pos + cart_to_dimetric(positions[gl_VertexID / 4]);
 
 	gl_Position = projection * vec4(view + position, 0, 1);
+	
+	if(uvcoord.y > 0.7)
+	{
+		position = local_pos + positions[gl_VertexID / 4];
+		gl_Position = projection * vec4(view + position, 0, 1);
+	}
 }
