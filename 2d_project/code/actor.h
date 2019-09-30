@@ -103,13 +103,24 @@ static void move_action(Action *action)
 struct SelectAction
 {
 	Action head;
+	int x;
+	int y;
 	GameState *state;
 };
 
 static ActionResult select_execute(Action *action)
 {
 	SelectAction *select = (SelectAction *)action;
-	select->state->selected = 1;
+
+	for (int i = 0; i < 256; ++i)
+	{
+		if ((int)select->state->actors[i].x == select->x &&
+			(int)select->state->actors[i].y == select->y)
+		{
+			select->state->selected = i;
+		}
+	}
+	
 	return {};
 }
 
