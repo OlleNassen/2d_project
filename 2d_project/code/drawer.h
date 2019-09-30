@@ -32,6 +32,7 @@ struct Drawer
 
 	unsigned short total_num_indices;
 	unsigned short total_num_vertices;
+	unsigned short tilemap_start_vertex;
 
 	unsigned int vao;
 	unsigned int vbo;

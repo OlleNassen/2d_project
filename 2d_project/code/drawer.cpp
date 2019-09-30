@@ -55,23 +55,23 @@ void drawer_draw_combat(Drawer& drawer, Camera& camera, Vector2 team_positions[]
 	
 		if (path[i] < 5)
 		{
-			drawer.vertex_colors[12+16 + i * 4 + 0] = color_create(55, 55, 255);
-			drawer.vertex_colors[12+16 + i * 4 + 1] = color_create(55, 55, 255);
-			drawer.vertex_colors[12+16 + i * 4 + 2] = color_create(55, 55, 255);
-			drawer.vertex_colors[12+16 + i * 4 + 3] = color_create(55, 55, 255);
+			drawer.vertex_colors[drawer.tilemap_start_vertex + i * 4 + 0] = color_create(55, 55, 255);
+			drawer.vertex_colors[drawer.tilemap_start_vertex + i * 4 + 1] = color_create(55, 55, 255);
+			drawer.vertex_colors[drawer.tilemap_start_vertex + i * 4 + 2] = color_create(55, 55, 255);
+			drawer.vertex_colors[drawer.tilemap_start_vertex + i * 4 + 3] = color_create(55, 55, 255);
 		}									
 		else								
 		{									
-			drawer.vertex_colors[12+16 + i * 4 + 0] = color_create(255, 255, 255);
-			drawer.vertex_colors[12+16 + i * 4 + 1] = color_create(255, 255, 255);
-			drawer.vertex_colors[12+16 + i * 4 + 2] = color_create(255, 255, 255);
-			drawer.vertex_colors[12+16 + i * 4 + 3] = color_create(255, 255, 255);
+			drawer.vertex_colors[drawer.tilemap_start_vertex + i * 4 + 0] = color_create(255, 255, 255);
+			drawer.vertex_colors[drawer.tilemap_start_vertex + i * 4 + 1] = color_create(255, 255, 255);
+			drawer.vertex_colors[drawer.tilemap_start_vertex + i * 4 + 2] = color_create(255, 255, 255);
+			drawer.vertex_colors[drawer.tilemap_start_vertex + i * 4 + 3] = color_create(255, 255, 255);
 		}	
 	}
 	
 	for (int i = 0; i < 4; ++i)
 	{
-		drawer.vertex_colors[16+4*6+ (i + 4*((int)cursor_pos.x + (int)cursor_pos.y * 60)/32) - 4] = color_create(255,0,0);
+		drawer.vertex_colors[drawer.tilemap_start_vertex + (i + 4*((int)cursor_pos.x + (int)cursor_pos.y * 60)/32) - 4] = color_create(255,0,0);
 	}
 	unsigned int size = sizeof(Vector2) * drawer.total_num_vertices;
 	glBindBuffer(GL_ARRAY_BUFFER, drawer.vbo);
@@ -126,7 +126,7 @@ void generate_tilemap(Drawer& drawer, const Uint32* type_data, unsigned short he
 		vector2_create(0.f, (float)tile_size_height)
 	};
 
-	unsigned short num_sprites = drawer.total_num_vertices / 4;
+	drawer.tilemap_start_vertex = drawer.total_num_vertices;
 
 	for (unsigned int i = 0; i < width; ++i)
 	{
@@ -134,7 +134,7 @@ void generate_tilemap(Drawer& drawer, const Uint32* type_data, unsigned short he
 		{
 			Vector2 world_position = vector2_create((float)i * tile_size_width, (float)j * tile_size_height);
 
-			drawer.sprites_world_positions[num_sprites +i + j * width] = world_position;
+			drawer.sprites_world_positions[drawer.tilemap_start_vertex / 4 +i + j * width] = world_position;
 
 			drawer.vertex_local_coords[drawer.total_num_vertices / 4][0] = rectangle_coordinates[0];
 			drawer.vertex_local_coords[drawer.total_num_vertices / 4][1] = rectangle_coordinates[1];
