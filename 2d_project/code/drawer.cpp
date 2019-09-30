@@ -33,7 +33,7 @@ void drawer_initialize(Drawer& drawer, const Uint32* type_data, unsigned short n
 	drawer.total_num_indices = 0;
 	drawer.total_num_vertices = 0;
 
-	text_render(drawer, "LOL", 3);
+	text_render(drawer, "ABCabc", 6);
 	unsigned short temp[] = {0,1,2,3};
 	generate_actors(drawer, 4, temp);
 	generate_tilemap(drawer, type_data, num_tiles_rows, num_tiles_columns, 32, 32);
@@ -71,14 +71,14 @@ void drawer_draw_combat(Drawer& drawer, Camera& camera, Vector2 team_positions[]
 	
 	for (int i = 0; i < 4; ++i)
 	{
-		drawer.vertex_colors[16+12+ (i + 4*((int)cursor_pos.x + (int)cursor_pos.y * 60)/32) - 4] = color_create(255,0,0);
+		drawer.vertex_colors[16+4*6+ (i + 4*((int)cursor_pos.x + (int)cursor_pos.y * 60)/32) - 4] = color_create(255,0,0);
 	}
 	unsigned int size = sizeof(Vector2) * drawer.total_num_vertices;
 	glBindBuffer(GL_ARRAY_BUFFER, drawer.vbo);
 	glBufferSubData(GL_ARRAY_BUFFER, size * 2, drawer.total_num_vertices * sizeof(Color), &drawer.vertex_colors[0]);
 
 	for(int i = 0; i < 4; ++i)
-		drawer.sprites_world_positions[3+i] = team_positions[i];
+		drawer.sprites_world_positions[6+i] = team_positions[i];
 
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, drawer.ssbo);
 	glBufferData(GL_SHADER_STORAGE_BUFFER, size / 4, &drawer.sprites_world_positions[0], GL_DYNAMIC_COPY);
@@ -284,14 +284,14 @@ int map_letter(char letter)
 	{
 		int ascii_upper_case_start = 65;
 
-		selected_tile += 32 * 2 + 1;
+		selected_tile += 32 + 1;
 		selected_tile += (int)letter - ascii_upper_case_start;
 	}
 	else
 	{
 		int ascii_lower_case_start = 97;
 
-		selected_tile += 32 * 4 + 1;
+		selected_tile += 32 * 2 + 1;
 		selected_tile += (int)letter - ascii_lower_case_start;
 	}
 
