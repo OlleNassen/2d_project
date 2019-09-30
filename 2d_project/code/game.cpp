@@ -89,7 +89,7 @@ void game_initialize(Game& game)
 	game.team_data.paths[3] = ptr + game.map.size * 3;
 	game.team_data.paths[4] = ptr + game.map.size * 4;
 }
-
+#include <iostream>
 void game_update(Game& game)
 {
 	camera_update(&game.camera);
@@ -126,7 +126,9 @@ void game_update(Game& game)
 		result.x -= (int)result.x % 32;
 		result.y -= (int)result.y % 32;
 
-		game.cursor.position = result;	
+		result.x -= 32; // strange offset to make it work
+
+		game.cursor.position = result;
 	}
 
 	for (int i = 1; i < 5; ++i)

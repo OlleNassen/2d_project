@@ -324,14 +324,14 @@ void drawer_update(Drawer& drawer, Vector2 team_positions[], short team_classes[
 
 	for (int i = 0; i < 4; ++i)
 	{
-		drawer.vertex_colors[drawer.tilemap_start_vertex + (i + 4 * ((int)cursor_pos.x + (int)cursor_pos.y * 60) / 32)] = color_create(255, 0, 0);
+		drawer.vertex_colors[drawer.tilemap_start_vertex + (i + 4 * ((int)cursor_pos.x/32 + (int)cursor_pos.y/32 * 60))] = color_create(255, 0, 0);
 	}
 	unsigned int size = sizeof(Vector2) * drawer.total_num_vertices;
 	glBindBuffer(GL_ARRAY_BUFFER, drawer.vbo);
 	glBufferSubData(GL_ARRAY_BUFFER, size * 2, drawer.total_num_vertices * sizeof(Color), &drawer.vertex_colors[0]);
 
 	for (int i = 0; i < 4; ++i)
-		drawer.sprites_world_positions[drawer.actor_start_vertex / 4 + i] = team_positions[i];
+		drawer.sprites_world_positions[drawer.actor_start_vertex / 4 + i] = vector2_add(team_positions[i], vector2_create(32,32));
 
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, drawer.ssbo);
 	glBufferData(GL_SHADER_STORAGE_BUFFER, size / 4, &drawer.sprites_world_positions[0], GL_DYNAMIC_COPY);
