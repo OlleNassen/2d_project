@@ -87,19 +87,6 @@ static void process()
 
 }
 
-
-struct MoveAction
-{
-	Action head;
-
-	float direction;
-};
-
-static void move_action(Action *action)
-{
-	MoveAction *move = (MoveAction *)action;
-}
-
 struct SelectAction
 {
 	Action head;
@@ -128,6 +115,39 @@ static ActionResult select_undo(Action *action)
 {
 	SelectAction *select = (SelectAction *)action;
 	select->state->selected = 0;
+	return {};
+}
+
+struct MoveAction
+{
+	Action head;
+	float x;
+	float y;
+	float oldx;
+	float oldy;
+	Actor *selected;
+};
+
+static ActionResult move_execute(Action *action)
+{
+	MoveAction *move = (MoveAction *)action;
+	Actor *actor = move->selected;
+	
+	move->oldx = actor->x;
+	move->oldy = actor->y;
+
+	actor->x = move->x;
+	actor->y = move->y;
+	return {};
+}
+
+static ActionResult move_undo(Action *action)
+{
+	MoveAction *move = (MoveAction *)action;
+	Actor *actor = move->selected;
+
+	actor->x = move->oldx;
+	actor->y = move->oldy;
 	return {};
 }
 

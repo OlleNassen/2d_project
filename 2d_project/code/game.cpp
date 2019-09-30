@@ -105,6 +105,7 @@ void game_update(Game& game)
 	if (window_keyboard_pressed(SDLK_3).pressed)
 		game.current_state = StateCombat;
 
+	GameState *game_state = game_stack_peek(&game.stack);
 	
 	if (select.pressed && select.transitions > 0)
 	{
@@ -122,16 +123,19 @@ void game_update(Game& game)
 		result.x -= (int)result.x % 32;
 		result.y -= (int)result.y % 32;
 
-		game.cursor.position = result;
-
-		for (int i = 0; i < 4; ++i)
-		{
-			flood(game.team_data.paths[i + 1], 
-				game.map.cost, game.map.width, game.map.height, 
-				(Uint32)game.team_data.positions[i].x / 32, (Uint32)game.team_data.positions[i].y / 32, 0);
-		}	
+		game.cursor.position = result;	
 	}
-	GameState *game_state = game_stack_peek(&game.stack);
+
+	for (int i = 1; i < 5; ++i)
+	{
+		Uint32 *path = game.team_data.paths[i];
+
+		for (int j = 0; j < game.map.size; ++j)  path[j] = 10;
+
+		flood(path,
+			game.map.cost, game.map.width, game.map.height,
+			(Uint32)game_state->actors[i].x / 32, (Uint32)game_state->actors[i].y / 32, 0);
+	}
 
 	SelectAction selact;
 	selact.head.execute = &select_execute;
@@ -140,7 +144,20 @@ void game_update(Game& game)
 	selact.x = game.cursor.position.x;
 	selact.y = game.cursor.position.y;
 
-	Action *action = (Action *)&selact;
+	MoveAction movact;
+	movact.head.execute = &move_execute;
+	movact.head.undo = &move_undo;
+	movact.selected = &game_state->actors[game_state->selected];
+	movact.x = game.cursor.position.x;
+	movact.y = game.cursor.position.y;
+	
+
+	Action *action = &selact.head;
+
+	if (game_state->selected)
+	{
+		action = &movact.head;
+	}
 
 	if (select.pressed && select.transitions > 0)
 	{
@@ -151,6 +168,7 @@ void game_update(Game& game)
 		}
 	}
 
+	action = &selact.head;
 	if (cancel.pressed && cancel.transitions > 0)
 	{
 		printf("%u\n", game.stack.top);
