@@ -148,6 +148,9 @@ void game_update(Game& game)
 	movact.head.execute = &move_execute;
 	movact.head.undo = &move_undo;
 	movact.selected = &game_state->actors[game_state->selected];
+	movact.path = game.team_data.paths[game_state->selected];
+	movact.width = game.map.width;
+	movact.height = game.map.height;
 	movact.x = game.cursor.position.x;
 	movact.y = game.cursor.position.y;
 	

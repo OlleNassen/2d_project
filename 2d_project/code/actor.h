@@ -126,18 +126,28 @@ struct MoveAction
 	float oldx;
 	float oldy;
 	Actor *selected;
+	unsigned *path;
+	unsigned width;
+	unsigned height;
 };
 
 static ActionResult move_execute(Action *action)
 {
 	MoveAction *move = (MoveAction *)action;
 	Actor *actor = move->selected;
-	
-	move->oldx = actor->x;
-	move->oldy = actor->y;
 
-	actor->x = move->x;
-	actor->y = move->y;
+	int x = move->x / 32;
+	int y = move->y / 32;
+	
+	if (x < move->width && y < move->height && move->path[x + y * move->width] < 5)
+	{
+		move->oldx = actor->x;
+		move->oldy = actor->y;
+
+		actor->x = move->x;
+		actor->y = move->y;
+	}
+	
 	return {};
 }
 
