@@ -247,7 +247,7 @@ void text_render(Drawer& drawer, const char * text, unsigned short num_letters)
 		drawer.vertex_local_coords[drawer.total_num_vertices / 4][3] = text_coordinates[3];
 
 		for (int k = 0; k < 4; ++k)
-			drawer.vertex_colors[drawer.total_num_vertices + k] = color_create(0, 255, 255);
+			drawer.vertex_colors[drawer.total_num_vertices + k] = color_create(255, 255, 255);
 
 		int tile_number = map_letter(text[i]);
 

@@ -12,7 +12,7 @@ layout(location = 3)uniform sampler2D sprite_tex;
 void main()
 {
 	frag = texture(sprite_tex, uv) * vec4(color, 1.0);
-	if(frag == vec4(0,0,0,0) || frag == vec4(1,1,1,1))
+	if(frag == vec4(0,0,0,0))
 		discard;
 	gl_FragDepth = z;
 }
