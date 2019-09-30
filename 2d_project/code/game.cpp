@@ -66,6 +66,10 @@ void game_initialize(Game& game)
 	printf("%u %u %u %u\n", path[4], path[5], path[6], path[7]);
 	printf("%u %u %u %u\n", path[8], path[9], path[10], path[11]);
 	printf("%u %u %u %u\n", path[12], path[13], path[14], path[15]);
+
+	game.stack.top = 1;
+	game.stack.data[0].selected = 0;
+	game.stack.data[1].selected = 0;
 	
 	create_game_map(game.map);
 	camera_initialize_default(game.camera);
@@ -74,16 +78,13 @@ void game_initialize(Game& game)
 	for(int i = 0; i < 4; ++i)
 		generate_character(game, i);
 
-	Uint32 *ptr = (Uint32 *)malloc(sizeof(Uint32) * game.map.size * 4);
-	for (int i = 0; i < game.map.size * 4; ++i) ptr[i] = 1000;
+	Uint32 *ptr = (Uint32 *)malloc(sizeof(Uint32) * game.map.size * 5);
+	for (int i = 0; i < game.map.size * 5; ++i) ptr[i] = 1000;
 	game.team_data.paths[0] = ptr;
 	game.team_data.paths[1] = ptr + game.map.size;
 	game.team_data.paths[2] = ptr + game.map.size * 2;
 	game.team_data.paths[3] = ptr + game.map.size * 3;
-
-	game.stack.top = 1;
-	game.stack.data[0].selected = 1;
-	game.stack.data[1].selected = 1;
+	game.team_data.paths[4] = ptr + game.map.size * 4;
 }
 
 void game_update(Game& game)
@@ -125,9 +126,9 @@ void game_update(Game& game)
 
 		for (int i = 0; i < 4; ++i)
 		{
-			flood(game.team_data.paths[i], 
+			flood(game.team_data.paths[i + 1], 
 				game.map.cost, game.map.width, game.map.height, 
-				(Uint32)game.team_data.positions[i].x / 32, (Uint32)game.team_data.positions[i].y / 32, 0);
+				(Uint32)game.team_data.positions[i].x / 32, (Uint32)game.team_data.positions[i].y / 32, 5);
 		}	
 	}
 	GameState *game_state = game_stack_peek(&game.stack);
