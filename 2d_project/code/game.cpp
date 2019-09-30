@@ -52,7 +52,7 @@ short generate_proficiency(Game& game);
 void load_names_from_file(Game& game, const char* path);
 
 void game_initialize(Game& game)
-{	
+{
 	srand(time(0));
 	game.cursor.position.x = 10;
 	game.current_state = StateCombat;
@@ -60,7 +60,7 @@ void game_initialize(Game& game)
 	for (int i = 0; i < 16; ++i) tiles[i] = 1;
 	Uint32 path[16];
 	for (int i = 0; i < 16; ++i) path[i] = 1000;
-	
+
 	flood(path, tiles, 4, 4, 2, 2, 0);
 
 	printf("%u %u %u %u\n", path[0], path[1], path[2], path[3]);
@@ -71,12 +71,15 @@ void game_initialize(Game& game)
 	game.stack.top = 1;
 	game.stack.data[0].selected = 0;
 	game.stack.data[1].selected = 0;
-	
+
+	GameState *state = game_stack_peek(&game.stack);
+	for (int i = 0; i < 256; ++i) state->actors[i].x = -100.0f;
+
 	create_game_map(game.map);
 	camera_initialize_default(game.camera);
 	drawer_initialize(game.drawer, game.map.tiles, game.map.height, game.map.width);
 	load_names_from_file(game, "names.bin");
-	for(int i = 0; i < 4; ++i)
+	for (int i = 0; i < 4; ++i)
 		generate_character(game, i);
 
 	Uint32 *ptr = (Uint32 *)malloc(sizeof(Uint32) * game.map.size * 5);
