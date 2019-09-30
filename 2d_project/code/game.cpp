@@ -217,7 +217,9 @@ void game_update(Game& game)
 
 void game_draw(Game& game)
 {
+	
 	GameState *game_state = game_stack_peek(&game.stack);
+	//printf("%i\n", game_state->selected);
 	drawer_update(game.drawer, game.team_data.positions, 
 		game.team_data.character_classes, 
 		game.cursor.position, game.team_data.paths[game_state->selected], game_state->actors[game_state->selected].num_mov);

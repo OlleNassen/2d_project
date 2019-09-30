@@ -299,14 +299,14 @@ void generate_buffers(Drawer& drawer)
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, drawer.ssbo);
 }
 
-void drawer_update(Drawer& drawer, Vector2 team_positions[], short team_classes[], Vector2& cursor_pos, Uint32 *path)
+void drawer_update(Drawer& drawer, Vector2 team_positions[], short team_classes[], Vector2& cursor_pos, Uint32 *path, Uint32 num_mov)
 {
 	for (int i = 0; i < 40 * 60; ++i)
 	{
 		int x = i % 60;
 		int y = i / 60;
 	
-		if (path[i] < 5)
+		if (path[i] < num_mov)
 		{
 			drawer.vertex_colors[drawer.tilemap_start_vertex + i * 4 + 0] = color_create(55, 55, 255);
 			drawer.vertex_colors[drawer.tilemap_start_vertex + i * 4 + 1] = color_create(55, 55, 255);
