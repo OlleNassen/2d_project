@@ -128,7 +128,7 @@ void game_update(Game& game)
 		{
 			flood(game.team_data.paths[i + 1], 
 				game.map.cost, game.map.width, game.map.height, 
-				(Uint32)game.team_data.positions[i].x / 32, (Uint32)game.team_data.positions[i].y / 32, 5);
+				(Uint32)game.team_data.positions[i].x / 32, (Uint32)game.team_data.positions[i].y / 32, 0);
 		}	
 	}
 	GameState *game_state = game_stack_peek(&game.stack);
