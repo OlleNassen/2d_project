@@ -8,6 +8,8 @@
 
 #define PI 3.14159
 
+static bool32 action_select(GameState *game_state);
+
 typedef struct
 {
 	Uint32 cost;
@@ -132,20 +134,29 @@ void game_update(Game& game)
 	}
 	GameState *game_state = game_stack_peek(&game.stack);
 
-#define pressed_once(button) button.pressed && button.transitions == 1
+	SelectAction selact;
+	selact.head.execute = &select_execute;
+	selact.head.undo = &select_undo;
+	selact.state = game_state;
 
-	if (pressed_once(select) && can_push_state(game_state))
+	Action *action = (Action *)&selact;
+
+	if (select.pressed && select.transitions > 0)
 	{
-		game_state = game_stack_push(&game.stack);
 		printf("%u\n", game.stack.top);
-		game_state->selected = 0;
+		if (action->execute)
+		{
+			action->execute(action);
+		}
 	}
 
-	if (pressed_once(cancel))
+	if (cancel.pressed && cancel.transitions > 0)
 	{
-		game_state = game_stack_pop(&game.stack);
 		printf("%u\n", game.stack.top);
-		game_state->selected = 1;
+		if (action->undo)
+		{
+			action->undo(action);
+		}
 	}
 }
 

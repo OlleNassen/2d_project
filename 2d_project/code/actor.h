@@ -46,15 +46,6 @@ GameState * game_stack_push(GameStack *stack);
 GameState * game_stack_pop(GameStack *stack);
 GameState * game_stack_peek(GameStack *stack);
 
-static bool can_push_state(GameState *state)
-{
-	if (state->selected != 0)
-	{
-		return true;
-	}
-	return false;
-}
-
 struct Action;
 
 struct ActionResult
@@ -66,6 +57,7 @@ struct ActionResult
 struct Action
 {
 	ActionResult(*execute)(struct Action *);
+	ActionResult(*undo)(struct Action *);
 };
 
 struct Actor2
@@ -106,6 +98,26 @@ struct MoveAction
 static void move_action(Action *action)
 {
 	MoveAction *move = (MoveAction *)action;
+}
+
+struct SelectAction
+{
+	Action head;
+	GameState *state;
+};
+
+static ActionResult select_execute(Action *action)
+{
+	SelectAction *select = (SelectAction *)action;
+	select->state->selected = 1;
+	return {};
+}
+
+static ActionResult select_undo(Action *action)
+{
+	SelectAction *select = (SelectAction *)action;
+	select->state->selected = 0;
+	return {};
 }
 
 #endif
