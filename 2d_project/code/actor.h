@@ -107,17 +107,21 @@ struct SelectAction
 	int y;
 	GameState *state;
 };
-
+#include <stdio.h>
 static ActionResult select_execute(Action *action)
 {
 	SelectAction *select = (SelectAction *)action;
+	printf("x: %i y: %i\n", select->x, select->y);
+	printf("x: %i y: %i\n", select->x / 32, select->y / 32);
+	printf("x: %i y: %i\n", (int)select->state->actors[1].x / 32, (int)select->state->actors[1].y / 32);
 
 	for (int i = 0; i < 256; ++i)
 	{
-		if ((int)select->state->actors[i].x == select->x &&
-			(int)select->state->actors[i].y == select->y)
+		if ((int)select->state->actors[i].x / 32 == select->x / 32 &&
+			(int)select->state->actors[i].y / 32 == select->y / 32)
 		{
 			select->state->selected = i;
+			printf("here");
 		}
 	}
 	
