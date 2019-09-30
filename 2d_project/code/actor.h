@@ -139,19 +139,15 @@ static ActionResult move_execute(Action *action)
 	MoveAction *move = (MoveAction *)action;
 	Actor *actor = move->selected;
 
-<<<<<<< HEAD
 	move->oldx = actor->x;
 	move->oldy = actor->y;
 	move->old_mov = actor->num_mov;
 	
-=======
->>>>>>> parent of b39cd1f... hmm
 	int x = move->x / 32;
 	int y = move->y / 32;
 	
 	if (x < move->width && y < move->height)
 	{
-<<<<<<< HEAD
 		unsigned cost = move->path[x + y * move->width];
 		if (cost < actor->num_mov)
 		{
@@ -161,13 +157,11 @@ static ActionResult move_execute(Action *action)
 		}
 		
 		
-=======
 		move->oldx = actor->x;
 		move->oldy = actor->y;
 
 		actor->x = move->x;
 		actor->y = move->y;
->>>>>>> parent of b39cd1f... hmm
 	}
 	
 	return {};
