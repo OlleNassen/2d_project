@@ -2,10 +2,13 @@
 #include "shader.h"
 #include <glad/glad.h>
 #include "window.h"
+#include <stdio.h>
+#include <ctype.h>
 
 void generate_tilemap(Drawer& drawer, const Uint32* type_data, unsigned short height, unsigned short width, unsigned int tile_size_width, unsigned int tile_size_height);
 void generate_actors(Drawer& drawer, int num_actors, unsigned short classes[]);
 void generate_buffers(Drawer& drawer);
+int map_letter(char letter);
 
 inline Color color_create(unsigned char r, unsigned char g, unsigned char b)
 {
@@ -219,6 +222,71 @@ void generate_actors(Drawer& drawer, int num_actors, unsigned short classes[])
 		drawer.total_num_vertices += 4;
 	}
 }
+
+void text_render(Drawer& drawer, const char * text, unsigned short num_letters)
+{
+	const int sprite_width = 32.f;
+	const int sprite_height = 32.f;
+
+	Quad text_coordinates =
+	{
+		vector2_create(0.f, 0.f),
+		vector2_create(sprite_width, 0.f),
+		vector2_create(sprite_width, sprite_height),
+		vector2_create(0.f, sprite_height)
+	};
+
+	for (int i = 0; i < num_letters; ++i)
+	{
+		int tile_number = map_letter(text[i]);
+
+		int uv_x = tile_number % (drawer.the_one_texture.width / sprite_width);
+		int uv_y = tile_number / (drawer.the_one_texture.width / sprite_width);
+
+		float gl_x = (float)uv_x / (drawer.the_one_texture.width / sprite_width);
+		float gl_y = (float)uv_y / (drawer.the_one_texture.height / sprite_height);
+
+		float tex_width = (float)sprite_width / drawer.the_one_texture.width;
+		float tex_height = (float)sprite_height / drawer.the_one_texture.height;
+
+		drawer.vertex_tex_coords[drawer.total_num_vertices / 4][0] = vector2_create(gl_x, gl_y + tex_height);
+		drawer.vertex_tex_coords[drawer.total_num_vertices / 4][1] = vector2_create(gl_x + tex_width, gl_y + tex_height);
+		drawer.vertex_tex_coords[drawer.total_num_vertices / 4][2] = vector2_create(gl_x + tex_width, gl_y);
+		drawer.vertex_tex_coords[drawer.total_num_vertices / 4][3] = vector2_create(gl_x, gl_y);
+
+		drawer.vertex_indices[drawer.total_num_indices++] = drawer.total_num_vertices + 0;
+		drawer.vertex_indices[drawer.total_num_indices++] = drawer.total_num_vertices + 1;
+		drawer.vertex_indices[drawer.total_num_indices++] = drawer.total_num_vertices + 2;
+		drawer.vertex_indices[drawer.total_num_indices++] = drawer.total_num_vertices + 0;
+		drawer.vertex_indices[drawer.total_num_indices++] = drawer.total_num_vertices + 2;
+		drawer.vertex_indices[drawer.total_num_indices++] = drawer.total_num_vertices + 3;
+
+		drawer.total_num_vertices += 4;
+	}
+}
+
+int map_letter(char letter)
+{
+	int selected_tile = 32 * 22; // 32 * 22 is where texture starts
+
+	if (isupper(letter))
+	{
+		int ascii_upper_case_start = 65;
+
+		selected_tile += 32 * 2 + 1;
+		selected_tile += (int)letter - ascii_upper_case_start;
+	}
+	else
+	{
+		int ascii_lower_case_start = 97;
+
+		selected_tile += 32 * 4 + 1;
+		selected_tile += (int)letter - ascii_lower_case_start;
+	}
+
+	return selected_tile;
+}
+
 
 void generate_buffers(Drawer& drawer)
 {
