@@ -24,5 +24,6 @@
     <ClInclude Include="code\texture.h" />
     <ClInclude Include="code\render_data.h" />
     <ClInclude Include="code\actor.h" />
+    <ClInclude Include="code\action.h" />
   </ItemGroup>
 </Project>

@@ -32,6 +32,7 @@
     <ClCompile Include="code\window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="code\action.h" />
     <ClInclude Include="code\actor.h" />
     <ClInclude Include="code\camera.h" />
     <ClInclude Include="code\engine.h" />

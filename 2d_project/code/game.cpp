@@ -6,6 +6,8 @@
 #include <time.h>
 #include <stdlib.h>
 
+#include "action.h"
+
 #define PI 3.14159
 
 typedef struct
@@ -142,70 +144,51 @@ void game_update(Game& game)
 			(Uint32)game_state->actors[i].x / 32, (Uint32)game_state->actors[i].y / 32, 0);
 	}
 
-	static Action *actions[128];
+	static Action actions[128];
 	static unsigned top;
+	for (int i = top+1; i < 128; ++i) actions[i].type = ActionTypeNone;
 
-	/*SelectAction selact;
-	selact.head.execute = &select_execute;
-	selact.head.undo = &select_undo;
-	selact.state = game_state;
-	selact.x = game.cursor.position.x;
-	selact.y = game.cursor.position.y;
+	Action selact;
+	selact.type = ActionTypeSelect;
+	selact.select.state = game_state;
+	selact.select.x = game.cursor.position.x;
+	selact.select.y = game.cursor.position.y;
 
-	MoveAction movact;
-	movact.head.execute = &move_execute;
-	movact.head.undo = &move_undo;
-	movact.selected = &game_state->actors[game_state->selected];
-	movact.path = game.team_data.paths[game_state->selected];
-	movact.width = game.map.width;
-	movact.height = game.map.height;
-	movact.x = game.cursor.position.x;
-	movact.y = game.cursor.position.y;*/
+	Action movact;
+	movact.type = ActionTypeMove;
+	movact.move.selected = &game_state->actors[game_state->selected];
+	movact.move.path = game.team_data.paths[game_state->selected];
+	movact.move.width = game.map.width;
+	movact.move.height = game.map.height;
+	movact.move.x = game.cursor.position.x;
+	movact.move.y = game.cursor.position.y;
 			
+		
 	if (select.pressed && select.transitions > 0)
 	{
 		if (game_state->selected)
 		{
-			MoveAction *movact = (MoveAction *)malloc(sizeof(MoveAction));
-			movact->head.execute = &move_execute;
-			movact->head.undo = &move_undo;
-			movact->selected = &game_state->actors[game_state->selected];
-			movact->path = game.team_data.paths[game_state->selected];
-			movact->width = game.map.width;
-			movact->height = game.map.height;
-			movact->x = game.cursor.position.x;
-			movact->y = game.cursor.position.y;
-			
-			
-			actions[++top] = &movact->head;
+			actions[++top] = movact;
 		}
 		else
 		{
-			SelectAction *selact = (SelectAction *)malloc(sizeof(SelectAction));
-			selact->head.execute = &select_execute;
-			selact->head.undo = &select_undo;
-			selact->state = game_state;
-			selact->x = game.cursor.position.x;
-			selact->y = game.cursor.position.y;
-
-			actions[++top] = &selact->head;
+			actions[++top] = selact;
 		}
-		
-		Action *action = actions[top];
-		if (action->execute)
+
+		Action *action = &actions[top];
+		if (action->type != ActionTypeNone)
 		{
-			action->execute(action);
+			action_perform(action);
 		}
 	}
 
 
-
 	if (cancel.pressed && cancel.transitions > 0)
 	{
-		Action *action = actions[top];
-		if (action && action->undo)
+		Action *action = &actions[top];
+		if (action->type != ActionTypeNone)
 		{
-			action->undo(action);
+			action_undo(action);
 			--top;
 		}
 	}
