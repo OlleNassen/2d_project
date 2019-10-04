@@ -9,6 +9,7 @@ void generate_tilemap(Drawer& drawer, const Uint32* type_data, unsigned short he
 void generate_actors(Drawer& drawer, int num_actors, unsigned short classes[]);
 void generate_buffers(Drawer& drawer);
 int map_letter(char letter);
+void add_rect(Drawer & drawer, Quad& size, int world_pos_arr_pos, Vector2 world_pos, Color color, int tile_in_texture);
 
 inline Color color_create(unsigned char r, unsigned char g, unsigned char b)
 {
@@ -87,7 +88,7 @@ void generate_tilemap(Drawer& drawer, const Uint32* type_data, unsigned short he
 {
 	drawer.tilemap_start_vertex = drawer.total_num_vertices;
 
-	Quad rectangle_coordinates =
+	Quad tile_size =
 	{
 		vector2_create(0.f, 0.f),
 		vector2_create((float)tile_size_width, 0.f),
@@ -99,42 +100,7 @@ void generate_tilemap(Drawer& drawer, const Uint32* type_data, unsigned short he
 	{
 		for (unsigned int j = 0; j < height; ++j)
 		{
-			Vector2 world_position = vector2_create((float)i * tile_size_width, (float)j * tile_size_height);
-
-			drawer.sprites_world_positions[drawer.tilemap_start_vertex / 4 +i + j * width] = world_position;
-
-			drawer.vertex_local_coords[drawer.total_num_vertices / 4][0] = rectangle_coordinates[0];
-			drawer.vertex_local_coords[drawer.total_num_vertices / 4][1] = rectangle_coordinates[1];
-			drawer.vertex_local_coords[drawer.total_num_vertices / 4][2] = rectangle_coordinates[2];
-			drawer.vertex_local_coords[drawer.total_num_vertices / 4][3] = rectangle_coordinates[3];
-
-			for(int k = 0; k < 4; ++k)
-				drawer.vertex_colors[drawer.total_num_vertices + k] = color_create(255, 255, 255);
-
-			int tile_number = type_data[i + j * width] + 32*15; // 32*15 is to offset to the tiles in the one texture
-
-			int uv_x = tile_number % (drawer.the_one_texture.width / tile_size_width);
-			int uv_y = tile_number / (drawer.the_one_texture.width / tile_size_width);
-
-			float gl_x = (float)uv_x / (drawer.the_one_texture.width / tile_size_width);
-			float gl_y = (float)uv_y / (drawer.the_one_texture.height / tile_size_height);
-
-			float tex_width = (float)tile_size_width / drawer.the_one_texture.width;
-			float tex_height = (float)tile_size_height / drawer.the_one_texture.height;
-
-			drawer.vertex_tex_coords[drawer.total_num_vertices / 4][0] = vector2_create(gl_x, gl_y + tex_height);
-			drawer.vertex_tex_coords[drawer.total_num_vertices / 4][1] = vector2_create(gl_x + tex_width, gl_y + tex_height);
-			drawer.vertex_tex_coords[drawer.total_num_vertices / 4][2] = vector2_create(gl_x + tex_width, gl_y);
-			drawer.vertex_tex_coords[drawer.total_num_vertices / 4][3] = vector2_create(gl_x, gl_y);
-
-			drawer.vertex_indices[drawer.total_num_indices++] = drawer.total_num_vertices + 0;
-			drawer.vertex_indices[drawer.total_num_indices++] = drawer.total_num_vertices + 1;
-			drawer.vertex_indices[drawer.total_num_indices++] = drawer.total_num_vertices + 2;
-			drawer.vertex_indices[drawer.total_num_indices++] = drawer.total_num_vertices + 0;
-			drawer.vertex_indices[drawer.total_num_indices++] = drawer.total_num_vertices + 2;
-			drawer.vertex_indices[drawer.total_num_indices++] = drawer.total_num_vertices + 3;
-
-			drawer.total_num_vertices += 4;
+			add_rect(drawer, tile_size, drawer.tilemap_start_vertex / 4 + i + j * width, vector2_create((float)i * tile_size_width, (float)j * tile_size_height), color_create(255, 255, 255), type_data[i + j * width] + 32 * 15);
 		}
 	}
 }
@@ -146,7 +112,7 @@ void generate_actors(Drawer& drawer, int num_actors, unsigned short classes[])
 	const int sprite_width = 32.f;
 	const int sprite_height = 32.f;
 
-	Quad rectangle_coordinates =
+	Quad actor_size =
 	{
 		vector2_create(0.f, 0.f),
 		vector2_create(sprite_width, 0.f),
@@ -156,40 +122,7 @@ void generate_actors(Drawer& drawer, int num_actors, unsigned short classes[])
 	
 	for (int i = 0; i < num_actors; ++i)
 	{
-		drawer.sprites_world_positions[drawer.total_num_vertices/4] = vector2_create(-100,0);
-
-		drawer.vertex_local_coords[drawer.total_num_vertices/4][0] = rectangle_coordinates[0];
-		drawer.vertex_local_coords[drawer.total_num_vertices/4][1] = rectangle_coordinates[1];
-		drawer.vertex_local_coords[drawer.total_num_vertices/4][2] = rectangle_coordinates[2];
-		drawer.vertex_local_coords[drawer.total_num_vertices/4][3] = rectangle_coordinates[3];
-
-		for(int k = 0; k < 4; ++k)
-			drawer.vertex_colors[drawer.total_num_vertices + k] = color_create(255, 255, 255);
-	
-		int tile_number = classes[i] * 4;
-	
-		int uv_x = tile_number % (drawer.the_one_texture.width / sprite_width);
-		int uv_y = tile_number / (drawer.the_one_texture.width / sprite_width);
-	
-		float gl_x = (float)uv_x / (drawer.the_one_texture.width / sprite_width);
-		float gl_y = (float)uv_y / (drawer.the_one_texture.height / sprite_height);
-	
-		float tex_width = (float)sprite_width / drawer.the_one_texture.width;
-		float tex_height = (float)sprite_height / drawer.the_one_texture.height;
-	
-		drawer.vertex_tex_coords[drawer.total_num_vertices/4][0] = vector2_create(gl_x, gl_y + tex_height);
-		drawer.vertex_tex_coords[drawer.total_num_vertices/4][1] = vector2_create(gl_x + tex_width, gl_y + tex_height);
-		drawer.vertex_tex_coords[drawer.total_num_vertices/4][2] = vector2_create(gl_x + tex_width, gl_y);
-		drawer.vertex_tex_coords[drawer.total_num_vertices/4][3] = vector2_create(gl_x, gl_y);
-
-		drawer.vertex_indices[drawer.total_num_indices++] = drawer.total_num_vertices + 0;
-		drawer.vertex_indices[drawer.total_num_indices++] = drawer.total_num_vertices + 1;
-		drawer.vertex_indices[drawer.total_num_indices++] = drawer.total_num_vertices + 2;
-		drawer.vertex_indices[drawer.total_num_indices++] = drawer.total_num_vertices + 0;
-		drawer.vertex_indices[drawer.total_num_indices++] = drawer.total_num_vertices + 2;
-		drawer.vertex_indices[drawer.total_num_indices++] = drawer.total_num_vertices + 3;
-	
-		drawer.total_num_vertices += 4;
+		add_rect(drawer, actor_size, drawer.total_num_vertices / 4, vector2_create(-100, 0), color_create(255, 255, 255), classes[i] * 4);
 	}
 }
 
@@ -198,7 +131,7 @@ void text_render(Drawer& drawer, const char * text, unsigned short num_letters)
 	const int sprite_width = 32.f;
 	const int sprite_height = 32.f;
 
-	Quad text_coordinates =
+	Quad text_size =
 	{
 		vector2_create(0.f, 0.f),
 		vector2_create(sprite_width, 0.f),
@@ -208,40 +141,7 @@ void text_render(Drawer& drawer, const char * text, unsigned short num_letters)
 
 	for (int i = 0; i < num_letters; ++i)
 	{
-		drawer.sprites_world_positions[drawer.total_num_vertices / 4] = vector2_create(i * 32, 32);
-
-		drawer.vertex_local_coords[drawer.total_num_vertices / 4][0] = text_coordinates[0];
-		drawer.vertex_local_coords[drawer.total_num_vertices / 4][1] = text_coordinates[1];
-		drawer.vertex_local_coords[drawer.total_num_vertices / 4][2] = text_coordinates[2];
-		drawer.vertex_local_coords[drawer.total_num_vertices / 4][3] = text_coordinates[3];
-
-		for (int k = 0; k < 4; ++k)
-			drawer.vertex_colors[drawer.total_num_vertices + k] = color_create(255, 255, 255);
-
-		int tile_number = map_letter(text[i]);
-
-		int uv_x = tile_number % (drawer.the_one_texture.width / sprite_width);
-		int uv_y = tile_number / (drawer.the_one_texture.width / sprite_width);
-
-		float gl_x = (float)uv_x / (drawer.the_one_texture.width / sprite_width);
-		float gl_y = (float)uv_y / (drawer.the_one_texture.height / sprite_height);
-
-		float tex_width = (float)sprite_width / drawer.the_one_texture.width;
-		float tex_height = (float)sprite_height / drawer.the_one_texture.height;
-
-		drawer.vertex_tex_coords[drawer.total_num_vertices / 4][0] = vector2_create(gl_x, gl_y + tex_height);
-		drawer.vertex_tex_coords[drawer.total_num_vertices / 4][1] = vector2_create(gl_x + tex_width, gl_y + tex_height);
-		drawer.vertex_tex_coords[drawer.total_num_vertices / 4][2] = vector2_create(gl_x + tex_width, gl_y);
-		drawer.vertex_tex_coords[drawer.total_num_vertices / 4][3] = vector2_create(gl_x, gl_y);
-
-		drawer.vertex_indices[drawer.total_num_indices++] = drawer.total_num_vertices + 0;
-		drawer.vertex_indices[drawer.total_num_indices++] = drawer.total_num_vertices + 1;
-		drawer.vertex_indices[drawer.total_num_indices++] = drawer.total_num_vertices + 2;
-		drawer.vertex_indices[drawer.total_num_indices++] = drawer.total_num_vertices + 0;
-		drawer.vertex_indices[drawer.total_num_indices++] = drawer.total_num_vertices + 2;
-		drawer.vertex_indices[drawer.total_num_indices++] = drawer.total_num_vertices + 3;
-
-		drawer.total_num_vertices += 4;
+		add_rect(drawer, text_size, drawer.total_num_vertices / 4, vector2_create(i * 32, 32), color_create(255, 255, 255), map_letter(text[i]));
 	}
 }
 
@@ -267,6 +167,43 @@ int map_letter(char letter)
 	return selected_tile;
 }
 
+void add_rect(Drawer & drawer, Quad& size, int world_pos_arr_pos, Vector2 world_pos, Color color, int tile_in_texture)
+{
+	drawer.sprites_world_positions[world_pos_arr_pos] = world_pos;
+
+	drawer.vertex_local_coords[drawer.total_num_vertices / 4][0] = size[0];
+	drawer.vertex_local_coords[drawer.total_num_vertices / 4][1] = size[1];
+	drawer.vertex_local_coords[drawer.total_num_vertices / 4][2] = size[2];
+	drawer.vertex_local_coords[drawer.total_num_vertices / 4][3] = size[3];
+
+	for (int k = 0; k < 4; ++k)
+		drawer.vertex_colors[drawer.total_num_vertices + k] = color;
+
+	int tile_number = tile_in_texture;
+
+	int uv_x = tile_number % (drawer.the_one_texture.width / (int)size[2].x);
+	int uv_y = tile_number / (drawer.the_one_texture.width / (int)size[2].x);
+
+	float gl_x = (float)uv_x / (drawer.the_one_texture.width / (int)size[2].x);
+	float gl_y = (float)uv_y / (drawer.the_one_texture.height / (int)size[2].y);
+
+	float tex_width = size[2].x / drawer.the_one_texture.width;
+	float tex_height = size[2].y / drawer.the_one_texture.height;
+
+	drawer.vertex_tex_coords[drawer.total_num_vertices / 4][0] = vector2_create(gl_x, gl_y + tex_height);
+	drawer.vertex_tex_coords[drawer.total_num_vertices / 4][1] = vector2_create(gl_x + tex_width, gl_y + tex_height);
+	drawer.vertex_tex_coords[drawer.total_num_vertices / 4][2] = vector2_create(gl_x + tex_width, gl_y);
+	drawer.vertex_tex_coords[drawer.total_num_vertices / 4][3] = vector2_create(gl_x, gl_y);
+
+	drawer.vertex_indices[drawer.total_num_indices++] = drawer.total_num_vertices + 0;
+	drawer.vertex_indices[drawer.total_num_indices++] = drawer.total_num_vertices + 1;
+	drawer.vertex_indices[drawer.total_num_indices++] = drawer.total_num_vertices + 2;
+	drawer.vertex_indices[drawer.total_num_indices++] = drawer.total_num_vertices + 0;
+	drawer.vertex_indices[drawer.total_num_indices++] = drawer.total_num_vertices + 2;
+	drawer.vertex_indices[drawer.total_num_indices++] = drawer.total_num_vertices + 3;
+
+	drawer.total_num_vertices += 4;
+}
 
 void generate_buffers(Drawer& drawer)
 {
